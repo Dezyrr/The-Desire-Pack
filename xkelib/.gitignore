@@ -1,0 +1,10 @@
+.DS_Store
+*.log
+*.sln
+*.vcxproj
+*.filters
+*.user
+*.log
+
+.vs/
+Release/

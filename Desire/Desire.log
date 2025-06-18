@@ -1,0 +1,42 @@
+﻿  state: unload
+  module name: Desire
+  Path: HDD:\Desire.xex
+  Module Unloading
+  main.cpp
+c:\users\leann\desktop\desire\desire\render.h(110): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\render.h(115): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\render.h(129): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\render.h(148): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\render.h(153): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\render.h(167): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\pregame.h(110): warning C4309: '=' : truncation of constant value
+c:\users\leann\desktop\desire\desire\menu.h(530): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\menu.h(570): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(570): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\menu.h(585): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(585): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\menu.h(593): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(593): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\menu.h(600): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(600): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\menu.h(654): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(804): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(817): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(838): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(838): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\menu.h(850): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(850): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\menu.h(860): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\users\leann\desktop\desire\desire\menu.h(860): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\teammenu.h(84): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\teammenu.h(86): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\users\leann\desktop\desire\desire\hooks.h(85): warning C4244: 'return' : conversion from '__int64' to 'DWORD', possible loss of data
+c:\users\leann\desktop\desire\desire\hooks.h(176): warning C4244: 'return' : conversion from '__int64' to 'int', possible loss of data
+main.cpp(36): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
+main.cpp(48): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
+  Generating code
+  Finished generating code
+  state: load
+  module name: Desire
+  Path: HDD:\Desire.xex
+  Module Loading

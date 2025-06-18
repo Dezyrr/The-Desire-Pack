@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="includes.h" />
+    <ClInclude Include="utilities.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="hooks.h">
+      <Filter>hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>menu</Filter>
+    </ClInclude>
+    <ClInclude Include="render.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="pregame.h">
+      <Filter>features\pregame</Filter>
+    </ClInclude>
+    <ClInclude Include="ingame.h">
+      <Filter>features\ingame</Filter>
+    </ClInclude>
+    <ClInclude Include="teammenu.h">
+      <Filter>features\ingame\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="functions.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="structs.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="account.h">
+      <Filter>features\account</Filter>
+    </ClInclude>
+    <ClInclude Include="gsc.h">
+      <Filter>features\ingame</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="utilities.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="vector.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="utils">
+      <UniqueIdentifier>{7a9ce221-ead3-4dab-abe5-134c2a2c468c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{f7511728-b129-486e-8f51-f6c103f773ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hooks">
+      <UniqueIdentifier>{4119b191-c196-407f-aec8-4eccbbb21af1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="menu">
+      <UniqueIdentifier>{11e029fc-449d-4371-9493-36643571a8a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render">
+      <UniqueIdentifier>{a8e9959a-a387-44d2-a8e1-6c10129f9dad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features">
+      <UniqueIdentifier>{4f440c3a-55ab-4a04-9c79-d26703ffeba1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\pregame">
+      <UniqueIdentifier>{6d182dd5-f077-4f0b-859c-eec32e50eeed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\ingame">
+      <UniqueIdentifier>{e2c1f88e-0a57-49c8-b8bb-5af15294963b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\ingame\menu">
+      <UniqueIdentifier>{ce456abe-6923-4eee-97a0-1d4671e25825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\account">
+      <UniqueIdentifier>{b805540a-a3f0-402a-9130-84ff1cd68f25}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
