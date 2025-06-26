@@ -98,6 +98,7 @@
     <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
     <LibraryPath>$(XDKInstallDir)\lib\xbox;$(LibraryPath)</LibraryPath>
     <RemoteRoot>hdd:\</RemoteRoot>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Xbox 360'">
     <ClCompile>
@@ -223,8 +224,8 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Users\leann\Desktop\Desire\xkelib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>xapilib.lib;d3d9ltcg.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3ltcg.lib;x3daudioltcg.lib;xmcoreltcg.lib;vcomp.lib;xhttp.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\xkelib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>xapilib.lib;d3d9ltcg.lib;d3dx9.lib;xgraphics.lib;xboxkrnl.lib;xnet.lib;xaudio2.lib;xact3ltcg.lib;x3daudioltcg.lib;xmcoreltcg.lib;vcomp.lib;xhttp.lib;xbdm.lib</AdditionalDependencies>
       <AdditionalOptions>/dll /ignore:4089 /ALIGN:128,4096 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ImageXex>

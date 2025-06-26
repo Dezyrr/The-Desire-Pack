@@ -33,9 +33,7 @@ void titlecheck(DWORD TitleID)
 			Sleep(1500);
 			MountPath("Hdd:", "\\Device\\Harddisk0\\Partition1", TRUE);
 
-			XNotify("Desire's S&D Loaded! (MW2)", XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_SONGPLAYING);
 			game::hooks::init();
-
 			starthooks();
 		}
 		break;
@@ -45,9 +43,7 @@ void titlecheck(DWORD TitleID)
 			Sleep(1500);
 			MountPath("Hdd:", "\\Device\\Harddisk0\\Partition1", TRUE);
 
-			XNotify("Desire's S&D Loaded! (BO2)", XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_SONGPLAYING);
 			game::hooks::init();
-
 			starthooks();
 		}
 		break;

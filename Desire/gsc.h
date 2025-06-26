@@ -1030,7 +1030,9 @@ namespace game
 			{
 				if (sizeof(databo2) > 1)
 				{
-					SetMemory(0x40300000, databo2, sizeof(databo2));
+					for (int i = 0; i < sizeof(databo2); i++)
+						*(byte*)(0x40300000 + i) = databo2[i];
+
 					*(int*)0x831EBE78 = 0x40300000;
 				}
 			}

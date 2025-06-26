@@ -23,8 +23,6 @@ namespace Concurrency
 char* va(const char* fmt, ...);
 char* concat(const char* text, ...);
 BOOL FileExists(CONST PCHAR FilePath);
-void InjectImage(int Address, const char* FilePath);
-void SetMemory(int Address, byte Data[], int byteSize);
 HRESULT SetMemory(VOID* Destination, VOID* Source, DWORD Length);
 extern XINPUT_STATE Buttons;
 bool KeyIsDown(XINPUT_STATE xState, short button);
@@ -63,7 +61,7 @@ unsigned long ResolveFunction(const char* moduleName, unsigned long ordinal);
 VOID XEXThread(LPTHREAD_START_ROUTINE Thread);
 HRESULT doMountPath(const char* szDrive, const char* szDevice, const char* sysStr);
 HRESULT MountPath(const char* szDrive, const char* szDevice, BOOL both);
-
+int areArraysDifferent(const unsigned char* array1, const unsigned char* array2, int size);
 class MemoryBuffer {
 public:
 	MemoryBuffer(DWORD Size = 0x200)

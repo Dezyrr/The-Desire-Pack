@@ -60,8 +60,16 @@ namespace game
 	void (*SV_LinkEntity)(gentity_s* gEnt) = reinterpret_cast<void (*)(gentity_s*)>(0x8225F518);
 	void (*SV_UnlinkEntity)(gentity_s* gEnt) = reinterpret_cast<void (*)(gentity_s*)>(0x8225F430);
 	int(_cdecl* NotifyOnButton)(int idx, const char* button, const char* button_name) = reinterpret_cast<int(*)(int, const char*, const char*)>(0x82225858);
+	int (*Scr_GetSelf)(int var) = reinterpret_cast<int(*)(int)>(0x82243758);
+	int (*CG_GetClientNum)(int var) = reinterpret_cast<int(*)(int)>(0x82253948);
+	int (*G_GetWeaponIndexForName)(const char* weaponname) = reinterpret_cast<int(*)(const char*)>(0x822105A8);
+	int (*G_GivePlayerWeapon)(playerState_s* playerstate, int weaponidx, char altmodelidx, int akimbo) = reinterpret_cast<int(*)(playerState_s*, int, char, int)>(0x82210B30);
+	int (*Add_Ammo)(gentity_s* ent, int weaponidx, char weaponmodel, int count, int fillclip) = reinterpret_cast<int(*)(gentity_s*, int, char, int, int)>(0x821E1EF8);
+	int (*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel, unsigned int tag) = reinterpret_cast<int(*)(gentity_s*, int, char, unsigned int)>(0x821E36A8);
 
-	void setgamefuncs()
+	bool(__cdecl* SV_IsClientBot)(int clientNum) = (bool(*)(int))0x822597F0;
+
+	void initgamefunctions()
 	{
 		switch (CURGAME)
 		{
@@ -138,9 +146,35 @@ namespace game
 			return false;
 		}
 
+		Material* getmaterial(const char* shader)
+		{
+			return Material_RegisterHandle(shader, 0);
+		}
+
+		void injectimage(int Address, const char* FilePath)
+		{
+			if (FileExists((PCHAR)FilePath))
+			{
+				FILE* Image;
+				fopen_s(&Image, FilePath, "rb");
+
+				fseek(Image, 0, SEEK_END);
+				long lsize = ftell(Image);
+				fseek(Image, 0, SEEK_SET);
+				fread((char*)Address, sizeof(char), lsize, Image);
+
+				fclose(Image);
+			}
+		}
+
 		void setclientdvar(int idx, const char* dvar, const char* value)
 		{
 			SV(idx, 0, va("s %s \"%s\"", dvar, value));
+		}
+
+		bool isbot(int idx)
+		{
+			return SV_IsClientBot(idx);
 		}
 
 		bool ishost(int idx)
@@ -180,42 +214,17 @@ namespace game
 
 			short playerteam = g_entities[idx].client->sess.cs.team;
 
-			return playerteam == hostteam || helpers::ishost(idx);
+			return playerteam == hostteam;
 		}
 
-		int gethostteam(int idx)
+		void iprintln(int idx, const char* text)
 		{
-			if (!isingame())
-				return false;
-
-			if (!cgs || !cgameGlob[idx].ClientInfo)
-				return false;
-
-			short hostteam = -1;
-
-			for (int i = 0; i < 18; i++)
-			{
-				if (!g_entities[i].client)
-					continue;
-
-				if (ishost(i))
-				{
-					hostteam = g_entities[i].client->sess.cs.team;
-					break;
-				}
-			}
-
-			if (hostteam == -1)
-			{
-				return false;
-			}
-
-			return hostteam;
+			SV(idx, 0, va("f \"%s\"", text));
 		}
 
-		void iprintln(int idx, const std::string& text)
+		void notifyclient(int idx, const char* text)
 		{
-			SV(idx, 0, va("f \"%s\"", text.c_str()));
+			iprintln(idx, std::string("^7[^6desire^7]: ").append(text).c_str());
 		}
 	}
 

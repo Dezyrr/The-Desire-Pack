@@ -9,7 +9,7 @@ namespace game
 		bool is_uav_enabled[18];
 		bool insta_sprint_enabled[18];
 		bool insta_shoots_enabled[18];
-		bool has_inited_menu[18];
+		bool always_zoomload_enabled[18];
 	};
 	entity_handler ent_handlr;
 
@@ -30,6 +30,7 @@ namespace game
 				bool soft_lands;
 				bool prone_spins;
 				bool ladder_spins;
+				bool knife_lunges;
 			};
 			varrs vars;
 
@@ -42,11 +43,16 @@ namespace game
 
 					gentity_s player = g_entities[i];
 
-					if (!helpers::isonhostteam(i))
-						continue;
+					if (!helpers::isonhostteam(i) || player.health < 1)
+					{
+						if (ent_handlr.is_uav_enabled[i])
+						{
+							*(byte*)(0x830CF264 + (player.client->ps.clientNum * 0x3700)) = 0x00;
+							ent_handlr.is_uav_enabled[i] = false;
+						}
 
-					if (player.health < 1)
 						continue;
+					}
 
 					if (features::ingame::vars.sweeping_uav && !ent_handlr.is_uav_enabled[i])
 					{
@@ -66,7 +72,7 @@ namespace game
 			{
 				if (CURGAME == MW2)
 				{
-					Cbuf_AddText(0, "sv_cheats 1;");
+					features::ingame::sweeping_uav();
 
 					// depatch bounces
 					if (features::ingame::vars.depatch_bounces)
@@ -127,9 +133,7 @@ namespace game
 					}
 					else
 					{
-						if (*(int*)(0x821CF3E4) != 0xC3EB8898)
-							*(float*)(0x82008898) = 3590.0;
-
+						*(float*)(0x82008898) = 3590.0;
 						*(int*)(0x820E217C) = 0x409A0010;
 						*(int*)(0x820E2184) = 0xC02B99C0;
 					}
@@ -143,38 +147,9 @@ namespace game
 					}
 					else
 					{
-						if (*(int*)(0x820E2184) != 0xC02B8898)
-							*(float*)(0x82008898) = 3590.0;
-
+						*(float*)(0x82008898) = 3590.0;
 						*(int*)(0x821CF3E4) = 0xC3EB8C98;
 						*(short*)(0x821CF3C4) = 0x419A;
-					}
-
-					if (features::ingame::vars.miniscule_health)
-					{
-						Cbuf_AddText(0, "scr_player_maxhealth 30;");
-					}
-					else
-					{
-						Cbuf_AddText(0, "scr_player_maxhealth 100;");
-					}
-
-					if (features::ingame::vars.no_fall_damage)
-					{
-						Cbuf_AddText(0, "bg_fallDamageMinHeight 9999;");
-					}
-					else
-					{
-						Cbuf_AddText(0, "bg_fallDamageMinHeight 128;");
-					}
-
-					if (features::ingame::vars.soft_lands)
-					{
-						Cbuf_AddText(0, "bg_softLandingMinHeight 0;bg_softLandingMaxHeight 0;bg_softlandingmaxdamage 0.1;");
-					}
-					else
-					{
-						Cbuf_AddText(0, "bg_softLandingMinHeight 128;bg_softLandingMaxHeight 300;bg_softlandingmaxdamage 0.1;");
 					}
 
 					if (features::ingame::vars.prone_spins)
@@ -194,10 +169,9 @@ namespace game
 					{
 						Cbuf_AddText(0, "bg_ladder_yawcap 100;");
 					}
-
-					features::ingame::sweeping_uav();
 				}
-				else
+
+				if (CURGAME == BO2)
 				{
 					// depatch bounces
 					if (features::ingame::vars.depatch_bounces)
@@ -250,6 +224,24 @@ namespace game
 					else
 					{
 						Cbuf_AddText(0, "ladderspins 0;");
+					}
+
+					if (features::ingame::vars.knife_lunges)
+					{
+						Dvar_FindVar("tu_aim_automelee_fix1")->current.value = 0;
+						Dvar_FindVar("aim_automelee_move_limit_range")->current.value = 9999.0f;
+						Dvar_FindVar("tu7_clampMeleeChargeJumping")->current.value = 0;
+						Dvar_FindVar("tu7_clampMeleeChargeHorzLaunch")->current.value = 0;
+						Dvar_FindVar("tu7_clampMeleeChargeJumpingMaxZVel")->current.value = 9999.0f;
+					}
+					else
+					{
+						// idk default values and cba to store them right now so fucking have fun with this hardcode
+						Dvar_FindVar("tu_aim_automelee_fix1")->current.value = 1;
+						Dvar_FindVar("aim_automelee_move_limit_range")->current.value = 125.f;
+						Dvar_FindVar("tu7_clampMeleeChargeJumping")->current.value = 1;
+						Dvar_FindVar("tu7_clampMeleeChargeHorzLaunch")->current.value = 1;
+						Dvar_FindVar("tu7_clampMeleeChargeJumpingMaxZVel")->current.value = 125.f;
 					}
 				}
 			}

@@ -40,12 +40,6 @@ char* concat(const char* text, ...)
 	return result;
 }
 
-void SetMemory(int Address, byte Data[], int byteSize)
-{
-	for (int i = 0; i < byteSize; i++)
-		*(byte*)(Address + i) = Data[i];
-}
-
 HRESULT SetMemory(VOID* Destination, VOID* Source, DWORD Length) 
 {
 	memcpy(Destination, Source, Length);
@@ -65,21 +59,6 @@ BOOL FileExists(CONST PCHAR FilePath)
 	return TRUE;
 }
 
-void InjectImage(int Address, const char* FilePath)
-{
-	if (FileExists((PCHAR)FilePath))
-	{
-		FILE* Image;
-		fopen_s(&Image, FilePath, "rb");
-
-		fseek(Image, 0, SEEK_END);
-		long lsize = ftell(Image);
-		fseek(Image, 0, SEEK_SET);
-		fread((char*)Address, sizeof(char), lsize, Image);
-
-		fclose(Image);
-	}
-}
 
 XINPUT_STATE Buttons;
 bool KeyIsDown(XINPUT_STATE xState, short button)
@@ -311,16 +290,6 @@ std::vector<unsigned char> intToByteArray(const std::string& hexString)
 	return byteArray;
 }
 
-void __declspec(naked) HvxGetVersions(int magic, int mode, unsigned addr, __int64 outBuff, DWORD length)
-{
-	__asm
-	{
-		li    r0, 0
-		sc
-		blr
-	}
-}
-
 int areArraysDifferent(const unsigned char* array1, const unsigned char* array2, int size)
 {
 	for (int i = 0; i < size; i++)
@@ -331,28 +300,5 @@ int areArraysDifferent(const unsigned char* array1, const unsigned char* array2,
 		}
 	}
 	return 0;
-}
-
-
-int auth()
-{
-	BYTE CPU[0x10] = { 0xE1, 0xAF, 0x70, 0x0F, 0x36, 0x30, 0x0B, 0x28, 0x2E, 0xA5, 0xF4, 0x21, 0xFF, 0x1B, 0x2F, 0x74 }; //CONVERT CPU KEY INTO BYTE ARRAY
-	int size = sizeof(CPU);
-
-	BYTE* key = (BYTE*)XPhysicalAlloc(0x10, MAXULONG_PTR, NULL, PAGE_READWRITE);
-	__int64 addr = ((INT64)MmGetPhysicalAddress(key) & 0xFFFFFFFF) | 0x8000000000000000;
-	HvxGetVersions(0x72627472, 5, 0x20, addr, 0x10);
-
-	int arrayCheck = areArraysDifferent(CPU, key, size);
-	if (arrayCheck != 0)
-	{
-		DbgPrint("Incorrect CPU Key");
-		return 0;
-	}
-	else
-	{
-		DbgPrint("Authentication Successful: %s\n", key);
-		return 1;
-	}
 }
 #pragma endregion
