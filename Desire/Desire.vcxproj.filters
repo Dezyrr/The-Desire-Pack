@@ -38,6 +38,15 @@
     <ClInclude Include="gsc.h">
       <Filter>features\ingame</Filter>
     </ClInclude>
+    <ClInclude Include="players.h">
+      <Filter>features\ingame</Filter>
+    </ClInclude>
+    <ClInclude Include="customisation.h">
+      <Filter>features\customisation</Filter>
+    </ClInclude>
+    <ClInclude Include="xorstr.h">
+      <Filter>utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -78,6 +87,9 @@
     </Filter>
     <Filter Include="features\account">
       <UniqueIdentifier>{b805540a-a3f0-402a-9130-84ff1cd68f25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\customisation">
+      <UniqueIdentifier>{611cc412-6de1-42a8-9e54-6c6f696785bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

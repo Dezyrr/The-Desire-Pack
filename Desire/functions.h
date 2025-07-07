@@ -116,10 +116,10 @@ namespace game
 		bool isingame()
 		{
 			if (CURGAME == MW2)
-				return Dvar_GetBool("cl_ingame");
+				return Dvar_GetBool(_("cl_ingame"));
 
 			else if (CURGAME == BO2)
-				return Dvar_FindVar("cl_ingame")->current.enabled;
+				return Dvar_FindVar(_("cl_ingame"))->current.enabled;
 
 			return false;
 		}
@@ -127,10 +127,10 @@ namespace game
 		bool isonlinegame()
 		{
 			if (CURGAME == MW2)
-				return Dvar_GetBool("onlinegame");
+				return Dvar_GetBool(_("onlinegame"));
 
 			else if (CURGAME == BO2)
-				return Dvar_FindVar("onlinegame")->current.enabled;
+				return Dvar_FindVar(_("onlinegame"))->current.enabled;
 
 			return false;
 		}
@@ -138,10 +138,10 @@ namespace game
 		bool ispublicmatch()
 		{
 			if (CURGAME == MW2)
-				return Dvar_GetBool("xblive_privatematch");
+				return Dvar_GetBool(_("xblive_privatematch"));
 
 			else if (CURGAME == BO2)
-				return Dvar_FindVar("xblive_privatematch")->current.enabled;
+				return Dvar_FindVar(_("xblive_privatematch"))->current.enabled;
 
 			return false;
 		}
@@ -156,7 +156,7 @@ namespace game
 			if (FileExists((PCHAR)FilePath))
 			{
 				FILE* Image;
-				fopen_s(&Image, FilePath, "rb");
+				fopen_s(&Image, FilePath, ("rb"));
 
 				fseek(Image, 0, SEEK_END);
 				long lsize = ftell(Image);
@@ -169,7 +169,7 @@ namespace game
 
 		void setclientdvar(int idx, const char* dvar, const char* value)
 		{
-			SV(idx, 0, va("s %s \"%s\"", dvar, value));
+			SV(idx, 0, va(("s %s \"%s\""), dvar, value));
 		}
 
 		bool isbot(int idx)
@@ -219,12 +219,12 @@ namespace game
 
 		void iprintln(int idx, const char* text)
 		{
-			SV(idx, 0, va("f \"%s\"", text));
+			SV(idx, 0, va(("f \"%s\""), text));
 		}
 
 		void notifyclient(int idx, const char* text)
 		{
-			iprintln(idx, std::string("^7[^6desire^7]: ").append(text).c_str());
+			iprintln(idx, std::string(_("^7[^6desire^7]: ")).append(text).c_str());
 		}
 	}
 

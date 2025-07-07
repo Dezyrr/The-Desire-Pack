@@ -7,6 +7,8 @@
 #include "hooks.h"
 #include "account.h"
 #include "gsc.h"
+#include "players.h"
+#include "customisation.h"
 
 namespace game
 {
@@ -18,7 +20,9 @@ namespace game
 			{
 				sm_main,
 				sm_matchmaking,
-				sm_ingame,
+				sm_trickshotting,
+				sm_customisation,
+				sm_players,
 				sm_account,
 				sm_misc
 			};
@@ -60,13 +64,13 @@ namespace game
 								{
 									features::pregame::vars.minplayerstostart--;
 									if (features::pregame::vars.minplayerstostart < 1)
-										features::pregame::vars.minplayerstostart = 1;
+										features::pregame::vars.minplayerstostart = 12;
 								}
 								else
 								{
 									features::pregame::vars.minplayerstostart++;
 									if (features::pregame::vars.minplayerstostart > 12)
-										features::pregame::vars.minplayerstostart = 12;
+										features::pregame::vars.minplayerstostart = 1;
 								}
 								break;
 							}
@@ -76,13 +80,13 @@ namespace game
 								{
 									features::pregame::vars.maxplayersinlobby--;
 									if (features::pregame::vars.maxplayersinlobby < 1)
-										features::pregame::vars.maxplayersinlobby = 1;
+										features::pregame::vars.maxplayersinlobby = 18;
 								}
 								else
 								{
 									features::pregame::vars.maxplayersinlobby++;
 									if (features::pregame::vars.maxplayersinlobby > 18)
-										features::pregame::vars.maxplayersinlobby = 18;
+										features::pregame::vars.maxplayersinlobby = 1;
 								}
 								break;
 							}
@@ -111,6 +115,134 @@ namespace game
 						break;
 					}
 
+					case sm_customisation:
+					{
+						switch (controls.currentoption)
+						{
+							// enable custom hud
+							case 0:
+							{
+								break;
+							}
+
+							// hud r
+							case 1:
+							{
+								if (left)
+								{
+									features::customisation::vars.hudcolor_r--;
+									if (features::customisation::vars.hudcolor_r < 0)
+										features::customisation::vars.hudcolor_r = 255;
+								}
+								else
+								{
+									features::customisation::vars.hudcolor_r++;
+									if (features::customisation::vars.hudcolor_r > 255)
+										features::customisation::vars.hudcolor_r = 0;
+								}
+								break;
+							}
+
+							// hud g
+							case 2:
+							{								
+								if (left)
+								{
+									features::customisation::vars.hudcolor_g--;
+									if (features::customisation::vars.hudcolor_g < 0)
+										features::customisation::vars.hudcolor_g = 255;
+								}
+								else
+								{
+									features::customisation::vars.hudcolor_g++;
+									if (features::customisation::vars.hudcolor_g > 255)
+										features::customisation::vars.hudcolor_g = 0;
+								}
+								break;
+							}
+
+							// hud b
+							case 3:
+							{								
+								if (left)
+								{
+									features::customisation::vars.hudcolor_b--;
+									if (features::customisation::vars.hudcolor_b < 0)
+										features::customisation::vars.hudcolor_b = 255;
+								}
+								else
+								{
+									features::customisation::vars.hudcolor_b++;
+									if (features::customisation::vars.hudcolor_b > 255)
+										features::customisation::vars.hudcolor_b = 0;
+								}
+								break;
+							}
+
+							// enable custom camos
+							case 4:
+							{
+								break;
+							}
+
+							// camo r
+							case 5:
+							{
+								if (left)
+								{
+									features::customisation::vars.camocolor_r--;
+									if (features::customisation::vars.camocolor_r < 0)
+										features::customisation::vars.camocolor_r = 255;
+								}
+								else
+								{
+									features::customisation::vars.camocolor_r++;
+									if (features::customisation::vars.camocolor_r > 255)
+										features::customisation::vars.camocolor_r = 0;
+								}
+								break;
+							}
+
+							// camo g
+							case 6:
+							{
+								if (left)
+								{
+									features::customisation::vars.camocolor_g--;
+									if (features::customisation::vars.camocolor_g < 0)
+										features::customisation::vars.camocolor_g = 255;
+								}
+								else
+								{
+									features::customisation::vars.camocolor_g++;
+									if (features::customisation::vars.camocolor_g > 255)
+										features::customisation::vars.camocolor_g = 0;
+								}
+								break;
+							}
+
+							// camo b
+							case 7:
+							{
+								if (left)
+								{
+									features::customisation::vars.camocolor_b--;
+									if (features::customisation::vars.camocolor_b < 0)
+										features::customisation::vars.camocolor_b = 255;
+								}
+								else
+								{
+									features::customisation::vars.camocolor_b++;
+									if (features::customisation::vars.camocolor_b > 255)
+										features::customisation::vars.camocolor_b = 0;
+								}
+								break;
+							}
+						}
+
+						break;
+					}
+
 					case sm_account:
 					{
 						switch (controls.currentoption)
@@ -119,9 +251,19 @@ namespace game
 							{
 								if (left)
 								{
-									features::account::vars.prestige--;
-									if (features::account::vars.prestige < 0)
-										features::account::vars.prestige = 0;
+									if (CURGAME == MW2)
+									{
+										features::account::vars.prestige--;
+										if (features::account::vars.prestige < 0)
+											features::account::vars.prestige = 11;
+									}
+
+									if (CURGAME == BO2)
+									{
+										features::account::vars.prestige--;
+										if (features::account::vars.prestige < 0)
+											features::account::vars.prestige = 15;
+									}
 								}
 								else
 								{
@@ -129,14 +271,14 @@ namespace game
 									{
 										features::account::vars.prestige++;
 										if (features::account::vars.prestige > 11)
-											features::account::vars.prestige = 11;
+											features::account::vars.prestige = 0;
 									}
 
 									if (CURGAME == BO2)
 									{
 										features::account::vars.prestige++;
 										if (features::account::vars.prestige > 15)
-											features::account::vars.prestige = 15;
+											features::account::vars.prestige = 0;
 									}
 								}
 								break;
@@ -169,7 +311,7 @@ namespace game
 
 							case 1:
 							{
-								menuvars.current_submenu = sm_ingame;
+								menuvars.current_submenu = sm_trickshotting;
 								controls.currentoption = 0;
 
 								break;
@@ -177,13 +319,29 @@ namespace game
 
 							case 2:
 							{
-								menuvars.current_submenu = sm_account;
+								menuvars.current_submenu = sm_customisation;
 								controls.currentoption = 0;
 
 								break;
 							}
 
 							case 3:
+							{
+								menuvars.current_submenu = sm_players;
+								controls.currentoption = 0;
+
+								break;
+							}
+
+							case 4:
+							{
+								menuvars.current_submenu = sm_account;
+								controls.currentoption = 0;
+
+								break;
+							}
+
+							case 5:
 							{
 								menuvars.current_submenu = sm_misc;
 								controls.currentoption = 0;
@@ -212,7 +370,7 @@ namespace game
 
 									if (CURGAME == BO2)
 									{
-										Cbuf_AddText(0, "party_connectToOthers 0;partyMigrate_disabled 1;party_mergingEnabled 0;");
+										Cbuf_AddText(0, _("party_connectToOthers 0;partyMigrate_disabled 1;party_mergingEnabled 0;"));
 									}
 								}
 								else
@@ -225,7 +383,7 @@ namespace game
 
 									if (CURGAME == BO2)
 									{
-										Cbuf_AddText(0, "party_connectToOthers 1;partyMigrate_disabled 0;party_mergingEnabled 1;");
+										Cbuf_AddText(0, _("party_connectToOthers 1;partyMigrate_disabled 0;party_mergingEnabled 1;"));
 									}
 								}
 								break;
@@ -240,7 +398,7 @@ namespace game
 								{
 									if (!helpers::isingame())
 									{
-										Menu_OpenByName(Menu_OpenName(0), "settings_map");
+										Menu_OpenByName(Menu_OpenName(0), _("settings_map"));
 										menu::handler::controls.isopen = false;
 									}
 								}
@@ -249,7 +407,7 @@ namespace game
 								{
 									if (!helpers::isingame())
 									{
-										Cbuf_AddText(0, "set party_minplayers 1; xpartygo");
+										Cbuf_AddText(0, _("set party_minplayers 1; xpartygo"));
 									}
 								}
 
@@ -262,7 +420,7 @@ namespace game
 								{
 									if (!helpers::isingame())
 									{
-										Menu_OpenByName(Menu_OpenName(0), "settings_gametype");
+										Menu_OpenByName(Menu_OpenName(0), _("settings_gametype"));
 										menu::handler::controls.isopen = false;
 									}
 								}
@@ -272,9 +430,9 @@ namespace game
 									// doesn't work really
 									switch (features::pregame::vars.gamemode)
 									{
-										case 0: Cbuf_AddText(0, "set ui_gametype sd;"); break;
-										case 1: Cbuf_AddText(0, "set ui_gametype dm;"); break;
-										case 2: Cbuf_AddText(0, "set ui_gametype tdm;"); break;
+										case 0: Cbuf_AddText(0, _("set ui_gametype sd;")); break;
+										case 1: Cbuf_AddText(0, _("set ui_gametype dm;")); break;
+										case 2: Cbuf_AddText(0, _("set ui_gametype tdm;")); break;
 										default: break;
 									}
 
@@ -295,7 +453,7 @@ namespace game
 						break;
 					}
 
-					case sm_ingame:
+					case sm_trickshotting:
 					{
 						switch (controls.currentoption)
 						{
@@ -409,6 +567,31 @@ namespace game
 						break;
 					}
 
+					case sm_customisation:
+					{
+						switch (controls.currentoption)
+						{
+							case 0: 
+							{
+								features::customisation::vars.custom_hud_color = !features::customisation::vars.custom_hud_color;
+								break;
+							}
+
+							case 4:
+							{
+								features::customisation::vars.custom_camo_color = !features::customisation::vars.custom_camo_color;
+								break;
+							}
+						}
+						break;
+					}
+
+					case sm_players:
+					{
+						game::features::ingame::players::kick(controls.currentoption);
+						break;
+					}
+
 					case sm_account:
 					{
 						switch (controls.currentoption)
@@ -504,13 +687,21 @@ namespace game
 						else if (input.Gamepad.wButtons == (XINPUT_GAMEPAD_DPAD_RIGHT))
 						{
 							doslidercrement(false);
-							controls.wait = 0;
+
+							if (handler::menuvars.current_submenu == sm_customisation)
+								controls.wait = 6;
+							else
+								controls.wait = 0;
 						}
 
 						else if (input.Gamepad.wButtons == (XINPUT_GAMEPAD_DPAD_LEFT))
 						{
 							doslidercrement(true);
-							controls.wait = 0;
+
+							if (handler::menuvars.current_submenu == sm_customisation)
+								controls.wait = 6;
+							else
+								controls.wait = 0;
 						}
 					}
 				}
@@ -518,7 +709,7 @@ namespace game
 
 			int calcmenuheight()
 			{
-				return (controls.lastoption * 16) + 32;
+				return (controls.lastoption * 18) + 30;
 			}
 
 			struct bound
@@ -564,7 +755,7 @@ namespace game
 					titlebackgroundposy = backgroundposy;
 
 					titleposx = titlebackgroundposx + 24;
-					titleposy = titlebackgroundposy + 17;
+					titleposy = titlebackgroundposy + 19;
 
 					optionposx = backgroundposx + 4;
 					optionposy = backgroundposy + titlebackgroundsizey + 17;
@@ -582,9 +773,9 @@ namespace game
 				void addoption(int i, const char* text)
 				{
 					if (i == handler::controls.currentoption)
-						render::shader(bounds.optionposx - 4, bounds.optionposy + (i * 16) - 14, bounds.backgroundsizex, 14, render::colors::accent, "white");
+						render::shader(bounds.optionposx - 4, bounds.optionposy + (i * 18) - 16, bounds.backgroundsizex, 16, render::colors::accent, "white");
 
-					render::text(text, bounds.optionposx, bounds.optionposy + (i * 16), CURGAME == MW2 ? hudSmallfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.6 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::def);
+					render::text(text, bounds.optionposx, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::def);
 
 					handler::controls.lastoption = i;
 				}
@@ -592,14 +783,14 @@ namespace game
 				void addsubtab(int i, const char* text)
 				{
 					addoption(i, text);
-					render::shader(bounds.optionposx + bounds.backgroundsizex - 8-8, bounds.optionposy + (i * 16) - 13, 14, 12, render::colors::white, "ui_arrow_right");
+					render::shader(bounds.optionposx + bounds.backgroundsizex - 8-8, bounds.optionposy + (i * 18) - 13, 14, 12, render::colors::white, "ui_arrow_right");
 					handler::controls.lastoption = i;
 				}
 
 				void addslider(int i, const char* text, int var, int min, int max)
 				{
 					addoption(i, text);
-					render::text(va("%i", var), bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 16), CURGAME == MW2 ? hudSmallfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.6 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
+					render::text(va("%i", var), bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
 					handler::controls.lastoption = i;
 				}
 
@@ -607,14 +798,22 @@ namespace game
 				{
 					addoption(i, text);
 					const char* selecteditem = items[selected];
-					render::text(selecteditem, bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 16), CURGAME == MW2 ? hudSmallfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.6 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
+					render::text(selecteditem, bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
 					handler::controls.lastoption = i;
 				}
 
 				void addcheckbox(int i, const char* text, bool var)
 				{
 					addoption(i, text);
-					render::text(va("%s", var ? "on" : "off"), bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 16), CURGAME == MW2 ? hudSmallfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.6 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
+
+					render::shader(bounds.optionposx + bounds.backgroundsizex - 12 - 8, bounds.optionposy + (i * 18) - 14, 12, 12, render::colors::blackhalfalpha, "white");
+
+					if (var)
+					{
+						render::shader(bounds.optionposx + bounds.backgroundsizex - 11 - 8, bounds.optionposy + (i * 18) - 13, 10, 10, render::colors::accent, "white");
+					}
+
+					//render::text(va("%s", var ? "on" : "off"), bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
 					handler::controls.lastoption = i;
 				}
 			}
@@ -643,15 +842,15 @@ namespace game
 			{
 				case MW2:
 				{
-					title = "desire mw2";
-					font = hudSmallfont;
+					title = _("desire mw2");
+					font = normalfont;
 					fontscale = 0.6;
 					break;
 				}
 
 				case BO2:
 				{
-					title = "desire bo2";
+					title = _("desire bo2");
 					font = FONT_SMALLBO2;
 					fontscale = 0.6;
 					break;
@@ -664,9 +863,8 @@ namespace game
 			{
 				handler::bounds.updatebounds();
 
-				//render::shader(handler::bounds.backgroundposx - 1, handler::bounds.backgroundposy - 1, handler::bounds.backgroundsizex + 2, handler::bounds.backgroundsizey + 2, render::colors::accent, "white");
-
-				render::shader(handler::bounds.backgroundposx, handler::bounds.backgroundposy, handler::bounds.backgroundsizex, handler::bounds.backgroundsizey, render::colors::black, "white");
+				render::shader(handler::bounds.backgroundposx - 1, handler::bounds.backgroundposy - 1, handler::bounds.backgroundsizex + 2, handler::bounds.backgroundsizey + 2, render::colors::accent, "white");
+				render::shader(handler::bounds.backgroundposx, handler::bounds.backgroundposy, handler::bounds.backgroundsizex, handler::bounds.backgroundsizey, render::colors::grey, "white");
 				render::shader(handler::bounds.titlebackgroundposx, handler::bounds.titlebackgroundposy, handler::bounds.titlebackgroundsizex, handler::bounds.titlebackgroundsizey, render::colors::accent, "white");
 				render::text(title.c_str(), handler::bounds.backgroundposx + handler::bounds.backgroundsizex / 2, handler::bounds.titleposy, font, fontscale, render::colors::white, false, render_alignment::center);
 
@@ -678,39 +876,79 @@ namespace game
 						{
 							case handler::sm_main:
 							{
-								handler::widgets::addsubtab(0, "matchmaking");
-								handler::widgets::addsubtab(1, "ingame");
-								handler::widgets::addsubtab(2, "account");
-								handler::widgets::addsubtab(3, "misc");
+								handler::widgets::addsubtab(0, _("matchmaking"));
+								handler::widgets::addsubtab(1, _("trickshotting"));
+								handler::widgets::addsubtab(2, _("customisation"));
+								handler::widgets::addsubtab(3, _("players"));
+								handler::widgets::addsubtab(4, _("account"));
+								handler::widgets::addsubtab(5, _("misc"));
 
 								break;
 							}
 
 							case handler::sm_matchmaking:
 							{
-								handler::widgets::addcheckbox(0, "forcehost", features::pregame::vars.forcehost);
-								handler::widgets::addslider(1, "min players to start", features::pregame::vars.minplayerstostart, 1, 12);
-								handler::widgets::addslider(2, "max players in lobby", features::pregame::vars.maxplayersinlobby, 1, 18);
-								handler::widgets::addoption(3, "change map");
-								handler::widgets::addoption(4, "change mode");
-								handler::widgets::addcheckbox(5, "disable dlc", features::pregame::vars.disabledlc);
+								handler::widgets::addcheckbox(0, _("forcehost"), features::pregame::vars.forcehost);
+								handler::widgets::addslider(1, _("min players to start"), features::pregame::vars.minplayerstostart, 1, 12);
+								handler::widgets::addslider(2, _("max players in lobby"), features::pregame::vars.maxplayersinlobby, 1, 18);
+								handler::widgets::addoption(3, _("change map"));
+								handler::widgets::addoption(4, _("change mode"));
+								handler::widgets::addcheckbox(5, _("disable dlc"), features::pregame::vars.disabledlc);
 
 								break;
 							}
 
-							case handler::sm_ingame:
+							case handler::sm_trickshotting:
 							{
-								handler::widgets::addcheckbox(0, "depatch bounces", features::ingame::vars.depatch_bounces);
-								handler::widgets::addcheckbox(1, "easy eles", features::ingame::vars.easy_eles);
-								handler::widgets::addcheckbox(2, "prone anywhere", features::ingame::vars.prone_anywhere);
-								handler::widgets::addcheckbox(3, "sweeping uav", features::ingame::vars.sweeping_uav);
-								handler::widgets::addcheckbox(4, "wallbang everything", features::ingame::vars.wallbang_everything);
-								handler::widgets::addcheckbox(5, "infinite bullet dist", features::ingame::vars.infinite_bullet_dist);
-								handler::widgets::addcheckbox(6, "miniscule health", features::ingame::vars.miniscule_health);
-								handler::widgets::addcheckbox(7, "no fall damage", features::ingame::vars.no_fall_damage);
-								//handler::widgets::addcheckbox(8, "soft lands", features::ingame::vars.soft_lands);
-								handler::widgets::addcheckbox(8, "prone spins", features::ingame::vars.prone_spins);
-								handler::widgets::addcheckbox(9, "ladder spins", features::ingame::vars.ladder_spins);
+								handler::widgets::addcheckbox(0, _("depatch bounces"), features::ingame::vars.depatch_bounces);
+								handler::widgets::addcheckbox(1, _("easy eles"), features::ingame::vars.easy_eles);
+								handler::widgets::addcheckbox(2, _("prone anywhere"), features::ingame::vars.prone_anywhere);
+								handler::widgets::addcheckbox(3, _("sweeping uav"), features::ingame::vars.sweeping_uav);
+								handler::widgets::addcheckbox(4, _("wallbang everything"), features::ingame::vars.wallbang_everything);
+								handler::widgets::addcheckbox(5, _("infinite bullet dist"), features::ingame::vars.infinite_bullet_dist);
+								handler::widgets::addcheckbox(6, _("miniscule health"), features::ingame::vars.miniscule_health);
+								handler::widgets::addcheckbox(7, _("no fall damage"), features::ingame::vars.no_fall_damage);
+								//handler::widgets::addcheckbox(8, _("soft lands"), features::ingame::vars.soft_lands);
+								handler::widgets::addcheckbox(8, _("prone spins"), features::ingame::vars.prone_spins);
+								handler::widgets::addcheckbox(9, _("ladder spins"), features::ingame::vars.ladder_spins);
+
+								break;
+							}
+
+							case handler::sm_customisation:
+							{
+								handler::widgets::addcheckbox(0, _("custom hud color"), features::customisation::vars.custom_hud_color);
+								handler::widgets::addslider(1, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255);
+								handler::widgets::addslider(2, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255);
+								handler::widgets::addslider(3, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255);
+								handler::widgets::addcheckbox(4, _("custom camo color"), features::customisation::vars.custom_camo_color);
+								handler::widgets::addslider(5, _("camo r"), features::customisation::vars.camocolor_r, 0, 255);
+								handler::widgets::addslider(6, _("camo g"), features::customisation::vars.camocolor_g, 0, 255);
+								handler::widgets::addslider(7, _("camo b"), features::customisation::vars.camocolor_b, 0, 255);
+								break;
+							}
+
+							case handler::sm_players:
+							{
+								if (helpers::isingame())
+								{
+									if (cgs)
+									{
+										for (int32_t i = 0; i < cgs->maxclients; i++)
+										{
+											if (!g_entities[i].client)
+												continue;
+
+											gentity_s player = g_entities[i];
+
+											handler::widgets::addoption((int)i, player.client->sess.cs.name);
+										}
+									}
+								}
+								else
+								{
+									handler::widgets::addoption(0, _("go in-game to see players"));
+								}
 
 								break;
 							}
@@ -718,16 +956,16 @@ namespace game
 							case handler::sm_account:
 							{
 								//handler::widgets::addoption(0, "unlockall");
-								handler::widgets::addslider(0, "prestige", features::account::vars.prestige, 0, 15);
-								handler::widgets::addoption(1, "change gamertag");
-								handler::widgets::addoption(2, "reset gamertag");
+								handler::widgets::addslider(0, _("prestige"), features::account::vars.prestige, 0, 15);
+								handler::widgets::addoption(1, _("change gamertag"));
+								handler::widgets::addoption(2, _("reset gamertag"));
 
 								break;
 							}
 
 							case handler::sm_misc:
 							{
-								handler::widgets::addcheckbox(0, "controls", handler::menuvars.watermark);
+								handler::widgets::addcheckbox(0, _("controls"), handler::menuvars.watermark);
 								break;
 							}
 
@@ -743,54 +981,64 @@ namespace game
 						{
 							case handler::sm_main:
 							{
-								handler::widgets::addsubtab(0, "matchmaking");
-								handler::widgets::addsubtab(1, "ingame");
-								handler::widgets::addsubtab(2, "account");
-								handler::widgets::addsubtab(3, "misc");
+								handler::widgets::addsubtab(0, _("matchmaking"));
+								handler::widgets::addsubtab(1, _("trickshotting"));
+								handler::widgets::addsubtab(2, _("account"));
+								handler::widgets::addsubtab(3, _("misc"));
 
 								break;
 							}
 
 							case handler::sm_matchmaking:
 							{
-								handler::widgets::addcheckbox(0, "forcehost", features::pregame::vars.forcehost);
-								handler::widgets::addslider(1, "min players to start", features::pregame::vars.minplayerstostart, 1, 12);
-								handler::widgets::addslider(2, "max players in lobby", features::pregame::vars.maxplayersinlobby, 1, 18);
-								handler::widgets::addoption(3, "force start game");
+								handler::widgets::addcheckbox(0, _("forcehost"), features::pregame::vars.forcehost);
+								handler::widgets::addslider(1, _("min players to start"), features::pregame::vars.minplayerstostart, 1, 12);
+								handler::widgets::addslider(2, _("max players in lobby"), features::pregame::vars.maxplayersinlobby, 1, 18);
+								handler::widgets::addoption(3, _("force start game"));
 
 								//const char* modes[] = { "snd", "ffa", "tdm" };
 								//handler::widgets::addcombo(4, "change mode", modes, features::pregame::vars.gamemode);
 
-								handler::widgets::addcheckbox(4, "disable dlc", features::pregame::vars.disabledlc);
+								handler::widgets::addcheckbox(4, _("disable dlc"), features::pregame::vars.disabledlc);
 
 								break;
 							}
 
-							case handler::sm_ingame:
+							case handler::sm_trickshotting:
 							{
-								handler::widgets::addcheckbox(0, "depatch bounces", features::ingame::vars.depatch_bounces);
-								handler::widgets::addcheckbox(1, "depatch eles", features::ingame::vars.easy_eles);
-								handler::widgets::addcheckbox(2, "depatch knife lunges", features::ingame::vars.knife_lunges);
-								handler::widgets::addcheckbox(3, "one shot snipers", features::ingame::vars.miniscule_health);
-								handler::widgets::addcheckbox(4, "prone spins", features::ingame::vars.prone_spins);
-								handler::widgets::addcheckbox(5, "ladder spins", features::ingame::vars.ladder_spins);
+								handler::widgets::addcheckbox(0, _("depatch bounces"), features::ingame::vars.depatch_bounces);
+								handler::widgets::addcheckbox(1, _("depatch eles"), features::ingame::vars.easy_eles);
+								handler::widgets::addcheckbox(2, _("depatch knife lunges"), features::ingame::vars.knife_lunges);
+								handler::widgets::addcheckbox(3, _("one shot snipers"), features::ingame::vars.miniscule_health);
+								handler::widgets::addcheckbox(4, _("prone spins"), features::ingame::vars.prone_spins);
+								handler::widgets::addcheckbox(5, _("ladder spins"), features::ingame::vars.ladder_spins);
 
+								break;
+							}
+
+							case handler::sm_customisation:
+							{
+								break;
+							}
+
+							case handler::sm_players:
+							{
 								break;
 							}
 
 							case handler::sm_account:
 							{
 								//handler::widgets::addoption(0, "unlock all");
-								handler::widgets::addslider(0, "prestige", features::account::vars.prestige, 0, 15);
-								handler::widgets::addoption(1, "change gamertag");
-								handler::widgets::addoption(2, "reset gamertag");
+								handler::widgets::addslider(0, _("prestige"), features::account::vars.prestige, 0, 15);
+								handler::widgets::addoption(1, _("change gamertag"));
+								handler::widgets::addoption(2, _("reset gamertag"));
 
 								break;
 							}
 
 							case handler::sm_misc:
 							{
-								handler::widgets::addcheckbox(0, "controls", handler::menuvars.watermark);
+								handler::widgets::addcheckbox(0, _("controls"), handler::menuvars.watermark);
 								break;
 							}
 
@@ -812,7 +1060,7 @@ namespace game
 					{
 						if (handler::controls.isopen)
 						{
-							render::text(fmt("%s close | %s select | %s up %s down | %s decrease %s increase",
+							render::text(fmt(_("%s close | %s select | %s up %s down | %s decrease %s increase"),
 								render::buttons::rs, render::buttons::x,
 								render::buttons::dpadup, render::buttons::dpaddown,
 								render::buttons::dpadright, render::buttons::dpadleft),
@@ -825,7 +1073,7 @@ namespace game
 						}
 						else
 						{
-							render::text(fmt("%s and %s for desire",
+							render::text(fmt(_("%s and %s for desire"),
 								render::buttons::lt, render::buttons::dpadup),
 								10,
 								uiContext->screenHeight - 10,
@@ -841,7 +1089,7 @@ namespace game
 					{
 						if (handler::controls.isopen)
 						{
-							render::text("^BXENONButtonStickAnimatedR^ close | ^BXENONButtonX^ select | ^BXENONButtondpadU^ up ^BXENONButtondpadD^ down | ^BXENONButtondpadL^ decrease ^BXENONButtondpadR^ increase",
+							render::text(_("^BXENONButtonStickAnimatedR^ close | ^BXENONButtonX^ select | ^BXENONButtondpadU^ up ^BXENONButtondpadD^ down | ^BXENONButtondpadL^ decrease ^BXENONButtondpadR^ increase"),
 								10,
 								uiContextBO2->height - 10,
 								font, fontscale,
@@ -851,7 +1099,7 @@ namespace game
 						}
 						else
 						{
-							render::text("^BXENONButtontrigL^ and ^BXENONButtondpadU^ for desire",
+							render::text(_("^BXENONButtontrigL^ and ^BXENONButtondpadU^ for desire"),
 								10,
 								uiContextBO2->height - 10,
 								font, fontscale,

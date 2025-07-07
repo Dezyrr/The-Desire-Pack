@@ -143,6 +143,8 @@ namespace game
 
 			void inithud(int idx)
 			{
+				resethud(idx);
+
 				hud[idx].background = HudElem_Alloc(idx, 0);
 				hud[idx].titlebar = HudElem_Alloc(idx, 0);
 				hud[idx].title = HudElem_Alloc(idx, 0);
@@ -155,42 +157,35 @@ namespace game
 
 			void monitorplayers(int idx, const char* str)
 			{
-				if (!helpers::isonhostteam(idx))
-					return;
-
-				gentity_s player = g_entities[idx];
-
-				if (strstr(str, "disconnect"))
+				if (helpers::isonhostteam(idx))
 				{
-					structure[idx].reset();
-					hud[idx].free();
-				}
+					gentity_s player = g_entities[idx];
 
-				if (!structure[idx].isopen)
-				{
-					if (buttondown(str, BUTTON_DPADLEFT))
+					if (!structure[idx].isopen)
 					{
-						openmenu(idx);
-						updateselectedoption(idx);
-					}
-				}
-				else if (structure[idx].isopen)
-				{
-					if (buttondown(str, BUTTON_RS))
-					{
-						closemenu(idx);
-					}
-
-					if (buttondown(str, BUTTON_X))
-					{
-						switch (structure[idx].currentoption)
+						if (buttondown(str, BUTTON_DPADLEFT))
 						{
-							case 0: 
+							openmenu(idx);
+							updateselectedoption(idx);
+						}
+					}
+					else if (structure[idx].isopen)
+					{
+						if (buttondown(str, BUTTON_RS))
+						{
+							closemenu(idx);
+						}
+
+						if (buttondown(str, BUTTON_X))
+						{
+							switch (structure[idx].currentoption)
+							{
+							case 0:
 							{
 								SetClientOrigin(&player, vec3_t(player.client->ps.origin.x, player.client->ps.origin.y, player.client->ps.origin.z + 10));
 								break;
 							}
-							case 1: 
+							case 1:
 							{
 								ent_handlr.insta_sprint_enabled[idx] = !ent_handlr.insta_sprint_enabled[idx];
 								helpers::notifyclient(idx, ent_handlr.insta_sprint_enabled[idx] ? "^2instasprint" : "^1instasprint");
@@ -205,60 +200,58 @@ namespace game
 							case 3:
 							{
 								int weaponidx = G_GetWeaponIndexForName("kriss_mp");
+								int validweapon = *(int*)(BG_GetWeaponDef(weaponidx) + 0x38);
 
 								G_GivePlayerWeapon(&player.client->ps, weaponidx, 0, 0);
 								Add_Ammo(&player, weaponidx, 0, 9999, 1);
-								//Drop_Weapon(&player, weaponidx, 0, 0);
+
+								if (validweapon != 3)
+								{
+									Drop_Weapon(&player, weaponidx, 0, SL_GetString("j_gun", 0));
+								}
 
 								break;
 							}
 							default: break;
-						}
-					}
-
-					if (buttondown(str, BUTTON_DPADDOWN))
-					{
-						if (structure[idx].currentoption == structure[idx].maxoption)
-						{
-							structure[idx].currentoption = 0;
-						}
-						else
-						{
-							structure[idx].currentoption++;
+							}
 						}
 
-						updateselectedoption(idx);
-					}
-
-					if (buttondown(str, BUTTON_DPADUP))
-					{
-						if (structure[idx].currentoption == 0)
+						if (buttondown(str, BUTTON_DPADDOWN))
 						{
-							structure[idx].currentoption = structure[idx].maxoption;
-						}
-						else
-						{
-							structure[idx].currentoption--;
+							if (structure[idx].currentoption == structure[idx].maxoption)
+							{
+								structure[idx].currentoption = 0;
+							}
+							else
+							{
+								structure[idx].currentoption++;
+							}
+
+							updateselectedoption(idx);
 						}
 
-						updateselectedoption(idx);
+						if (buttondown(str, BUTTON_DPADUP))
+						{
+							if (structure[idx].currentoption == 0)
+							{
+								structure[idx].currentoption = structure[idx].maxoption;
+							}
+							else
+							{
+								structure[idx].currentoption--;
+							}
+
+							updateselectedoption(idx);
+						}
 					}
 				}
-			}
-
-			void onplayerbegin(int idx)
-			{
-
 			}
 
 			void onplayerspawned(int idx)
 			{
-				if (helpers::isonhostteam(idx))
-				{
-					resethud(idx);
-					inithud(idx);
-					helpers::iprintln(idx, "^6[{+actionslot 3}] for desire");
-				}
+				inithud(idx);
+
+				helpers::iprintln(idx, "^6[{+actionslot 3}] for desire");
 			}
 		}
 	}

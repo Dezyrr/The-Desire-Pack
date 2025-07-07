@@ -245,18 +245,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="account.h" />
+    <ClInclude Include="customisation.h" />
     <ClInclude Include="functions.h" />
     <ClInclude Include="gsc.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="ingame.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="players.h" />
     <ClInclude Include="pregame.h" />
     <ClInclude Include="render.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="teammenu.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="vector.h" />
+    <ClInclude Include="xorstr.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

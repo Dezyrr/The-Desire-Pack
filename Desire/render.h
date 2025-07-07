@@ -74,6 +74,16 @@ namespace game
 			float black[4] = { 0, 0, 0, 1 };
 			float blacknoalpha[4] = { 0, 0, 0, 0 };
 			float blackhalfalpha[4] = { 0, 0, 0, 0.5 };
+
+			float grey[4] = { 0.12, 0.12, 0.12, 1 };
+			float greynoalpha[4] = { 0.1, 0.1, 0.1, 0};
+			float greyhalfalpha[4] = { 0.1, 0.1, 0.1, 0.5 };
+
+			float* fromrgb(int r, int g, int b, int a)
+			{
+				float temp[4] = { r / 255.f, g / 255.f, b / 255.f, a / 255.f };
+				return temp;
+			}
 		}
 
 		int textwidth(const char* text, const char* font)

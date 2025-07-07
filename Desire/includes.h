@@ -44,6 +44,7 @@ enum TitleIDs
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
+#include "xorstr.h"
 #include "utilities.h"
 #include "vector.h"
 

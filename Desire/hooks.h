@@ -79,13 +79,91 @@ namespace game
 				return input;
 			}
 
-			return MinHook["XamInputGetState"].Stub(r3, r4, r5);
+			return MinHook[("XamInputGetState")].Stub(r3, r4, r5);
+		}
+
+		bool ismoduleloaded(DWORD checksum)
+		{
+			PLDR_DATA_TABLE_ENTRY entry = (PLDR_DATA_TABLE_ENTRY)XexExecutableModuleHandle;
+			PLDR_DATA_TABLE_ENTRY firstentry = entry;
+			int counted = 0;
+
+			do
+			{
+				if (entry->CheckSum == checksum)
+					return true;
+
+				entry = (PLDR_DATA_TABLE_ENTRY)entry->InLoadOrderLinks.Flink;
+
+				if (++counted > 64)
+					break;
+
+			} while (entry != firstentry);
+
+			return false;
+		}
+
+		void dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025()
+		{
+			const DWORD checksums[] =
+			{
+				0x66156, // jimbo
+				0x44969, // matrix
+				0x2E8E4, // medaka
+				0x447DB  // infinityloader
+			};
+
+			for (int i = 0; i < 4; i++)
+			{
+				if (ismoduleloaded(checksums[i]))
+				{
+					const wchar_t* message = L"";
+
+					if (ismoduleloaded(checksums[0]))
+						message = __w(L"So we're dual loading an azza with unsetup...?");
+
+					if (ismoduleloaded(checksums[1]))
+						message = __w(L"Dude tryna run matrix hahahahahahah faggot");
+
+					if (ismoduleloaded(checksums[2]))
+						message = __w(L"I have no words for this one.. medaka.. in the big 25..");
+
+					if (ismoduleloaded(checksums[3]))
+						message = __w(L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...");
+
+					LPCWSTR buttons[1] = { __w(L"FUCK, NOW I CAN'T FAKE SHOTS") };
+					MESSAGEBOX_RESULT result;
+
+					XOVERLAPPED ol;
+					ZeroMemory(&ol, sizeof(ol));
+
+					XShowMessageBoxUI(
+						0,
+						__w(L"Desire's S&D (Dual Loading Detected)"),
+						message,
+						1,
+						buttons,
+						0,
+						XMB_ERRORICON,
+						&result,
+						&ol
+					);
+
+					while (!XHasOverlappedIoCompleted(&ol))
+					{
+						Sleep(25);
+					}
+
+					//XLaunchNewImage("dash.xex", 0);
+
+					return;
+				}
+			}
 		}
 
 		void R_EndFrame()
 		{
-			if (moduleunloading())
-				MinHook["R_EndFrame"].Stub();
+			ExCreateThread(0, 0, 0, 0, (LPTHREAD_START_ROUTINE)dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025, 0, 0);
 
 			menu::init();
 
@@ -98,80 +176,104 @@ namespace game
 				features::pregame::handle_pre_game_features();
 			}
 
-			MinHook["R_EndFrame"].Stub();
+			MinHook[("R_EndFrame")].Stub();
 		}
 
 		void UI_DrawText(const char* r3, int r4, void* r5, float f1, float f2, float f3, float f4, float f5, const float* color, int something)
 		{
-			if (moduleunloading())
-				MinHook["UI_DrawText"].Stub(r3, r4, r5, f1, f2, f3, f4, f5, color, something);
-
 			auto txt = const_cast<char*>(r3);
 
-			if (!strcmp(txt, "Searching"))
-				r3 = "Searching For Random";
+			if (!strcmp(txt, _("Searching")))
+				r3 = _("Searching For Random");
 
-			if (!strcmp(txt, "Searching."))
-				r3 = "Searching For Random.";
+			if (!strcmp(txt, _("Searching.")))
+				r3 = _("Searching For Random.");
 
-			if (!strcmp(txt, "Searching.."))
-				r3 = "Searching For Random..";
+			if (!strcmp(txt, _("Searching..")))
+				r3 = _("Searching For Random..");
 
-			if (!strcmp(txt, "Searching..."))
-				r3 = "Searching For Random...";
+			if (!strcmp(txt, _("Searching...")))
+				r3 = _("Searching For Random...");
 
-			if (!strcmp(txt, "Matched Player"))
-				r3 = "Found Random";
+			if (!strcmp(txt, _("Matched Player")))
+				r3 = _("Found Random");
 
-			if (!strcmp(txt, "1.4.163842"))
-				r3 = va("^8bastard");
+			if (!strcmp(txt, _("1.4.163842")))
+				r3 = va(_("^8bastard"));
 
-			MinHook["UI_DrawText"].Stub(r3, r4, r5, f1, f2, f3, f4, f5, color, something);
+			MinHook[("UI_DrawText")].Stub(r3, r4, r5, f1, f2, f3, f4, f5, color, something);
 		}
 
 		void AddCmdDrawStretchPic(float f1, float f2, float f3, float f4, float f5, float f6, float f7, float f8, const float* color, Material* material)
 		{
-			if (moduleunloading())
-				MinHook["AddCmdDrawStretchPic"].Stub(f1, f2, f3, f4, f5, f6, f7, f8, color, material);
-
 			if (CURGAME == MW2)
 			{
-				if (!strcmp(material->name, "mw2_main_cloud_overlay") ||
-					!strcmp(material->name, "mw2_main_cloud_overlay_write_dest_alpha") ||
-					!strcmp(material->name, "mw2_main_cloud_overlay_dest_alpha_masked") ||
-					!strcmp(material->name, "mw2_popup_bg_fogscroll") ||
-					!strcmp(material->name, "mockup_popup_bg_stencilfill") ||
-					!strcmp(material->name, "mw2_popup_bg_fogstencil"))
+				if (!strcmp(material->name, _("mw2_main_cloud_overlay")) ||
+					!strcmp(material->name, _("mw2_main_cloud_overlay_write_dest_alpha")) ||
+					!strcmp(material->name, _("mw2_main_cloud_overlay_dest_alpha_masked")) ||
+					!strcmp(material->name, _("mw2_popup_bg_fogscroll")) ||
+					!strcmp(material->name, _("mockup_popup_bg_stencilfill")) ||
+					!strcmp(material->name, _("mw2_popup_bg_fogstencil")))
 				{
 					color = render::colors::accenthalfalpha;
 				}
 
-				if (!strcmp(material->name, "mockup_bg_glow"))
+				if (!strcmp(material->name, _("mockup_bg_glow")))
 				{
 					color = render::colors::blacknoalpha;
 				}
 
 				if (!helpers::isingame())
 				{
-					if (!memcmp(material, helpers::getmaterial("mw2_main_background"), sizeof(material)))
+					if (!memcmp(material, helpers::getmaterial(_("mw2_main_background")), sizeof(material)))
 					{
-						material = helpers::getmaterial("mw2_main_mp_image");
-						helpers::injectimage(0xB9567000, "Hdd:\\Desire\\background.bin");
+						material = helpers::getmaterial(_("mw2_main_mp_image"));
+						helpers::injectimage(0xB9567000, _("Hdd:\\Desire\\background.bin"));
+					}
+				}
+
+				if (helpers::isingame())
+				{
+					if (features::customisation::vars.custom_hud_color)
+					{
+						if (strstr(material->name, _("minimap")) ||
+							strstr(material->name, _("radar")) ||
+							strstr(material->name, _("compass")) ||
+							strstr(material->name, _("ammo")) ||
+							strstr(material->name, _("sweep")) ||
+							strstr(material->name, _("hud")))
+						{
+							color = render::colors::fromrgb(
+								features::customisation::vars.hudcolor_r,
+								features::customisation::vars.hudcolor_g,
+								features::customisation::vars.hudcolor_b,
+								255
+							);
+						}
 					}
 				}
 			}
 
-			MinHook["AddCmdDrawStretchPic"].Stub(f1, f2, f3, f4, f5, f6, f7, f8, color, material);
+			MinHook[("AddCmdDrawStretchPic")].Stub(f1, f2, f3, f4, f5, f6, f7, f8, color, material);
 		}
 
 		int LUIDrawRectangle(int r3, float x, float y, float w, float h, float r, float g, float b, float a, Material* material, int f10)
 		{
-			if (moduleunloading())
-				return MinHook["LUIDrawRectangle"].Stub(r3, x, y, w, h, r, g, b, a, material, f10);
+			if (!strcmp(material->name, _("ui_globe")) ||
+				!strcmp(material->name, _("menu_mp_title_screen")) ||
+				!strcmp(material->name, _("menu_mp_title_screen_mp")))
+			{
+				r = 0;
+				g = 0;
+				b = 0;
+				a = 0;
+			}
 
-			if (!strcmp(material->name, "menu_mp_soldiers") ||
-				!strcmp(material->name, "ui_globe") ||
-				!strcmp(material->name, "ui_smoke"))
+			if (!strcmp(material->name, _("lui_bkg")) ||
+				!strcmp(material->name, _("menu_mp_background_main2")) ||
+				!strcmp(material->name, _("menu_mp_soldiers")) ||
+				!strcmp(material->name, _("ui_smoke")) ||
+				!strcmp(material->name, _("lui_random_map_vote")))
 			{
 				r = render::colors::accent[0];
 				g = render::colors::accent[1];
@@ -179,14 +281,24 @@ namespace game
 				a = render::colors::accent[3];
 			}
 
-			return MinHook["LUIDrawRectangle"].Stub(r3, x, y, w, h, r, g, b, a, material, f10);
+			if (!helpers::isingame())
+			{
+				// set bo2 background to bo1 cuz it looks cool
+				if (!strcmp(material->name, _("lui_bkg")) || !strcmp(material->name, _("menu_mp_soldiers")))
+				{
+					material = helpers::getmaterial(_("menu_mp_background_main2"));
+				}
+
+				// this will come, just need to find the address for either menu_mp_soldiers or menu_mp_background_main2
+				// last known menu_mp_background_main2 offset -> 0x831B4710 (found at https://github.com/MrReekoFTWxD/BO2-Material) 
+				//helpers::injectimage(0x831B4710, _("Hdd:\\Desire\\background.bin"));
+			}
+
+			return MinHook[("LUIDrawRectangle")].Stub(r3, x, y, w, h, r, g, b, a, material, f10);
 		}
 
 		void PM_Weapon(pmove_t* a1, pml_t* a2)
 		{
-			if (moduleunloading())
-				MinHook["PM_Weapon"].Stub(a1, a2);
-
 			int clientidx = a1->ps->clientNum;
 				
 			if (helpers::isonhostteam(clientidx))
@@ -202,9 +314,20 @@ namespace game
 
 				if (ent_handlr.always_zoomload_enabled[clientidx])
 				{
-					if (a1->ps->weapState->weaponState == WEAPON_RELOADING)
+					if (a1->ps->weapState->weaponState == WEAPON_RELOADING 
+						&& a1->ps->weapState->weapAnim != WEAP_RELOAD_EMPTY)
 					{
 						a1->ps->weapState->weaponState = WEAPON_READY;
+					}
+				}
+
+				if (ent_handlr.insta_shoots_enabled[clientidx])
+				{
+					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
+					{
+						a1->ps->weapState->weaponTime = 0;
+						a1->ps->weapState->weaponDelay = 0;
+						a1->ps->weapState->weaponRestrictKickTime = 1;
 					}
 				}
 			}
@@ -214,48 +337,46 @@ namespace game
 			//	a1->ps->weapState->weaponState = WEAPON_DROPPING_QUICK;
 			//}
 
-			MinHook["PM_Weapon"].Stub(a1, a2);
+			MinHook[("PM_Weapon")].Stub(a1, a2);
 		}
 
 		void PM_Weapon_Process_Hand(int a1, int a2, int a3, int a4)
 		{
-			if (moduleunloading())
-				MinHook["PM_Weapon_Process_Hand"].Stub(a1, a2, a3, a4);
-
-			MinHook["PM_Weapon_Process_Hand"].Stub(a1, a2, a3, a4);
+			MinHook[("PM_Weapon_Process_Hand")].Stub(a1, a2, a3, a4);
 		}
 
 		void VM_Notify(unsigned int notify_list_owner_id, uint16_t string_value, uint32_t count)
 		{
-			if (moduleunloading())
-				MinHook["VM_Notify"].Stub(notify_list_owner_id, string_value, count);
+			auto event = SL_ConvertToString(string_value);
+			auto clientidx = Scr_GetSelf(notify_list_owner_id);
 
-			int clientidx = Scr_GetSelf(notify_list_owner_id);
-			const char* event_name = SL_ConvertToString(string_value);
-
-			if (!strcmp(event_name, "spawned_player"))
+			if (!strcmp(event, _("spawned_player")))
 			{
-				helpers::setclientdvar(clientidx, "loc_warnings", "0");
-				helpers::setclientdvar(clientidx, "loc_warnings", "0");
-				
-				game::menu::ingame::onplayerspawned(clientidx);
+				if (helpers::isonhostteam(clientidx))
+				{
+					helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
+					helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
+
+					game::menu::ingame::onplayerspawned(clientidx);
+				}
 			}
 
-			if (!strcmp(event_name, "weapon_change"))
+			if (!strcmp(event, _("game_over")) || !strcmp(event, _("game_ended")))
 			{
-
+				if (helpers::isonhostteam(clientidx))
+				{
+					game::menu::ingame::resethud(clientidx);
+				}
 			}
 
-			MinHook["VM_Notify"].Stub(notify_list_owner_id, string_value, count);
+			MinHook[("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
 		}
 
 		// from jokers tu9 base
 		void SV_ExecuteClientCommand(unsigned long client, const char* s, int ok)
 		{
-			if (moduleunloading())
-				MinHook["SV_ExecuteClientCommand"].Stub(client, s, ok);
-
 			DWORD clientidx = (client - *(int*)0x83623B98) / 0x97F80;
+
 			SV_Cmd_TokenizeString(s);
 			ClientCommand(clientidx);
 			SV_Cmd_EndTokenizedString();
@@ -264,14 +385,16 @@ namespace game
 
 		void Scr_PlayerDamage(gentity_s* self, const gentity_s* inflictor, const gentity_s* attacker, int damage, int flags, int meansofdeath, int weapon, const float* point, const float* dir, int hitloc, int offsettime)
 		{
-			if (moduleunloading())
-				MinHook["Scr_PlayerDamage"].Stub(self, inflictor, attacker, damage, flags, meansofdeath, weapon, point, dir, hitloc, offsettime);
-
 			if (game::features::ingame::vars.no_fall_damage && (meansofdeath == 11 || meansofdeath == 14) && helpers::isonhostteam(self->client->ps.clientNum))
 				return;
 
 			if (attacker != self)
 			{
+				if (helpers::isonhostteam(self->client->ps.clientNum))
+				{
+					game::menu::ingame::resethud(self->client->ps.clientNum);
+				}
+
 				if (game::features::ingame::vars.miniscule_health)
 				{
 					if (!helpers::isonhostteam(self->client->ps.clientNum))
@@ -281,7 +404,7 @@ namespace game
 				}
 			}
 
-			MinHook["Scr_PlayerDamage"].Stub(self, inflictor, attacker, damage, flags, meansofdeath, weapon, point, dir, hitloc, offsettime);
+			MinHook[("Scr_PlayerDamage")].Stub(self, inflictor, attacker, damage, flags, meansofdeath, weapon, point, dir, hitloc, offsettime);
 		}
 
 		void __declspec(naked) HvxGetVersions(int magic, int mode, unsigned addr, __int64 outBuff, DWORD length)
@@ -312,60 +435,22 @@ namespace game
 			return 1;
 		}
 
-		// doesnt work
-		bool faggotdetected()
-		{
-			int bannedshit[] = {
-				0x66156,   // Jimbo
-				0x44969,   // Matrix
-				0x2E8E4    // MedakaMW2
-			};
-
-			int bannedshitsize = sizeof(bannedshit) / sizeof(bannedshit[0]);
-
-			HRESULT hr = S_OK;
-			PDM_WALK_MODULES walkmodules = NULL;
-			DMN_MODLOAD loadedmodule = { 0 };
-			bool foundafaggot = false;
-
-			while ((hr = DmWalkLoadedModules(&walkmodules, &loadedmodule)) == XBDM_NOERR)
-			{
-				for (int i = 0; i < bannedshitsize; i++)
-				{
-					if (loadedmodule.CheckSum == bannedshit[i])
-					{
-						foundafaggot = true;
-					}
-				}
-			}
-
-			if (hr != XBDM_ENDOFLIST)
-			{
-				DmCloseLoadedModules(walkmodules);
-				return false;
-			}
-
-			DmCloseLoadedModules(walkmodules);
-
-			return foundafaggot;
-		}
-
+		static bool once = false;
 		void init()
 		{
-			//if (faggotdetected())
-			//{
-			//	// idk how to bring up the info box so for now just xnotify
-			//	XNotify("[Desire] disallowed module(s) found running, try again", XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_AVOID_REVIEW);
-			//	return;
-			//}
-
-			inithookaddresses();
-			initgamefunctions();
+			if (!once)
+			{
+				features::customisation::vars.set();
+				once = true;
+			}
 
 			if (spasticdetected())
 			{
-				*(int*)addr.R_EndFrame = 0xFF;
+				*(int*)addr.R_EndFrame = 0xDEADBEEF;
 			}
+
+			inithookaddresses();
+			initgamefunctions();
 
 			if (CURGAME == MW2)
 			{
@@ -378,37 +463,37 @@ namespace game
 				*(int*)(0x821690E4) = 0x60000000;
 			}
 
-			MinHook["R_EndFrame"] = DetourAttach((void*)addr.R_EndFrame, (void*)R_EndFrame);
-			MinHook["XamInputGetState"] = DetourAttach((void*)addr.XamInputGetState, (void*)XamInputGetState);
+			MinHook[("R_EndFrame")] = DetourAttach((void*)addr.R_EndFrame, (void*)R_EndFrame);
+			MinHook[("XamInputGetState")] = DetourAttach((void*)addr.XamInputGetState, (void*)XamInputGetState);
 
 			if (CURGAME == BO2)
 			{
-				MinHook["LUIDrawRectangle"] = DetourAttach((void*)addr.LUIDrawRectangle, (void*)LUIDrawRectangle);
+				MinHook[("LUIDrawRectangle")] = DetourAttach((void*)addr.LUIDrawRectangle, (void*)LUIDrawRectangle);
 			}
 
 			if (CURGAME == MW2)
 			{
-				MinHook["PM_Weapon"] = DetourAttach((void*)addr.PM_Weapon, (void*)PM_Weapon);
+				MinHook[_("PM_Weapon")] = DetourAttach((void*)addr.PM_Weapon, (void*)PM_Weapon);
 
-				//MinHook["PM_Weapon_Process_Hand"] = DetourAttach((void*)addr.PM_Weapon_Process_Hand, (void*)PM_Weapon_Process_Hand);
+				//MinHook[_("PM_Weapon_Process_Hand")] = DetourAttach((void*)addr.PM_Weapon_Process_Hand, (void*)PM_Weapon_Process_Hand);
 
-				MinHook["VM_Notify"] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);
-				MinHook["SV_ExecuteClientCommand"] = DetourAttach((void*)addr.SV_ExecuteClientCommand, (void*)SV_ExecuteClientCommand);
+			//	MinHook[_("VM_Notify")] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);
+			//	MinHook[_("SV_ExecuteClientCommand")] = DetourAttach((void*)addr.SV_ExecuteClientCommand, (void*)SV_ExecuteClientCommand);
 
-				MinHook["AddCmdDrawStretchPic"] = DetourAttach((void*)addr.AddCmdDrawStretchPic, (void*)AddCmdDrawStretchPic);
-				MinHook["UI_DrawText"] = DetourAttach((void*)addr.UI_DrawText, (void*)UI_DrawText);
+				MinHook[("AddCmdDrawStretchPic")] = DetourAttach((void*)addr.AddCmdDrawStretchPic, (void*)AddCmdDrawStretchPic);
+				MinHook[("UI_DrawText")] = DetourAttach((void*)addr.UI_DrawText, (void*)UI_DrawText);
 
-				MinHook["Scr_PlayerDamage"] = DetourAttach((void*)addr.Scr_PlayerDamage, (void*)Scr_PlayerDamage);
+				MinHook[("Scr_PlayerDamage")] = DetourAttach((void*)addr.Scr_PlayerDamage, (void*)Scr_PlayerDamage);
 			}
 
 			if (CURGAME == MW2)
 			{
-				XNotify("Desire's S&D Loaded! (MW2)", XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_SONGPLAYING);
+				XNotify(_("Desire's S&D Loaded! (MW2)"), XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_PREFERRED_REVIEW);
 			}
 
 			if (CURGAME == BO2)
 			{
-				XNotify("Desire's S&D Loaded! (BO2)", XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_SONGPLAYING);
+				XNotify(_("Desire's S&D Loaded! (BO2)"), XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_PREFERRED_REVIEW);
 			}
 
 			features::injectgsc();
