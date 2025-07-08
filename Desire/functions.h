@@ -41,7 +41,11 @@ namespace game
 	void(__cdecl* CL_DrawStretchPicPhysical)(float x, float y, float w, float h, float s1, float t1, float s2, float t2, const float* color, Material* material) = reinterpret_cast<void(*)(float, float, float, float, float, float, float, float, const float*, Material*)>(0x821384D8);
 	void(__cdecl* Menu_OpenByName)(int fuck, char* name) = reinterpret_cast<void(*)(int, char*)>(0x82281FA0);
 	int(__cdecl* Menu_OpenName)(int fuck) = reinterpret_cast<int(*)(int)>(0x8226C438);
-	XAssetHeader(__cdecl* DB_FindXAssetHeader)(XAssetType type, const char* name) = (XAssetHeader(*)(XAssetType type, const char* name))0x8219BBC8;
+
+	XAssetHeader(__cdecl* DB_FindXAssetHeader)(XAssetType type, const char* name) = (XAssetHeader(*)(XAssetType, const char*))0x8219BBC8;
+	XAssetHeaderBO2(__cdecl* DB_FindXAssetHeaderBO2)(XAssetTypeBO2 type, const char* name, bool errorIfMissing, int waitTime) = (XAssetHeaderBO2(*)(XAssetTypeBO2, const char*, bool, int))0x822CAE50;
+
+
 	game_hudelem_s* (__cdecl* HudElem_Alloc)(int clientIndex, int TeamNum) = (game_hudelem_s * (*)(int, int))0x821DF928;
 	void(__cdecl* HudElem_Free)(game_hudelem_s*) = reinterpret_cast<void(*)(game_hudelem_s*)>(0x821DF9C0);
 	int(__cdecl* G_LocalizedStringIndex)(const char* String) = (int(*)(const char*))0x8220C7A0;
@@ -66,8 +70,11 @@ namespace game
 	int (*G_GivePlayerWeapon)(playerState_s* playerstate, int weaponidx, char altmodelidx, int akimbo) = reinterpret_cast<int(*)(playerState_s*, int, char, int)>(0x82210B30);
 	int (*Add_Ammo)(gentity_s* ent, int weaponidx, char weaponmodel, int count, int fillclip) = reinterpret_cast<int(*)(gentity_s*, int, char, int, int)>(0x821E1EF8);
 	int (*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel, unsigned int tag) = reinterpret_cast<int(*)(gentity_s*, int, char, unsigned int)>(0x821E36A8);
-
 	bool(__cdecl* SV_IsClientBot)(int clientNum) = (bool(*)(int))0x822597F0;
+
+	void UI_OpenToastPopup(const char* title, const char* description, const char* material, int displayTime)  {
+		((void(*)(...))0x82454800)(0, material, title, description, displayTime);
+	}
 
 	void initgamefunctions()
 	{
@@ -146,6 +153,11 @@ namespace game
 			return false;
 		}
 
+		void printimageinfo(XAssetHeaderBO2 img)
+		{
+			printf(_("%s: [%d, %d, %d, %d]\n"), img.image->name, img.image->width, img.image->height, img.image->depth, img.image->levelCount);
+		}
+
 		Material* getmaterial(const char* shader)
 		{
 			return Material_RegisterHandle(shader, 0);
@@ -164,6 +176,16 @@ namespace game
 				fread((char*)Address, sizeof(char), lsize, Image);
 
 				fclose(Image);
+			}
+		}
+
+		void replacematerial(const char* materialname, const char* imagetoreplacewith)
+		{
+			if (FileExists((PCHAR)imagetoreplacewith))
+			{
+				auto temp = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, materialname, false, 0);
+				helpers::injectimage((int)temp.image->pixels, imagetoreplacewith);
+				helpers::printimageinfo(temp);
 			}
 		}
 

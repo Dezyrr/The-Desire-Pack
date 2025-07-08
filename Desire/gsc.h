@@ -1035,6 +1035,8 @@ namespace game
 
 					*(int*)0x831EBE78 = 0x40300000;
 				}
+
+				UI_OpenToastPopup(_("Desire"), _("Successfully loaded team menu!"), _("ui_host"), 6000);
 			}
 		}
 	}

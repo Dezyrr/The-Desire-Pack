@@ -119,123 +119,49 @@ namespace game
 					{
 						switch (controls.currentoption)
 						{
-							// enable custom hud
 							case 0:
 							{
 								break;
 							}
 
-							// hud r
 							case 1:
 							{
-								if (left)
-								{
-									features::customisation::vars.hudcolor_r--;
-									if (features::customisation::vars.hudcolor_r < 0)
-										features::customisation::vars.hudcolor_r = 255;
-								}
-								else
-								{
-									features::customisation::vars.hudcolor_r++;
-									if (features::customisation::vars.hudcolor_r > 255)
-										features::customisation::vars.hudcolor_r = 0;
-								}
+
 								break;
 							}
 
-							// hud g
 							case 2:
 							{								
-								if (left)
-								{
-									features::customisation::vars.hudcolor_g--;
-									if (features::customisation::vars.hudcolor_g < 0)
-										features::customisation::vars.hudcolor_g = 255;
-								}
-								else
-								{
-									features::customisation::vars.hudcolor_g++;
-									if (features::customisation::vars.hudcolor_g > 255)
-										features::customisation::vars.hudcolor_g = 0;
-								}
+
 								break;
 							}
 
-							// hud b
 							case 3:
 							{								
-								if (left)
-								{
-									features::customisation::vars.hudcolor_b--;
-									if (features::customisation::vars.hudcolor_b < 0)
-										features::customisation::vars.hudcolor_b = 255;
-								}
-								else
-								{
-									features::customisation::vars.hudcolor_b++;
-									if (features::customisation::vars.hudcolor_b > 255)
-										features::customisation::vars.hudcolor_b = 0;
-								}
+
 								break;
 							}
 
-							// enable custom camos
 							case 4:
 							{
 								break;
 							}
 
-							// camo r
 							case 5:
 							{
-								if (left)
-								{
-									features::customisation::vars.camocolor_r--;
-									if (features::customisation::vars.camocolor_r < 0)
-										features::customisation::vars.camocolor_r = 255;
-								}
-								else
-								{
-									features::customisation::vars.camocolor_r++;
-									if (features::customisation::vars.camocolor_r > 255)
-										features::customisation::vars.camocolor_r = 0;
-								}
+
 								break;
 							}
 
-							// camo g
 							case 6:
 							{
-								if (left)
-								{
-									features::customisation::vars.camocolor_g--;
-									if (features::customisation::vars.camocolor_g < 0)
-										features::customisation::vars.camocolor_g = 255;
-								}
-								else
-								{
-									features::customisation::vars.camocolor_g++;
-									if (features::customisation::vars.camocolor_g > 255)
-										features::customisation::vars.camocolor_g = 0;
-								}
+
 								break;
 							}
 
-							// camo b
 							case 7:
 							{
-								if (left)
-								{
-									features::customisation::vars.camocolor_b--;
-									if (features::customisation::vars.camocolor_b < 0)
-										features::customisation::vars.camocolor_b = 255;
-								}
-								else
-								{
-									features::customisation::vars.camocolor_b++;
-									if (features::customisation::vars.camocolor_b > 255)
-										features::customisation::vars.camocolor_b = 0;
-								}
+
 								break;
 							}
 						}
@@ -345,6 +271,16 @@ namespace game
 							{
 								menuvars.current_submenu = sm_misc;
 								controls.currentoption = 0;
+
+								break;
+							}
+
+							case 6:
+							{
+								if (CURGAME == BO2)
+								{
+									features::injectgsc();
+								}
 
 								break;
 							}
@@ -571,18 +507,23 @@ namespace game
 					{
 						switch (controls.currentoption)
 						{
-							case 0: 
+							case 0:
 							{
-								features::customisation::vars.custom_hud_color = !features::customisation::vars.custom_hud_color;
+								if (!helpers::isingame())
+									features::customisation::customcallingcards();
+
 								break;
 							}
 
-							case 4:
-							{
-								features::customisation::vars.custom_camo_color = !features::customisation::vars.custom_camo_color;
+							case 1:
+							{									
+								if (!helpers::isingame())
+									features::customisation::customprestiges();
+
 								break;
 							}
 						}
+
 						break;
 					}
 
@@ -882,6 +823,7 @@ namespace game
 								handler::widgets::addsubtab(3, _("players"));
 								handler::widgets::addsubtab(4, _("account"));
 								handler::widgets::addsubtab(5, _("misc"));
+								handler::widgets::addsubtab(6, _("cardtitle test"));
 
 								break;
 							}
@@ -916,15 +858,16 @@ namespace game
 							}
 
 							case handler::sm_customisation:
-							{
-								handler::widgets::addcheckbox(0, _("custom hud color"), features::customisation::vars.custom_hud_color);
-								handler::widgets::addslider(1, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255);
-								handler::widgets::addslider(2, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255);
-								handler::widgets::addslider(3, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255);
-								handler::widgets::addcheckbox(4, _("custom camo color"), features::customisation::vars.custom_camo_color);
-								handler::widgets::addslider(5, _("camo r"), features::customisation::vars.camocolor_r, 0, 255);
-								handler::widgets::addslider(6, _("camo g"), features::customisation::vars.camocolor_g, 0, 255);
-								handler::widgets::addslider(7, _("camo b"), features::customisation::vars.camocolor_b, 0, 255);
+							{								
+								handler::widgets::addoption(0, _("custom callingcards"));
+								//handler::widgets::addcheckbox(0, _("custom hud color"), features::customisation::vars.custom_hud_color);
+								//handler::widgets::addslider(1, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255);
+								//handler::widgets::addslider(2, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255);
+								//handler::widgets::addslider(3, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255);
+								//handler::widgets::addcheckbox(4, _("custom camo color"), features::customisation::vars.custom_camo_color);
+								//handler::widgets::addslider(5, _("camo r"), features::customisation::vars.camocolor_r, 0, 255);
+								//handler::widgets::addslider(6, _("camo g"), features::customisation::vars.camocolor_g, 0, 255);
+								//handler::widgets::addslider(7, _("camo b"), features::customisation::vars.camocolor_b, 0, 255);
 								break;
 							}
 
@@ -983,8 +926,11 @@ namespace game
 							{
 								handler::widgets::addsubtab(0, _("matchmaking"));
 								handler::widgets::addsubtab(1, _("trickshotting"));
-								handler::widgets::addsubtab(2, _("account"));
-								handler::widgets::addsubtab(3, _("misc"));
+								handler::widgets::addsubtab(2, _("customisation"));
+								handler::widgets::addsubtab(3, _("players"));
+								handler::widgets::addsubtab(4, _("account"));
+								handler::widgets::addsubtab(5, _("misc"));
+								handler::widgets::addoption(6, _("load team menu"));
 
 								break;
 							}
@@ -1018,11 +964,33 @@ namespace game
 
 							case handler::sm_customisation:
 							{
+								handler::widgets::addoption(0, _("custom callingcards"));
+								//handler::widgets::addoption(1, _("custom camos"));
 								break;
 							}
 
 							case handler::sm_players:
 							{
+								if (helpers::isingame())
+								{
+									if (cgs)
+									{
+										for (int32_t i = 0; i < cgs->maxclients; i++)
+										{
+											if (!g_entities[i].client)
+												continue;
+
+											gentity_s player = g_entities[i];
+
+											handler::widgets::addoption((int)i, player.client->sess.cs.name);
+										}
+									}
+								}
+								else
+								{
+									handler::widgets::addoption(0, _("go in-game to see players"));
+								}
+
 								break;
 							}
 

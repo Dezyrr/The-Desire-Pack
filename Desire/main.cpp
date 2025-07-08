@@ -31,7 +31,7 @@ void titlecheck(DWORD TitleID)
 		if (!strcmp((char*)0x82001270, "multiplayer"))
 		{
 			Sleep(1500);
-			MountPath("Hdd:", "\\Device\\Harddisk0\\Partition1", TRUE);
+			MountPath("hdd:", "\\Device\\Harddisk0\\Partition1", TRUE);
 
 			game::hooks::init();
 			starthooks();
@@ -41,7 +41,7 @@ void titlecheck(DWORD TitleID)
 		if (!strcmp((char*)0x82003580, "multiplayer"))
 		{
 			Sleep(1500);
-			MountPath("Hdd:", "\\Device\\Harddisk0\\Partition1", TRUE);
+			MountPath("hdd:", "\\Device\\Harddisk0\\Partition1", TRUE);
 
 			game::hooks::init();
 			starthooks();

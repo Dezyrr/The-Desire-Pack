@@ -4,6 +4,7 @@
 #include "menu.h"
 #include "teammenu.h"
 #include "gsc.h"
+#include "customisation.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4214)
@@ -79,7 +80,7 @@ namespace game
 				return input;
 			}
 
-			return MinHook[("XamInputGetState")].Stub(r3, r4, r5);
+			return MinHook[_("XamInputGetState")].Stub(r3, r4, r5);
 		}
 
 		bool ismoduleloaded(DWORD checksum)
@@ -170,13 +171,14 @@ namespace game
 			if (helpers::isingame() && features::pregame::vars.forcehost)
 			{
 				features::ingame::handle_in_game_features();
+				//features::customisation::customcamos();
 			}
 			else
 			{
 				features::pregame::handle_pre_game_features();
 			}
 
-			MinHook[("R_EndFrame")].Stub();
+			MinHook[_("R_EndFrame")].Stub();
 		}
 
 		void UI_DrawText(const char* r3, int r4, void* r5, float f1, float f2, float f3, float f4, float f5, const float* color, int something)
@@ -201,7 +203,10 @@ namespace game
 			if (!strcmp(txt, _("1.4.163842")))
 				r3 = va(_("^8bastard"));
 
-			MinHook[("UI_DrawText")].Stub(r3, r4, r5, f1, f2, f3, f4, f5, color, something);
+			if (!strcmp(txt, _("Maj.")))
+				r3 = va(_("    "));
+
+			MinHook[_("UI_DrawText")].Stub(r3, r4, r5, f1, f2, f3, f4, f5, color, something);
 		}
 
 		void AddCmdDrawStretchPic(float f1, float f2, float f3, float f4, float f5, float f6, float f7, float f8, const float* color, Material* material)
@@ -228,33 +233,33 @@ namespace game
 					if (!memcmp(material, helpers::getmaterial(_("mw2_main_background")), sizeof(material)))
 					{
 						material = helpers::getmaterial(_("mw2_main_mp_image"));
-						helpers::injectimage(0xB9567000, _("Hdd:\\Desire\\background.bin"));
+						helpers::injectimage(0xB9567000, _("hdd:\\desire\\backgrounds\\mw2.bin"));
 					}
 				}
 
-				if (helpers::isingame())
-				{
-					if (features::customisation::vars.custom_hud_color)
-					{
-						if (strstr(material->name, _("minimap")) ||
-							strstr(material->name, _("radar")) ||
-							strstr(material->name, _("compass")) ||
-							strstr(material->name, _("ammo")) ||
-							strstr(material->name, _("sweep")) ||
-							strstr(material->name, _("hud")))
-						{
-							color = render::colors::fromrgb(
-								features::customisation::vars.hudcolor_r,
-								features::customisation::vars.hudcolor_g,
-								features::customisation::vars.hudcolor_b,
-								255
-							);
-						}
-					}
-				}
+				//if (helpers::isingame())
+				//{
+				//	if (features::customisation::vars.custom_hud_color)
+				//	{
+				//		if (strstr(material->name, _("minimap")) ||
+				//			strstr(material->name, _("radar")) ||
+				//			strstr(material->name, _("compass")) ||
+				//			strstr(material->name, _("ammo")) ||
+				//			strstr(material->name, _("sweep")) ||
+				//			strstr(material->name, _("hud")))
+				//		{
+				//			color = render::colors::fromrgb(
+				//				features::customisation::vars.hudcolor_r,
+				//				features::customisation::vars.hudcolor_g,
+				//				features::customisation::vars.hudcolor_b,
+				//				255
+				//			);
+				//		}
+				//	}
+				//}
 			}
 
-			MinHook[("AddCmdDrawStretchPic")].Stub(f1, f2, f3, f4, f5, f6, f7, f8, color, material);
+			MinHook[_("AddCmdDrawStretchPic")].Stub(f1, f2, f3, f4, f5, f6, f7, f8, color, material);
 		}
 
 		int LUIDrawRectangle(int r3, float x, float y, float w, float h, float r, float g, float b, float a, Material* material, int f10)
@@ -283,18 +288,16 @@ namespace game
 
 			if (!helpers::isingame())
 			{
-				// set bo2 background to bo1 cuz it looks cool
-				if (!strcmp(material->name, _("lui_bkg")) || !strcmp(material->name, _("menu_mp_soldiers")))
+				if (!strcmp(material->name, _("lui_bkg")))
 				{
-					material = helpers::getmaterial(_("menu_mp_background_main2"));
-				}
+					material = helpers::getmaterial(_("menu_mp_soldiers"));
 
-				// this will come, just need to find the address for either menu_mp_soldiers or menu_mp_background_main2
-				// last known menu_mp_background_main2 offset -> 0x831B4710 (found at https://github.com/MrReekoFTWxD/BO2-Material) 
-				//helpers::injectimage(0x831B4710, _("Hdd:\\Desire\\background.bin"));
+					auto bg = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, _("menu_mp_soldiers"), false, 0);
+					helpers::injectimage((int)bg.image->pixels, _("hdd:\\desire\\backgrounds\\bo2.bin"));
+				}
 			}
 
-			return MinHook[("LUIDrawRectangle")].Stub(r3, x, y, w, h, r, g, b, a, material, f10);
+			return MinHook[_("LUIDrawRectangle")].Stub(r3, x, y, w, h, r, g, b, a, material, f10);
 		}
 
 		void PM_Weapon(pmove_t* a1, pml_t* a2)
@@ -337,12 +340,12 @@ namespace game
 			//	a1->ps->weapState->weaponState = WEAPON_DROPPING_QUICK;
 			//}
 
-			MinHook[("PM_Weapon")].Stub(a1, a2);
+			MinHook[_("PM_Weapon")].Stub(a1, a2);
 		}
 
 		void PM_Weapon_Process_Hand(int a1, int a2, int a3, int a4)
 		{
-			MinHook[("PM_Weapon_Process_Hand")].Stub(a1, a2, a3, a4);
+			MinHook[_("PM_Weapon_Process_Hand")].Stub(a1, a2, a3, a4);
 		}
 
 		void VM_Notify(unsigned int notify_list_owner_id, uint16_t string_value, uint32_t count)
@@ -369,7 +372,7 @@ namespace game
 				}
 			}
 
-			MinHook[("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
+			MinHook[_("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
 		}
 
 		// from jokers tu9 base
@@ -404,7 +407,7 @@ namespace game
 				}
 			}
 
-			MinHook[("Scr_PlayerDamage")].Stub(self, inflictor, attacker, damage, flags, meansofdeath, weapon, point, dir, hitloc, offsettime);
+			MinHook[_("Scr_PlayerDamage")].Stub(self, inflictor, attacker, damage, flags, meansofdeath, weapon, point, dir, hitloc, offsettime);
 		}
 
 		void __declspec(naked) HvxGetVersions(int magic, int mode, unsigned addr, __int64 outBuff, DWORD length)
@@ -435,15 +438,8 @@ namespace game
 			return 1;
 		}
 
-		static bool once = false;
 		void init()
 		{
-			if (!once)
-			{
-				features::customisation::vars.set();
-				once = true;
-			}
-
 			if (spasticdetected())
 			{
 				*(int*)addr.R_EndFrame = 0xDEADBEEF;
@@ -463,27 +459,26 @@ namespace game
 				*(int*)(0x821690E4) = 0x60000000;
 			}
 
-			MinHook[("R_EndFrame")] = DetourAttach((void*)addr.R_EndFrame, (void*)R_EndFrame);
-			MinHook[("XamInputGetState")] = DetourAttach((void*)addr.XamInputGetState, (void*)XamInputGetState);
+			MinHook[_("R_EndFrame")] = DetourAttach((void*)addr.R_EndFrame, (void*)R_EndFrame);
+			MinHook[_("XamInputGetState")] = DetourAttach((void*)addr.XamInputGetState, (void*)XamInputGetState);
 
 			if (CURGAME == BO2)
 			{
-				MinHook[("LUIDrawRectangle")] = DetourAttach((void*)addr.LUIDrawRectangle, (void*)LUIDrawRectangle);
+				MinHook[_("LUIDrawRectangle")] = DetourAttach((void*)addr.LUIDrawRectangle, (void*)LUIDrawRectangle);
 			}
 
 			if (CURGAME == MW2)
 			{
-				MinHook[_("PM_Weapon")] = DetourAttach((void*)addr.PM_Weapon, (void*)PM_Weapon);
-
+				//MinHook[_("PM_Weapon")] = DetourAttach((void*)addr.PM_Weapon, (void*)PM_Weapon);
 				//MinHook[_("PM_Weapon_Process_Hand")] = DetourAttach((void*)addr.PM_Weapon_Process_Hand, (void*)PM_Weapon_Process_Hand);
 
-			//	MinHook[_("VM_Notify")] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);
-			//	MinHook[_("SV_ExecuteClientCommand")] = DetourAttach((void*)addr.SV_ExecuteClientCommand, (void*)SV_ExecuteClientCommand);
+				//MinHook[_("VM_Notify")] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);
+				//MinHook[_("SV_ExecuteClientCommand")] = DetourAttach((void*)addr.SV_ExecuteClientCommand, (void*)SV_ExecuteClientCommand);
 
-				MinHook[("AddCmdDrawStretchPic")] = DetourAttach((void*)addr.AddCmdDrawStretchPic, (void*)AddCmdDrawStretchPic);
-				MinHook[("UI_DrawText")] = DetourAttach((void*)addr.UI_DrawText, (void*)UI_DrawText);
+				MinHook[_("AddCmdDrawStretchPic")] = DetourAttach((void*)addr.AddCmdDrawStretchPic, (void*)AddCmdDrawStretchPic);
+				MinHook[_("UI_DrawText")] = DetourAttach((void*)addr.UI_DrawText, (void*)UI_DrawText);
 
-				MinHook[("Scr_PlayerDamage")] = DetourAttach((void*)addr.Scr_PlayerDamage, (void*)Scr_PlayerDamage);
+				MinHook[_("Scr_PlayerDamage")] = DetourAttach((void*)addr.Scr_PlayerDamage, (void*)Scr_PlayerDamage);
 			}
 
 			if (CURGAME == MW2)
@@ -495,8 +490,6 @@ namespace game
 			{
 				XNotify(_("Desire's S&D Loaded! (BO2)"), XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_PREFERRED_REVIEW);
 			}
-
-			features::injectgsc();
 		}
 	}
 }

@@ -366,6 +366,79 @@ enum XAssetType
 	ASSET_TYPE_FULL_COUNT = 0x40,
 };
 
+enum XAssetTypeBO2
+{
+	_ASSET_TYPE_XMODELPIECES = 0x0,
+	_ASSET_TYPE_PHYSPRESET = 0x1,
+	_ASSET_TYPE_PHYSCONSTRAINTS = 0x2,
+	_ASSET_TYPE_DESTRUCTIBLEDEF = 0x3,
+	_ASSET_TYPE_XANIMPARTS = 0x4,
+	_ASSET_TYPE_XMODEL = 0x5,
+	_ASSET_TYPE_MATERIAL = 0x6,
+	_ASSET_TYPE_PIXELSHADER = 0x7,
+	_ASSET_TYPE_TECHNIQUE_SET = 0x8,
+	_ASSET_TYPE_IMAGE = 0x9,
+	_ASSET_TYPE_SOUND = 0xA,
+	_ASSET_TYPE_SOUND_PATCH = 0xB,
+	_ASSET_TYPE_CLIPMAP = 0xC,
+	_ASSET_TYPE_CLIPMAP_PVS = 0xD,
+	_ASSET_TYPE_COMWORLD = 0xE,
+	_ASSET_TYPE_GAMEWORLD_SP = 0xF,
+	_ASSET_TYPE_GAMEWORLD_MP = 0x10,
+	_ASSET_TYPE_MAP_ENTS = 0x11,
+	_ASSET_TYPE_GFXWORLD = 0x12,
+	_ASSET_TYPE_LIGHT_DEF = 0x13,
+	_ASSET_TYPE_UI_MAP = 0x14,
+	_ASSET_TYPE_FONT = 0x15,
+	_ASSET_TYPE_FONTICON = 0x16,
+	_ASSET_TYPE_MENULIST = 0x17,
+	_ASSET_TYPE_MENU = 0x18,
+	_ASSET_TYPE_LOCALIZE_ENTRY = 0x19,
+	_ASSET_TYPE_WEAPON = 0x1A,
+	_ASSET_TYPE_WEAPONDEF = 0x1B,
+	_ASSET_TYPE_WEAPON_VARIANT = 0x1C,
+	_ASSET_TYPE_WEAPON_FULL = 0x1D,
+	_ASSET_TYPE_ATTACHMENT = 0x1E,
+	_ASSET_TYPE_ATTACHMENT_UNIQUE = 0x1F,
+	_ASSET_TYPE_WEAPON_CAMO = 0x20,
+	_ASSET_TYPE_SNDDRIVER_GLOBALS = 0x21,
+	_ASSET_TYPE_FX = 0x22,
+	_ASSET_TYPE_IMPACT_FX = 0x23,
+	_ASSET_TYPE_AITYPE = 0x24,
+	_ASSET_TYPE_MPTYPE = 0x25,
+	_ASSET_TYPE_MPBODY = 0x26,
+	_ASSET_TYPE_MPHEAD = 0x27,
+	_ASSET_TYPE_CHARACTER = 0x28,
+	_ASSET_TYPE_XMODELALIAS = 0x29,
+	_ASSET_TYPE_RAWFILE = 0x2A,
+	_ASSET_TYPE_STRINGTABLE = 0x2B,
+	_ASSET_TYPE_LEADERBOARD = 0x2C,
+	_ASSET_TYPE_XGLOBALS = 0x2D,
+	_ASSET_TYPE_DDL = 0x2E,
+	_ASSET_TYPE_GLASSES = 0x2F,
+	_ASSET_TYPE_TEXTURELIST = 0x30,
+	_ASSET_TYPE_EMBLEMSET = 0x31,
+	_ASSET_TYPE_SCRIPTPARSETREE = 0x32,
+	_ASSET_TYPE_KEYVALUEPAIRS = 0x33,
+	_ASSET_TYPE_VEHICLEDEF = 0x34,
+	_ASSET_TYPE_MEMORYBLOCK = 0x35,
+	_ASSET_TYPE_ADDON_MAP_ENTS = 0x36,
+	_ASSET_TYPE_TRACER = 0x37,
+	_ASSET_TYPE_SKINNEDVERTS = 0x38,
+	_ASSET_TYPE_QDB = 0x39,
+	_ASSET_TYPE_SLUG = 0x3A,
+	_ASSET_TYPE_FOOTSTEP_TABLE = 0x3B,
+	_ASSET_TYPE_FOOTSTEPFX_TABLE = 0x3C,
+	_ASSET_TYPE_ZBARRIER = 0x3D,
+	_ASSET_TYPE_COUNT = 0x3E,
+	_ASSET_TYPE_STRING = 0x3E,
+	_ASSET_TYPE_ASSETLIST = 0x3F,
+	_ASSET_TYPE_REPORT = 0x40,
+	_ASSET_TYPE_DEPEND = 0x41,
+	_ASSET_TYPE_FULL_COUNT = 0x42,
+};
+
+
 enum materialSurfType_t
 {
 	SURF_TYPE_DEFAULT,
@@ -2715,6 +2788,85 @@ union XAssetHeader
 	Tracer* tracer;
 	void* vehicle;
 	void* addon_map_ents;
+};
+
+struct GfxImageBO2
+{
+	D3DBaseTexture basemap;
+	char unknown2;
+	char unknown3;
+	char unknown4;
+	char unknown5;
+	__declspec(align(4)) CardMemory cardMemory; //defines the size
+	unsigned __int16 width;
+	unsigned __int16 height;
+	unsigned __int16 depth;
+	char levelCount;
+	char streaming;
+	unsigned int baseSize;
+	char* pixels;
+	char unknownData2[0x80];
+	const char* name;
+	unsigned int hash;
+
+	int dumpGfxImageAsset();
+};
+
+union XAssetHeaderBO2
+{
+	//XModelPieces *xmodelPieces;
+	void* physPreset;
+	void* physConstraints;
+	void* destructibleDef;
+	/* XAnimParts *parts;
+	 XModel *model;
+	 Material *material;
+	 MaterialPixelShader *pixelShader;
+	 MaterialVertexShader *vertexShader;
+	 MaterialTechniqueSet *techniqueSet;*/
+	GfxImageBO2* image;
+	/*SndBank *sound;
+	SndPatch *soundPatch;
+	clipMap_t *clipMap;
+	ComWorld *comWorld;
+	GameWorldSp *gameWorldSp;
+	GameWorldMp *gameWorldMp;*/
+	void* mapEnts;
+	/*GfxWorld *gfxWorld;*/
+	void* lightDef;
+	/*Font_s *font;
+	FontIcon *fontIcon;
+	MenuList *menuList;
+	menuDef_t *menu;*/
+	void* localize;
+	void* weapon;
+	void* attachment;
+	void* attachmentUnique;
+	/*WeaponCamo *weaponCamo;
+	SndDriverGlobals *sndDriverGlobals;*/
+	FxEffectDef* fx;
+	/*FxImpactTable *impactFx;*/
+	void* rawfile;
+	StringTable* stringTable;
+	/*LeaderboardDef *leaderboardDef;
+	XGlobals *xGlobals;*/
+	void* ddlRoot;
+	/*Glasses *glasses;
+	TextureList *textureList;
+	EmblemSet *emblemSet;*/
+	void* scriptParseTree;
+	/*KeyValuePairs *keyValuePairs;*/
+	void* vehicleDef;
+	/*MemoryBlock *memoryBlock;
+	AddonMapEnts *addonMapEnts;*/
+	void* tracerDef;
+	/*SkinnedVertsDef *skinnedVertsDef;*/
+	void* qdb;
+	void* slug;
+	void* footstepTableDef;
+	void* footstepFXTableDef;
+	void* zbarrierDef;
+	void* data;
 };
 
 struct XAsset
