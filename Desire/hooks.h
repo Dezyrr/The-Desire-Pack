@@ -121,16 +121,16 @@ namespace game
 					const wchar_t* message = L"";
 
 					if (ismoduleloaded(checksums[0]))
-						message = __w(L"So we're dual loading an azza with unsetup...?");
+						message = __w(L"So we're dual loading an azza with unsetup...?\n\nUnload jimbo and you can play retard");
 
 					if (ismoduleloaded(checksums[1]))
-						message = __w(L"Dude tryna run matrix hahahahahahah faggot");
+						message = __w(L"Dude tryna run matrix hahahahahahah faggot\n\nHonestly i should straight up blacklist your console from this but hey, unload matrix and you can play");
 
 					if (ismoduleloaded(checksums[2]))
-						message = __w(L"I have no words for this one.. medaka.. in the big 25..");
+						message = __w(L"I have no words for this one.. medaka.. in the big 25..\n\nUnload Medaka and you can play");
 
 					if (ismoduleloaded(checksums[3]))
-						message = __w(L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...");
+						message = __w(L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...\n\nUnload infinityloader and shiitt i might let you play g");
 
 					LPCWSTR buttons[1] = { __w(L"FUCK, NOW I CAN'T FAKE SHOTS") };
 					MESSAGEBOX_RESULT result;
@@ -171,7 +171,6 @@ namespace game
 			if (helpers::isingame() && features::pregame::vars.forcehost)
 			{
 				features::ingame::handle_in_game_features();
-				//features::customisation::customcamos();
 			}
 			else
 			{
@@ -233,7 +232,8 @@ namespace game
 					if (!memcmp(material, helpers::getmaterial(_("mw2_main_background")), sizeof(material)))
 					{
 						material = helpers::getmaterial(_("mw2_main_mp_image"));
-						helpers::injectimage(0xB9567000, _("hdd:\\desire\\backgrounds\\mw2.bin"));
+						//helpers::injectimage(0xB9567000, _("hdd:\\desire\\backgrounds\\mw2.bin"));
+						helpers::replacematerial(_("mw2_main_mp_image"), _("hdd:\\desire\\backgrounds\\mw2.bin"));
 					}
 				}
 
@@ -292,8 +292,7 @@ namespace game
 				{
 					material = helpers::getmaterial(_("menu_mp_soldiers"));
 
-					auto bg = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, _("menu_mp_soldiers"), false, 0);
-					helpers::injectimage((int)bg.image->pixels, _("hdd:\\desire\\backgrounds\\bo2.bin"));
+					helpers::replacematerial(_("menu_mp_soldiers"), _("hdd:\\desire\\backgrounds\\bo2.bin"));
 				}
 			}
 

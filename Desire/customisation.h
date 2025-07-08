@@ -38,9 +38,9 @@ namespace game
 
 				if (CURGAME == BO2)
 				{
-				//	helpers::replacematerial(_("t6_camo_blossom_pattern"), _("hdd:\\desire\\camos\\bo2\\t6_camo_blossom_pattern.bin"));
-				//	auto temp = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, "t6_camo_blossom_pattern", false, 0);
-				//	helpers::printimageinfo(temp);
+					//helpers::replacematerial(_("t6_camo_blossom_pattern"), _("hdd:\\desire\\camos\\bo2\\t6_camo_blossom_pattern.bin"));
+					//auto temp = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, "t6_camo_blossom_pattern", false, 0);
+					//helpers::printimageinfo(temp);
 				}
 			}
 

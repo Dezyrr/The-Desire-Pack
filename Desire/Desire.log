@@ -12,7 +12,6 @@ c:\github\the-desire-pack\desire\render.h(158): warning C4482: nonstandard exten
 c:\github\the-desire-pack\desire\render.h(163): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
 c:\github\the-desire-pack\desire\render.h(177): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
 c:\github\the-desire-pack\desire\pregame.h(108): warning C4309: '=' : truncation of constant value
-c:\github\the-desire-pack\desire\customisation.h(42): warning C4482: nonstandard extension used: enum 'XAssetTypeBO2' used in qualified name
 c:\github\the-desire-pack\desire\menu.h(679): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
 c:\github\the-desire-pack\desire\menu.h(719): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
 c:\github\the-desire-pack\desire\menu.h(719): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
@@ -34,11 +33,10 @@ c:\github\the-desire-pack\desire\teammenu.h(92): warning C4244: 'argument' : con
 c:\github\the-desire-pack\desire\teammenu.h(93): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
 c:\github\the-desire-pack\desire\teammenu.h(134): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
 c:\github\the-desire-pack\desire\hooks.h(83): warning C4244: 'return' : conversion from '__int64' to 'DWORD', possible loss of data
-c:\github\the-desire-pack\desire\hooks.h(295): warning C4482: nonstandard extension used: enum 'XAssetTypeBO2' used in qualified name
-c:\github\the-desire-pack\desire\hooks.h(300): warning C4244: 'return' : conversion from '__int64' to 'int', possible loss of data
-c:\github\the-desire-pack\desire\hooks.h(430): warning C4826: Conversion from 'PVOID' to 'INT64' is sign-extended. This may cause unexpected runtime behavior.
-c:\github\the-desire-pack\desire\hooks.h(486): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
-c:\github\the-desire-pack\desire\hooks.h(491): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
+c:\github\the-desire-pack\desire\hooks.h(299): warning C4244: 'return' : conversion from '__int64' to 'int', possible loss of data
+c:\github\the-desire-pack\desire\hooks.h(429): warning C4826: Conversion from 'PVOID' to 'INT64' is sign-extended. This may cause unexpected runtime behavior.
+c:\github\the-desire-pack\desire\hooks.h(485): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
+c:\github\the-desire-pack\desire\hooks.h(490): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
   Generating code
   Finished generating code
   state: load
