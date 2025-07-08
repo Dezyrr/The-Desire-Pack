@@ -14,6 +14,7 @@ namespace game
 	}	
 
 	int current_title = 0;
+	PHANDLE callingcard_thread = nullptr;
 }
 
 void titlecheck(DWORD TitleID)

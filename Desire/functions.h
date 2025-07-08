@@ -153,7 +153,12 @@ namespace game
 			return false;
 		}
 
-		void printimageinfo(XAssetHeaderBO2 img)
+		void printimageinfomw2(XAssetHeader img)
+		{
+			printf(_("%s: [%d, %d, %d, %d, %d]\n"), img.image->name, img.image->width, img.image->height, img.image->depth, img.image->levelCount, img.image->Format);
+		}
+
+		void printimageinfobo2(XAssetHeaderBO2 img)
 		{
 			printf(_("%s: [%d, %d, %d, %d]\n"), img.image->name, img.image->width, img.image->height, img.image->depth, img.image->levelCount);
 		}
@@ -183,9 +188,17 @@ namespace game
 		{
 			if (FileExists((PCHAR)imagetoreplacewith))
 			{
-				auto temp = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, materialname, false, 0);
-				helpers::injectimage((int)temp.image->pixels, imagetoreplacewith);
-				helpers::printimageinfo(temp);
+				if (CURGAME == MW2)
+				{
+					auto temp = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, materialname);
+					helpers::injectimage((int)temp.image->pixels, imagetoreplacewith);
+				}
+
+				if (CURGAME == BO2)
+				{
+					auto temp = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, materialname, false, 0);
+					helpers::injectimage((int)temp.image->pixels, imagetoreplacewith);
+				}
 			}
 		}
 

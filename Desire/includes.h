@@ -54,6 +54,7 @@ namespace game
 {
 	bool moduleunloading();
 	extern int current_title;
+	extern PHANDLE callingcard_thread;
 }
 #endif
 #define CURGAME game::current_title

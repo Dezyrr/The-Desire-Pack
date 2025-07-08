@@ -2902,10 +2902,91 @@ public:
 	float FPS; //0x0028 
 	char _0x002C[28];
 };
+
+struct clientInfo_s 
+{
+	int infoValid; //0x0000 
+	int nextValid; //0x0004 
+	int clientNumber; //0x0008 
+	char clientName[32]; //0x000C
+	int Team; //0x002C
+	char _0x002C[48];
+	int Rank; //0x0060 
+	int Prestige; //0x0064 
+	char _0x0068[0x10];
+	char xuid[8];
+	char clanAbbrev[8]; //0x0080 
+	int Ping; //0x0088 
+	int status_icon; //0x008C 
+	int Place; //0x0090 
+	int Score; //0x0094 
+	int Kills; //0x0098 
+	int Assists; //0x009C 
+	int Deaths; //0x00A0 
+	char _0x00A4[32];
+	int Headshots; //0x00C4 
+	char _0x00C8[4];
+	int currentStreak; //0x00CC 
+	char _0x00D0[80];
+	char SecondaryWeapon[32]; //0x0120 
+	char _0x0140[900];
+	vec3_t viewAngles; //0x04C4 
+	char _0x04D0[192];
+	int aimingIn; //0x0590 
+	char _0x0594[628];
+};
+struct refDef_s {
+
+	int Width; //0x0000 
+	int Height; //0x0004 
+	char _0x0008[20];
+	vec2_t tanHalfFov; //0x001C 
+	char _0x0024[12];
+	vec3_t viewOrigin; //0x0030 
+	char _0x003C[4];
+	vec3_t viewAxis[3]; //0x0040 
+	char _0x0064[8];
+};
+
+struct compassData_s 
+{
+	char _0x0000[0x24];
+};
+
+struct cgs_tBO2 {
+	int clientNumber; //0x0000
+	int localClientNum; //0x0004
+	char _0x0008[0x20];
+	void* snap; //0x0028
+	char _0x002C[0x8C];
+	vec3_t Origin; //0x00B8
+	char _0x00C4[0x1AC];
+	float ZoomState; //0x270
+	char _0x0274[0x54];
+	int Health; //0x02C8
+	char _0x02CC[0x4];
+	int maxHealth; //0x02D0
+	char _0x02D4[0x47DC8];
+	BYTE bThirdPerson; //0x4809C
+	char _0x4809D[0xB];
+	playerState_s playerState; //0x480A8
+	char _0x48638[0x5250];
+	refDef_s refDef; //0x4D888
+	char _0x4D8F4[0x1BF74];
+	compassData_s compassData; //0x69868
+	char _0x6988C[0x204];
+	clientInfo_s clientInfo[18]; //0x69A90
+	char _0x72B20[0xE060];
+	float SpreadScale; //0x80B80
+	char _0x80B84[0x6B7C];
+};
+
 #define scrPlace ((ScreenPlacement*)0x82690F40)
 
 #define uiContext ((UiContext*)0x83647860)
 #define uiContextBO2 ((UiContext_t*)0x83BA29F0)
+
+#define cgsBO2 (*(cgs_tBO2**)0x82BBAE44)
 
 #define scrVmPub ((scrVmPub_t*)0x835C49D8)
 #define cgameGlob (*(cg_s**)0x825B8638)

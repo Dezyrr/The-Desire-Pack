@@ -509,8 +509,32 @@ namespace game
 						{
 							case 0:
 							{
-								if (!helpers::isingame())
-									features::customisation::customcallingcards();
+								if (!features::customisation::vars.custom_callingcards_enabled)
+								{
+									features::customisation::vars.wasingame = true;
+
+									if (!helpers::isingame() && features::customisation::vars.wasingame)
+									{
+										// thread this so that we can keep a constant check wether we are in game or not
+										ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcards, 0, 0);
+										features::customisation::vars.custom_callingcards_enabled = true;
+
+										if (CURGAME == BO2)
+										{
+											UI_OpenToastPopup(_("Desire"), _("Successfully loaded custom calling cards!"), _("ui_host"), 6000);
+										}
+									}
+								}
+								else
+								{
+									if (game::callingcard_thread)
+									{
+										CloseHandle(game::callingcard_thread);
+									}
+
+									features::customisation::vars.wasingame = true;
+									features::customisation::vars.custom_callingcards_enabled = false;
+								}
 
 								break;
 							}
@@ -518,7 +542,9 @@ namespace game
 							case 1:
 							{									
 								if (!helpers::isingame())
+								{
 									features::customisation::customprestiges();
+								}
 
 								break;
 							}
@@ -820,10 +846,9 @@ namespace game
 								handler::widgets::addsubtab(0, _("matchmaking"));
 								handler::widgets::addsubtab(1, _("trickshotting"));
 								handler::widgets::addsubtab(2, _("customisation"));
-								handler::widgets::addsubtab(3, _("players"));
+								handler::widgets::addsubtab(3, _("kick players"));
 								handler::widgets::addsubtab(4, _("account"));
 								handler::widgets::addsubtab(5, _("misc"));
-								handler::widgets::addsubtab(6, _("cardtitle test"));
 
 								break;
 							}
@@ -858,8 +883,8 @@ namespace game
 							}
 
 							case handler::sm_customisation:
-							{								
-								handler::widgets::addoption(0, _("custom callingcards"));
+							{
+								handler::widgets::addoption(0, _("custom calling cards"));
 								//handler::widgets::addcheckbox(0, _("custom hud color"), features::customisation::vars.custom_hud_color);
 								//handler::widgets::addslider(1, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255);
 								//handler::widgets::addslider(2, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255);
@@ -877,7 +902,7 @@ namespace game
 								{
 									if (cgs)
 									{
-										for (int32_t i = 0; i < cgs->maxclients; i++)
+										for (int32_t i = 0; i < 18; i++)
 										{
 											if (!g_entities[i].client)
 												continue;
@@ -927,7 +952,7 @@ namespace game
 								handler::widgets::addsubtab(0, _("matchmaking"));
 								handler::widgets::addsubtab(1, _("trickshotting"));
 								handler::widgets::addsubtab(2, _("customisation"));
-								handler::widgets::addsubtab(3, _("players"));
+								handler::widgets::addsubtab(3, _("kick players"));
 								handler::widgets::addsubtab(4, _("account"));
 								handler::widgets::addsubtab(5, _("misc"));
 								handler::widgets::addoption(6, _("load team menu"));
@@ -964,7 +989,7 @@ namespace game
 
 							case handler::sm_customisation:
 							{
-								handler::widgets::addoption(0, _("custom callingcards"));
+								handler::widgets::addoption(0, _("custom calling cards"));
 								//handler::widgets::addoption(1, _("custom camos"));
 								break;
 							}
@@ -973,18 +998,17 @@ namespace game
 							{
 								if (helpers::isingame())
 								{
-									if (cgs)
+	/*								if (cgsBO2)
 									{
-										for (int32_t i = 0; i < cgs->maxclients; i++)
+										for (int32_t i = 0; i < 18; i++)
 										{
-											if (!g_entities[i].client)
+											if (!cgsBO2[i].playerState.clientNum)
 												continue;
 
-											gentity_s player = g_entities[i];
-
-											handler::widgets::addoption((int)i, player.client->sess.cs.name);
+		
+											handler::widgets::addoption((int)i, cgsBO2[i].playerState.);
 										}
-									}
+									}*/
 								}
 								else
 								{

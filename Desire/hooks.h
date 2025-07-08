@@ -202,8 +202,35 @@ namespace game
 			if (!strcmp(txt, _("1.4.163842")))
 				r3 = va(_("^8bastard"));
 
-			if (!strcmp(txt, _("Maj.")))
-				r3 = va(_("    "));
+			if (features::customisation::vars.custom_callingcards_enabled)
+			{
+				if (!strcmp(txt, _("FNG")))
+					r3 = va(_("   "));
+
+				if (!strcmp(txt, _("S.S.D.D.")))
+					r3 = va(_("        "));
+
+				if (!strcmp(txt, _("Sgt.")))
+					r3 = va(_("     "));
+
+				if (!strcmp(txt, _("1st Sgt.")))
+					r3 = va(_("        "));
+
+				if (!strcmp(txt, _("1st Lt.")))
+					r3 = va(_("       "));
+
+				if (!strcmp(txt, _("Maj.")))
+					r3 = va(_("    "));
+
+				if (!strcmp(txt, _("FNG")))
+					r3 = va(_("   "));
+
+				if (!strcmp(txt, _("Gen.")))
+					r3 = va(_("    "));
+
+				if (!strcmp(txt, _("Commander")))
+					r3 = va(_("         "));
+			}
 
 			MinHook[_("UI_DrawText")].Stub(r3, r4, r5, f1, f2, f3, f4, f5, color, something);
 		}
@@ -232,8 +259,8 @@ namespace game
 					if (!memcmp(material, helpers::getmaterial(_("mw2_main_background")), sizeof(material)))
 					{
 						material = helpers::getmaterial(_("mw2_main_mp_image"));
-						//helpers::injectimage(0xB9567000, _("hdd:\\desire\\backgrounds\\mw2.bin"));
-						helpers::replacematerial(_("mw2_main_mp_image"), _("hdd:\\desire\\backgrounds\\mw2.bin"));
+
+						helpers::injectimage(0xB9567000, _("hdd:\\desire\\backgrounds\\mw2.bin"));
 					}
 				}
 
@@ -274,9 +301,9 @@ namespace game
 				a = 0;
 			}
 
-			if (!strcmp(material->name, _("lui_bkg")) ||
+			if (/*!strcmp(material->name, _("lui_bkg")) ||
 				!strcmp(material->name, _("menu_mp_background_main2")) ||
-				!strcmp(material->name, _("menu_mp_soldiers")) ||
+				!strcmp(material->name, _("menu_mp_soldiers")) ||*/
 				!strcmp(material->name, _("ui_smoke")) ||
 				!strcmp(material->name, _("lui_random_map_vote")))
 			{
@@ -488,6 +515,17 @@ namespace game
 			if (CURGAME == BO2)
 			{
 				XNotify(_("Desire's S&D Loaded! (BO2)"), XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_PREFERRED_REVIEW);
+			}
+
+			if (game::moduleunloading())
+			{
+				if (features::customisation::vars.custom_callingcards_enabled)
+				{
+					if (game::callingcard_thread)
+					{
+						CloseHandle(game::callingcard_thread);
+					}
+				}
 			}
 		}
 	}
