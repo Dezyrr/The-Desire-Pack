@@ -1,10 +1,13 @@
 #pragma once
-#include "includes.h"
 #include "structs.h"
 
 namespace game
 {
 	void(_cdecl* SV)(int clientNum, int type, const char* text);
+	void (*SV_ExecuteClientCommand)(client_t* client, const char* s, int clientOK, int fromOldServer) = reinterpret_cast<void (*)(client_t*, const char*, int, int)>(0x82253140);
+
+	void (*SV_DropClient)(client_t* client, const char* reason, bool tellThem) = reinterpret_cast<void (*)(client_t*, const char*, bool)>(0x822523A8);
+
 	int(__cdecl* R_TextHeight)(void* font);
 	int(__cdecl* R_TextWidth)(const char* text, int maxchars, void* font);
 	int(__cdecl* R_TextWidthBO2)(int unk, const char* text, int maxchars, void* font);
@@ -45,7 +48,6 @@ namespace game
 	XAssetHeader(__cdecl* DB_FindXAssetHeader)(XAssetType type, const char* name) = (XAssetHeader(*)(XAssetType, const char*))0x8219BBC8;
 	XAssetHeaderBO2(__cdecl* DB_FindXAssetHeaderBO2)(XAssetTypeBO2 type, const char* name, bool errorIfMissing, int waitTime) = (XAssetHeaderBO2(*)(XAssetTypeBO2, const char*, bool, int))0x822CAE50;
 
-
 	game_hudelem_s* (__cdecl* HudElem_Alloc)(int clientIndex, int TeamNum) = (game_hudelem_s * (*)(int, int))0x821DF928;
 	void(__cdecl* HudElem_Free)(game_hudelem_s*) = reinterpret_cast<void(*)(game_hudelem_s*)>(0x821DF9C0);
 	int(__cdecl* G_LocalizedStringIndex)(const char* String) = (int(*)(const char*))0x8220C7A0;
@@ -67,10 +69,14 @@ namespace game
 	int (*Scr_GetSelf)(int var) = reinterpret_cast<int(*)(int)>(0x82243758);
 	int (*CG_GetClientNum)(int var) = reinterpret_cast<int(*)(int)>(0x82253948);
 	int (*G_GetWeaponIndexForName)(const char* weaponname) = reinterpret_cast<int(*)(const char*)>(0x822105A8);
-	int (*G_GivePlayerWeapon)(playerState_s* playerstate, int weaponidx, char altmodelidx, int akimbo) = reinterpret_cast<int(*)(playerState_s*, int, char, int)>(0x82210B30);
+	int (*G_GivePlayerWeapon)(playerState_s* playerstate, int weaponidx, int camo, int akimbo) = reinterpret_cast<int(*)(playerState_s*, int, int, int)>(0x82210B30);
 	int (*Add_Ammo)(gentity_s* ent, int weaponidx, char weaponmodel, int count, int fillclip) = reinterpret_cast<int(*)(gentity_s*, int, char, int, int)>(0x821E1EF8);
 	int (*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel, unsigned int tag) = reinterpret_cast<int(*)(gentity_s*, int, char, unsigned int)>(0x821E36A8);
 	bool(__cdecl* SV_IsClientBot)(int clientNum) = (bool(*)(int))0x822597F0;
+	const char* (__cdecl* G_GetWeaponNameForIndex)(int weaponIndex) = (const char* (*)(int))0x820E22F0;
+	void (*Scr_AddString)(const char* string) = reinterpret_cast<void(*)(const char*)>(0x8224C620);
+	void (*Scr_Notify)(int* ent, short stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int*, short, unsigned int)>(0x82209710);
+	void (*Scr_NotifyNum)(int entnum, unsigned int classnum, unsigned int stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int, unsigned int, unsigned int, unsigned int)>(0x82209710);
 
 	void UI_OpenToastPopup(const char* title, const char* description, const char* material, int displayTime)  {
 		((void(*)(...))0x82454800)(0, material, title, description, displayTime);
@@ -202,14 +208,74 @@ namespace game
 			}
 		}
 
+		const char* getweaponname(char weapon)
+		{
+			return G_GetWeaponNameForIndex(weapon);
+		}
+
+		bool isholdingsniper(int idx)
+		{
+			if (!g_entities[idx].client)
+				return false;
+
+			auto weapidx = g_entities[idx].client->ps.weapon.data;
+			auto weapstr = G_GetWeaponNameForIndex(weapidx);
+
+			if (strstr(weapstr, "cheytac") || 
+				strstr(weapstr, "m21") || 
+				strstr(weapstr, "wa2000") ||
+				strstr(weapstr, "barrett"))
+				return true;
+
+			return false;
+		}
+
+		bool isholdingthrowingknife(int idx)
+		{
+			if (!g_entities[idx].client)
+				return false;
+
+			auto weapidx = g_entities[idx].client->ps.weapon.data;
+			auto weapstr = G_GetWeaponNameForIndex(weapidx);
+
+			if (weapstr == "throwingknife_mp")
+				return true;
+
+			return false;
+		}
+
+		bool isholdingspas(int idx)
+		{
+			if (!g_entities[idx].client)
+				return false;
+
+			auto weapidx = g_entities[idx].client->ps.weapon.data;
+			auto weapstr = G_GetWeaponNameForIndex(weapidx);
+
+			if (strstr(weapstr, "spas"))
+				return true;
+
+			return false;
+		}
+
 		void setclientdvar(int idx, const char* dvar, const char* value)
 		{
 			SV(idx, 0, va(("s %s \"%s\""), dvar, value));
 		}
 
-		bool isbot(int idx)
+		void setclientname(int idx, const char* name)
 		{
-			return SV_IsClientBot(idx);
+			strcpy(g_clients[idx].sess.cs.name, name);
+		}
+
+		bool SV_IsClientActive(int clientNum) 
+		{
+			return svs->clients[clientNum].state == CS_ACTIVE;
+		}
+
+		bool SV_IsTestClient(int clientNum) 
+		{
+			return svs->clients[clientNum].testClient == TC_TEST_CLIENT;
 		}
 
 		bool ishost(int idx)
@@ -220,12 +286,28 @@ namespace game
 			return Session_IsHost(0x83AC3DB0, idx);
 		}
 
+		int gethostidx()
+		{
+			for (int i = 0; i < 18; i++)
+			{
+				if (ishost(i))
+					return i;
+			}
+
+			return -1;
+		}
+
+		void kickclient(int idx, const char* reason, ...)
+		{
+
+		}
+
 		bool isonhostteam(int idx)
 		{
 			if (!isingame())
 				return false;
 
-			if (!cgs || !cgameGlob[idx].ClientInfo)
+			if (!cgs || !cgs[idx].ClientInfo)
 				return false;
 
 			short hostteam = -1;
@@ -260,6 +342,11 @@ namespace game
 		void notifyclient(int idx, const char* text)
 		{
 			iprintln(idx, std::string(_("^7[^6desire^7]: ")).append(text).c_str());
+		}
+
+		bool shouldrunonteamorself(int feature_value, int clientidx)
+		{
+			return (feature_value == 1 && clientidx == cgs->clientNumber) || (feature_value == 2 && helpers::isonhostteam(clientidx));
 		}
 	}
 

@@ -1,5 +1,4 @@
 #pragma once
-#include "includes.h"
 #include "functions.h"
 
 namespace game
@@ -10,6 +9,7 @@ namespace game
 		bool insta_sprint_enabled[18];
 		bool insta_shoots_enabled[18];
 		bool always_zoomload_enabled[18];
+		bool insta_spas_pump[18];
 	};
 	entity_handler ent_handlr;
 
@@ -19,6 +19,8 @@ namespace game
 		{
 			struct varrs
 			{
+				// game settings
+				bool prevent_enemy_forfeit;
 				bool depatch_bounces;
 				bool easy_eles;
 				bool prone_anywhere;
@@ -31,8 +33,126 @@ namespace game
 				bool prone_spins;
 				bool ladder_spins;
 				bool knife_lunges;
+
+				// team menu
+				int insta_sprint;
+				int insta_shoots;
+				int always_zoomload;
+				int always_lunge;
+				int insta_spas_pump;
 			};
 			varrs vars;
+
+			// bot spawning taken from hayzen
+			namespace preventforfeit
+			{
+				void* botent = nullptr;
+
+				void teamselect(int idx)
+				{
+					Scr_AddString("autoassign");
+					Scr_AddString("team_marinesopfor");
+					Scr_NotifyNum(idx, 0, SL_GetString("menuresponse", 0), 2);
+				}
+
+				void classselect(int idx) 
+				{
+					Scr_AddString("class1");
+					Scr_AddString("changeclass");
+					Scr_NotifyNum(idx, 0, SL_GetString("menuresponse", 0), 2);
+				}
+
+				uint32_t spawnbotthread()
+				{
+					if (!botent)
+						return 0;
+
+					int serverid = GetMemory<int>(0x8360922C);
+
+					int botclientnum = static_cast<gentity_s*>(botent)->client->ps.clientNum;
+
+					client_t* botclient = &GetMemory<client_t*>(0x83620380 + 0x3818)[botclientnum];
+
+					SV_ExecuteClientCommand(botclient, va("mr %d 3 autoassign", serverid), 1, 0);
+
+					Sleep(150);
+
+					SV_ExecuteClientCommand(botclient, va("mr %d 10 class1", serverid), 1, 0);
+
+					Sleep(150);
+
+					return 0;
+				}
+
+				void spawnbot()
+				{
+					gentity_s* bot = static_cast<gentity_s*>(botent);
+
+					if (botent != nullptr)
+					{
+						return;
+					}
+
+					bot = SV_AddTestClient();
+					botent = bot;
+
+					CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(spawnbotthread), 0, 0, nullptr);
+				}
+
+				int enemyteamcount()
+				{
+					short hostTeam = -1;
+
+					for (int i = 0; i < 18; i++)
+					{
+						if (!g_entities[i].client)
+							continue;
+
+						if (helpers::ishost(i))
+						{
+							hostTeam = g_entities[i].client->sess.cs.team;
+							break;
+						}
+					}
+
+					if (hostTeam == -1)
+						return 0;
+
+					int count = 0;
+
+					for (int i = 0; i < 18; i++)
+					{
+						if (!g_entities[i].client)
+							continue;
+
+						short playerTeam = g_entities[i].client->sess.cs.team;
+
+						if (playerTeam != hostTeam && playerTeam != 0)
+							count++;
+					}
+
+					return count;
+				}
+
+				void spawnbotifnoenemies()
+				{
+					int enemies = enemyteamcount();
+
+					if (enemies == 0 && !botent)
+					{
+						spawnbot();
+					}
+				}
+
+				void waitforbotnamechange()
+				{
+					if (!botent)
+						return;
+
+					int botclientnum = static_cast<gentity_s*>(botent)->client->ps.clientNum;
+					helpers::setclientname(botclientnum, "Waiting for player");
+				}
+			}
 
 			void sweeping_uav()
 			{
@@ -68,10 +188,40 @@ namespace game
 				}
 			}
 
+			void dropweapon(const char* name, int camo)
+			{
+				gentity_s player = g_entities[cgs->clientNumber];
+
+				int weaponidx = G_GetWeaponIndexForName(name);
+				int validweapon = *(int*)(BG_GetWeaponDef(weaponidx) + 0x38);
+
+				G_GivePlayerWeapon(&player.client->ps, weaponidx, camo, 0);
+				Add_Ammo(&player, weaponidx, 0, 9999, 1);
+
+				if (*(int*)(BG_GetWeaponDef(weaponidx) + 0x38) == 3)
+					return;
+
+				Drop_Weapon(&player, weaponidx, 0, 0);
+			}
+
 			void handle_in_game_features()
 			{
 				if (CURGAME == MW2)
 				{
+					if (features::ingame::vars.prevent_enemy_forfeit)
+					{
+						features::ingame::preventforfeit::waitforbotnamechange();
+						features::ingame::preventforfeit::spawnbotifnoenemies();
+					}
+					else
+					{
+						if (features::ingame::preventforfeit::botent != nullptr)
+						{
+							int botclientnum = static_cast<gentity_s*>(features::ingame::preventforfeit::botent)->client->ps.clientNum;
+							helpers::kickclient(botclientnum, _("Hello Skid! From Desire. Don't worry though, I am also a skid. :D"));
+						}
+					}
+
 					features::ingame::sweeping_uav();
 
 					// depatch bounces

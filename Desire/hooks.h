@@ -168,9 +168,14 @@ namespace game
 
 			menu::init();
 
-			if (helpers::isingame() && features::pregame::vars.forcehost)
+			//bool shouldruningamestuff = CURGAME == MW2 ? helpers::ishost(cgs->clientNumber) : CURGAME == BO2 ? features::pregame::vars.forcehost : false;
+
+			if (helpers::isingame())
 			{
-				features::ingame::handle_in_game_features();
+				if (features::pregame::vars.forcehost)
+				{
+					features::ingame::handle_in_game_features();
+				}
 			}
 			else
 			{
@@ -264,26 +269,26 @@ namespace game
 					}
 				}
 
-				//if (helpers::isingame())
-				//{
-				//	if (features::customisation::vars.custom_hud_color)
-				//	{
-				//		if (strstr(material->name, _("minimap")) ||
-				//			strstr(material->name, _("radar")) ||
-				//			strstr(material->name, _("compass")) ||
-				//			strstr(material->name, _("ammo")) ||
-				//			strstr(material->name, _("sweep")) ||
-				//			strstr(material->name, _("hud")))
-				//		{
-				//			color = render::colors::fromrgb(
-				//				features::customisation::vars.hudcolor_r,
-				//				features::customisation::vars.hudcolor_g,
-				//				features::customisation::vars.hudcolor_b,
-				//				255
-				//			);
-				//		}
-				//	}
-				//}
+				if (helpers::isingame())
+				{
+					if (features::customisation::vars.custom_hud_color)
+					{
+						if (strstr(material->name, _("minimap")) ||
+							strstr(material->name, _("radar")) ||
+							strstr(material->name, _("compass")) ||
+							strstr(material->name, _("ammo")) ||
+							strstr(material->name, _("sweep")) ||
+							strstr(material->name, _("hud")))
+						{
+							color = render::colors::fromrgb(
+								features::customisation::vars.hudcolor_r,
+								features::customisation::vars.hudcolor_g,
+								features::customisation::vars.hudcolor_b,
+								255
+							);
+						}
+					}
+				}
 			}
 
 			MinHook[_("AddCmdDrawStretchPic")].Stub(f1, f2, f3, f4, f5, f6, f7, f8, color, material);
@@ -328,43 +333,66 @@ namespace game
 
 		void PM_Weapon(pmove_t* a1, pml_t* a2)
 		{
+			if (!a1 || !a1->ps)
+				return;
+
+			if (!helpers::ishost(cgs->clientNumber))
+				return;
+
 			int clientidx = a1->ps->clientNum;
-				
-			if (helpers::isonhostteam(clientidx))
+
+			if (helpers::shouldrunonteamorself(features::ingame::vars.insta_sprint, clientidx))
 			{
-				if (ent_handlr.insta_sprint_enabled[clientidx])
+				if (a1->ps->weapState->weaponState == WEAPON_SPRINT_RAISE)
 				{
-					if (a1->ps->weapState->weaponState == WEAPON_SPRINT_RAISE)
-					{
-						a1->ps->weapState->weapAnim = WEAP_SPRINT_LOOP;
-						a1->ps->weapState->weaponState = WEAPON_SPRINT_LOOP;
-					}
-				}
-
-				if (ent_handlr.always_zoomload_enabled[clientidx])
-				{
-					if (a1->ps->weapState->weaponState == WEAPON_RELOADING 
-						&& a1->ps->weapState->weapAnim != WEAP_RELOAD_EMPTY)
-					{
-						a1->ps->weapState->weaponState = WEAPON_READY;
-					}
-				}
-
-				if (ent_handlr.insta_shoots_enabled[clientidx])
-				{
-					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
-					{
-						a1->ps->weapState->weaponTime = 0;
-						a1->ps->weapState->weaponDelay = 0;
-						a1->ps->weapState->weaponRestrictKickTime = 1;
-					}
+					a1->ps->weapState->weapAnim = WEAP_SPRINT_LOOP;
+					a1->ps->weapState->weaponState = WEAPON_SPRINT_LOOP;
 				}
 			}
 
-			//if (a1->ps->weapState->weaponState == WEAPON_RAISING)
-			//{
-			//	a1->ps->weapState->weaponState = WEAPON_DROPPING_QUICK;
-			//}
+			if (helpers::shouldrunonteamorself(features::ingame::vars.always_zoomload, clientidx))
+			{
+				if (a1->ps->weapState->weaponState == WEAPON_RELOADING &&
+					a1->ps->weapState->weapAnim != WEAP_RELOAD_EMPTY) 
+				{
+					a1->ps->weapState->weaponState = WEAPON_READY;
+				}
+			}
+
+			if (helpers::shouldrunonteamorself(features::ingame::vars.insta_shoots, clientidx))
+			{
+				if (a1->ps->weapState->weaponState == WEAPON_RAISING) 
+				{
+					a1->ps->weapState->weaponTime = 0;
+					a1->ps->weapState->weaponDelay = 0;
+					a1->ps->weapState->weaponRestrictKickTime = 1;
+				}
+			}
+
+			if (helpers::shouldrunonteamorself(features::ingame::vars.always_lunge, clientidx))
+			{
+				if (a1->ps->weapState->weaponState == WEAPON_MELEE_INIT)
+				{
+					a1->ps->weapState->weapAnim = WEAP_MELEE_CHARGE;
+				}
+			}
+
+			if (helpers::shouldrunonteamorself(features::ingame::vars.insta_spas_pump, clientidx))
+			{
+				if (helpers::isholdingspas(clientidx))
+				{
+					if (a1->ps->weapState->weaponState == WEAPON_FIRING)
+					{
+						a1->ps->weapState->weapAnim = WEAP_RECHAMBER;
+
+						if (a1->ps->weapState->weapAnim == WEAP_RECHAMBER)
+						{
+							a1->ps->weapState->weaponState = WEAPON_RECHAMBERING;
+							a1->ps->weapState->weaponState = WEAPON_READY;
+						}
+					}
+				}
+			}
 
 			MinHook[_("PM_Weapon")].Stub(a1, a2);
 		}
@@ -379,24 +407,24 @@ namespace game
 			auto event = SL_ConvertToString(string_value);
 			auto clientidx = Scr_GetSelf(notify_list_owner_id);
 
-			if (!strcmp(event, _("spawned_player")))
-			{
-				if (helpers::isonhostteam(clientidx))
-				{
-					helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
-					helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
+			//if (!strcmp(event, _("spawned_player")))
+			//{
+			//	if (helpers::isonhostteam(clientidx))
+			//	{
+			//		//helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
+			//		//helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
 
-					game::menu::ingame::onplayerspawned(clientidx);
-				}
-			}
+			//		//game::menu::ingame::onplayerspawned(clientidx);
+			//	}
+			//}
 
-			if (!strcmp(event, _("game_over")) || !strcmp(event, _("game_ended")))
-			{
-				if (helpers::isonhostteam(clientidx))
-				{
-					game::menu::ingame::resethud(clientidx);
-				}
-			}
+			//if (!strcmp(event, _("game_over")) || !strcmp(event, _("game_ended")))
+			//{
+			//	if (helpers::isonhostteam(clientidx))
+			//	{
+			//		game::menu::ingame::resethud(clientidx);
+			//	}
+			//}
 
 			MinHook[_("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
 		}
@@ -412,23 +440,26 @@ namespace game
 			game::menu::ingame::monitorplayers(clientidx, s);
 		}
 
+		// from ascension ps3, playerdamage address by shield
 		void Scr_PlayerDamage(gentity_s* self, const gentity_s* inflictor, const gentity_s* attacker, int damage, int flags, int meansofdeath, int weapon, const float* point, const float* dir, int hitloc, int offsettime)
 		{
+			if (damage > 1000 && flags == 2 && (meansofdeath == 9 || meansofdeath == 2))
+				return;
+
 			if (game::features::ingame::vars.no_fall_damage && (meansofdeath == 11 || meansofdeath == 14) && helpers::isonhostteam(self->client->ps.clientNum))
 				return;
 
-			if (attacker != self)
+			if (attacker && inflictor && self != inflictor && self->client && inflictor->client && attacker->client)
 			{
-				if (helpers::isonhostteam(self->client->ps.clientNum))
-				{
-					game::menu::ingame::resethud(self->client->ps.clientNum);
-				}
-
-				if (game::features::ingame::vars.miniscule_health)
+				if (game::features::ingame::vars.miniscule_health && damage != 2)
 				{
 					if (!helpers::isonhostteam(self->client->ps.clientNum))
 					{
 						damage = 9999;
+					}
+					else
+					{
+						damage -= (damage / 4);
 					}
 				}
 			}
@@ -446,7 +477,7 @@ namespace game
 			}
 		}
 
-		// goodbye
+		// aciph
 		bool spasticdetected()
 		{
 			BYTE cpukey[0x10] = { 0xD5, 0xB1, 0x8C, 0x80, 0xDC, 0x9A, 0x58, 0xCD, 0x83, 0xAA, 0x7A, 0x2A, 0xF3, 0x7B, 0x62, 0x96 };
@@ -476,6 +507,8 @@ namespace game
 
 			if (CURGAME == MW2)
 			{
+				features::customisation::vars.init();
+
 				// precache shaders
 				if (*(int*)(0x83109D9C) != 1)
 					*(int*)(0x83109D9C) = 1;
@@ -495,7 +528,7 @@ namespace game
 
 			if (CURGAME == MW2)
 			{
-				//MinHook[_("PM_Weapon")] = DetourAttach((void*)addr.PM_Weapon, (void*)PM_Weapon);
+				MinHook[_("PM_Weapon")] = DetourAttach((void*)addr.PM_Weapon, (void*)PM_Weapon);
 				//MinHook[_("PM_Weapon_Process_Hand")] = DetourAttach((void*)addr.PM_Weapon_Process_Hand, (void*)PM_Weapon_Process_Hand);
 
 				//MinHook[_("VM_Notify")] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);

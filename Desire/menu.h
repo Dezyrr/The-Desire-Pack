@@ -20,9 +20,11 @@ namespace game
 			{
 				sm_main,
 				sm_matchmaking,
+				sm_gamesettings,
 				sm_trickshotting,
 				sm_customisation,
 				sm_players,
+				sm_playeroptions,
 				sm_account,
 				sm_misc
 			};
@@ -115,6 +117,111 @@ namespace game
 						break;
 					}
 
+					case sm_trickshotting:
+					{
+						switch (controls.currentoption)
+						{
+							case 0:
+							{
+								if (left)
+								{
+									features::ingame::vars.insta_shoots--;
+									if (features::ingame::vars.insta_shoots < 0)
+										features::ingame::vars.insta_shoots = 2;
+								}
+								else
+								{
+									features::ingame::vars.insta_shoots++;
+									if (features::ingame::vars.insta_shoots > 2)
+										features::ingame::vars.insta_shoots = 0;
+								}
+								break;
+							}
+
+							case 1:
+							{
+								if (left)
+								{
+									features::ingame::vars.insta_sprint--;
+									if (features::ingame::vars.insta_sprint < 0)
+										features::ingame::vars.insta_sprint = 2;
+								}
+								else
+								{
+									features::ingame::vars.insta_sprint++;
+									if (features::ingame::vars.insta_sprint > 2)
+										features::ingame::vars.insta_sprint = 0;
+								}
+								break;
+							}
+
+							case 2:
+							{
+								if (left)
+								{
+									features::ingame::vars.insta_spas_pump--;
+									if (features::ingame::vars.insta_spas_pump < 0)
+										features::ingame::vars.insta_spas_pump = 2;
+								}
+								else
+								{
+									features::ingame::vars.insta_spas_pump++;
+									if (features::ingame::vars.insta_spas_pump > 2)
+										features::ingame::vars.insta_spas_pump = 0;
+								}
+								break;
+							}
+
+							case 3:
+							{
+								if (left)
+								{
+									features::ingame::vars.always_zoomload--;
+									if (features::ingame::vars.always_zoomload < 0)
+										features::ingame::vars.always_zoomload = 2;
+								}
+								else
+								{
+									features::ingame::vars.always_zoomload++;
+									if (features::ingame::vars.always_zoomload > 2)
+										features::ingame::vars.always_zoomload = 0;
+								}
+								break;
+							}
+
+							case 4:
+							{
+								if (left)
+								{
+									features::ingame::vars.always_lunge--;
+									if (features::ingame::vars.always_lunge < 0)
+										features::ingame::vars.always_lunge = 2;
+								}
+								else
+								{
+									features::ingame::vars.always_lunge++;
+									if (features::ingame::vars.always_lunge > 2)
+										features::ingame::vars.always_lunge = 0;
+								}
+								break;
+							}
+
+							case 6:
+							{
+
+								break;
+							}
+
+							case 7:
+							{
+
+								break;
+							}
+						}
+
+						break;
+					}
+
 					case sm_customisation:
 					{
 						switch (controls.currentoption)
@@ -132,18 +239,52 @@ namespace game
 
 							case 2:
 							{								
-
+								if (left)
+								{
+									features::customisation::vars.hudcolor_r--;
+									if (features::customisation::vars.hudcolor_r < 0)
+										features::customisation::vars.hudcolor_r = 255;
+								}
+								else
+								{
+									features::customisation::vars.hudcolor_r++;
+									if (features::customisation::vars.hudcolor_r > 255)
+										features::customisation::vars.hudcolor_r = 0;
+								}
 								break;
 							}
 
 							case 3:
 							{								
-
+								if (left)
+								{
+									features::customisation::vars.hudcolor_g--;
+									if (features::customisation::vars.hudcolor_g < 0)
+										features::customisation::vars.hudcolor_g = 255;
+								}
+								else
+								{
+									features::customisation::vars.hudcolor_g++;
+									if (features::customisation::vars.hudcolor_g > 255)
+										features::customisation::vars.hudcolor_g = 0;
+								}
 								break;
 							}
 
 							case 4:
 							{
+								if (left)
+								{
+									features::customisation::vars.hudcolor_b--;
+									if (features::customisation::vars.hudcolor_b < 0)
+										features::customisation::vars.hudcolor_b = 255;
+								}
+								else
+								{
+									features::customisation::vars.hudcolor_b++;
+									if (features::customisation::vars.hudcolor_b > 255)
+										features::customisation::vars.hudcolor_b = 0;
+								}
 								break;
 							}
 
@@ -237,7 +378,7 @@ namespace game
 
 							case 1:
 							{
-								menuvars.current_submenu = sm_trickshotting;
+								menuvars.current_submenu = sm_gamesettings;
 								controls.currentoption = 0;
 
 								break;
@@ -245,7 +386,7 @@ namespace game
 
 							case 2:
 							{
-								menuvars.current_submenu = sm_customisation;
+								menuvars.current_submenu = sm_trickshotting;
 								controls.currentoption = 0;
 
 								break;
@@ -253,7 +394,7 @@ namespace game
 
 							case 3:
 							{
-								menuvars.current_submenu = sm_players;
+								menuvars.current_submenu = sm_customisation;
 								controls.currentoption = 0;
 
 								break;
@@ -261,7 +402,7 @@ namespace game
 
 							case 4:
 							{
-								menuvars.current_submenu = sm_account;
+								menuvars.current_submenu = sm_players;
 								controls.currentoption = 0;
 
 								break;
@@ -269,7 +410,7 @@ namespace game
 
 							case 5:
 							{
-								menuvars.current_submenu = sm_misc;
+								menuvars.current_submenu = sm_account;
 								controls.currentoption = 0;
 
 								break;
@@ -277,6 +418,29 @@ namespace game
 
 							case 6:
 							{
+								menuvars.current_submenu = sm_misc;
+								controls.currentoption = 0;
+
+								break;
+							}
+
+							case 7:
+							{
+								if (CURGAME == MW2)
+								{
+									auto weap = g_entities[cgs->clientNumber].client->ps.weapon.data;
+
+									auto text = fmt("info: [num: %d, weapid: %d, weapname: %s]\n", 
+										cgs->clientNumber,
+										weap,
+										G_GetWeaponNameForIndex(weap)
+									);
+
+									printf(text);
+
+									//helpers::replacematerial("weapon_camo_blue_tiger", "Hdd:\\Desire\\camos\\mw2\\weapon_camo_blue_tiger.bin");
+								}
+
 								if (CURGAME == BO2)
 								{
 									features::injectgsc();
@@ -371,8 +535,6 @@ namespace game
 										case 2: Cbuf_AddText(0, _("set ui_gametype tdm;")); break;
 										default: break;
 									}
-
-									features::pregame::vars.disabledlc = !features::pregame::vars.disabledlc;
 								}
 
 								break;
@@ -389,23 +551,29 @@ namespace game
 						break;
 					}
 
-					case sm_trickshotting:
+					case sm_gamesettings:
 					{
 						switch (controls.currentoption)
 						{
 							case 0:
 							{
-								features::ingame::vars.depatch_bounces = !features::ingame::vars.depatch_bounces;
+								features::ingame::vars.prevent_enemy_forfeit = !features::ingame::vars.prevent_enemy_forfeit;
 								break;
 							}
 
 							case 1:
 							{
-								features::ingame::vars.easy_eles = !features::ingame::vars.easy_eles;
+								features::ingame::vars.depatch_bounces = !features::ingame::vars.depatch_bounces;
 								break;
 							}
 
 							case 2:
+							{
+								features::ingame::vars.easy_eles = !features::ingame::vars.easy_eles;
+								break;
+							}
+
+							case 3:
 							{
 								if (CURGAME == MW2)
 								{
@@ -420,7 +588,7 @@ namespace game
 								break;
 							}
 
-							case 3:
+							case 4:
 							{
 								if (CURGAME == MW2)
 								{
@@ -435,7 +603,7 @@ namespace game
 								break;
 							}
 
-							case 4:
+							case 5:
 							{
 								if (CURGAME == MW2)
 								{
@@ -451,7 +619,7 @@ namespace game
 								break;
 							}
 
-							case 5:
+							case 6:
 							{
 								features::ingame::vars.infinite_bullet_dist = !features::ingame::vars.infinite_bullet_dist;
 
@@ -463,19 +631,19 @@ namespace game
 								break;
 							}
 
-							case 6:
+							case 7:
 							{
 								features::ingame::vars.miniscule_health = !features::ingame::vars.miniscule_health;
 								break;
 							}
 
-							case 7:
+							case 8:
 							{		
 								features::ingame::vars.no_fall_damage = !features::ingame::vars.no_fall_damage;
 								break;
 							}
 
-							case 8:
+							case 9:
 							{
 								//features::ingame::vars.soft_lands = !features::ingame::vars.soft_lands;
 								features::ingame::vars.prone_spins = !features::ingame::vars.prone_spins;
@@ -483,7 +651,7 @@ namespace game
 								break;
 							}
 
-							case 9:
+							case 10:
 							{
 								//features::ingame::vars.prone_spins = !features::ingame::vars.prone_spins;
 								features::ingame::vars.ladder_spins = !features::ingame::vars.ladder_spins;
@@ -491,7 +659,7 @@ namespace game
 								break;
 							}
 
-							case 10:
+							case 11:
 							{
 								features::ingame::vars.ladder_spins = !features::ingame::vars.ladder_spins;
 								break;
@@ -503,6 +671,21 @@ namespace game
 						break;
 					}
 
+					case sm_trickshotting:
+					{
+						switch (controls.currentoption)
+						{
+							case 5:
+							{
+								features::ingame::dropweapon("spas12_grip_mp", 8);
+								break;
+							}
+
+							default: break;
+						}
+						break;
+					}
+
 					case sm_customisation:
 					{
 						switch (controls.currentoption)
@@ -511,18 +694,22 @@ namespace game
 							{
 								if (!features::customisation::vars.custom_callingcards_enabled)
 								{
-									features::customisation::vars.wasingame = true;
-
-									if (!helpers::isingame() && features::customisation::vars.wasingame)
+									if (CURGAME == MW2)
 									{
-										// thread this so that we can keep a constant check wether we are in game or not
-										ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcards, 0, 0);
-										features::customisation::vars.custom_callingcards_enabled = true;
+										features::customisation::vars.wasingame = true;
 
-										if (CURGAME == BO2)
+										if (!helpers::isingame() && features::customisation::vars.wasingame)
 										{
-											UI_OpenToastPopup(_("Desire"), _("Successfully loaded custom calling cards!"), _("ui_host"), 6000);
+											// thread this so that we can keep a constant check wether we are in game or not
+											ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcardsthread, 0, 0);
+											features::customisation::vars.custom_callingcards_enabled = true;
 										}
+									}
+
+									if (CURGAME == BO2)
+									{
+										features::customisation::customcallingcards();
+										UI_OpenToastPopup(_("Desire"), _("Successfully loaded custom calling cards!"), _("ui_host"), 6000);
 									}
 								}
 								else
@@ -541,11 +728,7 @@ namespace game
 
 							case 1:
 							{									
-								if (!helpers::isingame())
-								{
-									features::customisation::customprestiges();
-								}
-
+								features::customisation::vars.custom_hud_color = !features::customisation::vars.custom_hud_color;
 								break;
 							}
 						}
@@ -844,11 +1027,14 @@ namespace game
 							case handler::sm_main:
 							{
 								handler::widgets::addsubtab(0, _("matchmaking"));
-								handler::widgets::addsubtab(1, _("trickshotting"));
-								handler::widgets::addsubtab(2, _("customisation"));
-								handler::widgets::addsubtab(3, _("kick players"));
-								handler::widgets::addsubtab(4, _("account"));
-								handler::widgets::addsubtab(5, _("misc"));
+								handler::widgets::addsubtab(1, _("game settings"));
+								handler::widgets::addsubtab(2, _("trickshotting"));
+								handler::widgets::addsubtab(3, _("customisation"));
+								handler::widgets::addsubtab(4, _("kick players"));
+								handler::widgets::addsubtab(5, _("account"));
+								handler::widgets::addsubtab(6, _("misc"));
+								handler::widgets::addsubtab(7, _("testing"));
+
 
 								break;
 							}
@@ -865,30 +1051,43 @@ namespace game
 								break;
 							}
 
+							case handler::sm_gamesettings:
+							{
+								handler::widgets::addcheckbox(0, _("prevent enemy forfeit"), features::ingame::vars.prevent_enemy_forfeit);
+								handler::widgets::addcheckbox(1, _("depatch bounces"), features::ingame::vars.depatch_bounces);
+								handler::widgets::addcheckbox(2, _("easy eles"), features::ingame::vars.easy_eles);
+								handler::widgets::addcheckbox(3, _("prone anywhere"), features::ingame::vars.prone_anywhere);
+								handler::widgets::addcheckbox(4, _("sweeping uav"), features::ingame::vars.sweeping_uav);
+								handler::widgets::addcheckbox(5, _("wallbang everything"), features::ingame::vars.wallbang_everything);
+								handler::widgets::addcheckbox(6, _("infinite bullet dist"), features::ingame::vars.infinite_bullet_dist);
+								handler::widgets::addcheckbox(7, _("miniscule health"), features::ingame::vars.miniscule_health);
+								handler::widgets::addcheckbox(8, _("no fall damage"), features::ingame::vars.no_fall_damage);
+								//handler::widgets::addcheckbox(9, _("soft lands"), features::ingame::vars.soft_lands);
+								handler::widgets::addcheckbox(9, _("prone spins"), features::ingame::vars.prone_spins);
+								handler::widgets::addcheckbox(10, _("ladder spins"), features::ingame::vars.ladder_spins);
+
+								break;
+							}
+
 							case handler::sm_trickshotting:
 							{
-								handler::widgets::addcheckbox(0, _("depatch bounces"), features::ingame::vars.depatch_bounces);
-								handler::widgets::addcheckbox(1, _("easy eles"), features::ingame::vars.easy_eles);
-								handler::widgets::addcheckbox(2, _("prone anywhere"), features::ingame::vars.prone_anywhere);
-								handler::widgets::addcheckbox(3, _("sweeping uav"), features::ingame::vars.sweeping_uav);
-								handler::widgets::addcheckbox(4, _("wallbang everything"), features::ingame::vars.wallbang_everything);
-								handler::widgets::addcheckbox(5, _("infinite bullet dist"), features::ingame::vars.infinite_bullet_dist);
-								handler::widgets::addcheckbox(6, _("miniscule health"), features::ingame::vars.miniscule_health);
-								handler::widgets::addcheckbox(7, _("no fall damage"), features::ingame::vars.no_fall_damage);
-								//handler::widgets::addcheckbox(8, _("soft lands"), features::ingame::vars.soft_lands);
-								handler::widgets::addcheckbox(8, _("prone spins"), features::ingame::vars.prone_spins);
-								handler::widgets::addcheckbox(9, _("ladder spins"), features::ingame::vars.ladder_spins);
-
+								const char* modes[] = { "off", "self", "team" };
+								handler::widgets::addcombo(0, "insta shoots", modes, features::ingame::vars.insta_shoots);
+								handler::widgets::addcombo(1, "insta sprint", modes, features::ingame::vars.insta_sprint);
+								handler::widgets::addcombo(2, "insta spas pump", modes, features::ingame::vars.insta_spas_pump);
+								handler::widgets::addcombo(3, "always zoomload", modes, features::ingame::vars.always_zoomload);
+								handler::widgets::addcombo(4, "always lunge", modes, features::ingame::vars.always_lunge);
+								handler::widgets::addoption(5, "drop canswap");
 								break;
 							}
 
 							case handler::sm_customisation:
 							{
 								handler::widgets::addoption(0, _("custom calling cards"));
-								//handler::widgets::addcheckbox(0, _("custom hud color"), features::customisation::vars.custom_hud_color);
-								//handler::widgets::addslider(1, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255);
-								//handler::widgets::addslider(2, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255);
-								//handler::widgets::addslider(3, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255);
+								handler::widgets::addcheckbox(1, _("custom hud color"), features::customisation::vars.custom_hud_color);
+								handler::widgets::addslider(2, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255);
+								handler::widgets::addslider(3, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255);
+								handler::widgets::addslider(4, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255);
 								//handler::widgets::addcheckbox(4, _("custom camo color"), features::customisation::vars.custom_camo_color);
 								//handler::widgets::addslider(5, _("camo r"), features::customisation::vars.camocolor_r, 0, 255);
 								//handler::widgets::addslider(6, _("camo g"), features::customisation::vars.camocolor_g, 0, 255);
@@ -900,17 +1099,15 @@ namespace game
 							{
 								if (helpers::isingame())
 								{
-									if (cgs)
+									for (int i = 0; i < 18; i++)
 									{
-										for (int32_t i = 0; i < 18; i++)
+										if (!g_entities[i].client)
 										{
-											if (!g_entities[i].client)
-												continue;
-
-											gentity_s player = g_entities[i];
-
-											handler::widgets::addoption((int)i, player.client->sess.cs.name);
+											handler::widgets::addoption(i, "-");
+											continue;
 										}
+
+										handler::widgets::addoption(i, g_entities[i].client->sess.cs.name);
 									}
 								}
 								else
@@ -950,12 +1147,13 @@ namespace game
 							case handler::sm_main:
 							{
 								handler::widgets::addsubtab(0, _("matchmaking"));
-								handler::widgets::addsubtab(1, _("trickshotting"));
-								handler::widgets::addsubtab(2, _("customisation"));
-								handler::widgets::addsubtab(3, _("kick players"));
-								handler::widgets::addsubtab(4, _("account"));
-								handler::widgets::addsubtab(5, _("misc"));
-								handler::widgets::addoption(6, _("load team menu"));
+								handler::widgets::addsubtab(1, _("game settings"));
+								handler::widgets::addsubtab(2, _("team settings"));
+								handler::widgets::addsubtab(3, _("customisation"));
+								handler::widgets::addsubtab(4, _("kick players"));
+								handler::widgets::addsubtab(5, _("account"));
+								handler::widgets::addsubtab(6, _("misc"));
+								handler::widgets::addoption(7, _("load team menu"));
 
 								break;
 							}
@@ -977,6 +1175,11 @@ namespace game
 
 							case handler::sm_trickshotting:
 							{
+								break;
+							}
+
+							case handler::sm_gamesettings:
+							{
 								handler::widgets::addcheckbox(0, _("depatch bounces"), features::ingame::vars.depatch_bounces);
 								handler::widgets::addcheckbox(1, _("depatch eles"), features::ingame::vars.easy_eles);
 								handler::widgets::addcheckbox(2, _("depatch knife lunges"), features::ingame::vars.knife_lunges);
@@ -996,24 +1199,7 @@ namespace game
 
 							case handler::sm_players:
 							{
-								if (helpers::isingame())
-								{
-	/*								if (cgsBO2)
-									{
-										for (int32_t i = 0; i < 18; i++)
-										{
-											if (!cgsBO2[i].playerState.clientNum)
-												continue;
-
-		
-											handler::widgets::addoption((int)i, cgsBO2[i].playerState.);
-										}
-									}*/
-								}
-								else
-								{
-									handler::widgets::addoption(0, _("go in-game to see players"));
-								}
+								handler::widgets::addoption(0, _("not working yet, too lazy"));
 
 								break;
 							}

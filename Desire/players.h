@@ -1,7 +1,5 @@
 #pragma once
-#include "includes.h"
 #include "functions.h"
-
 
 namespace game
 {
@@ -13,7 +11,7 @@ namespace game
 			{
 				void kick(int i)
 				{
-					// kick donny
+					helpers::kickclient(i, "Player Kicked.");
 				}
 			}
 		}

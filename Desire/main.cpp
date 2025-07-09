@@ -14,6 +14,8 @@ namespace game
 	}	
 
 	int current_title = 0;
+
+	volatile bool shouldstop_callingcard_thread = false;
 	PHANDLE callingcard_thread = nullptr;
 }
 

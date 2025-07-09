@@ -915,7 +915,6 @@ struct playerState_s
 	struct PlayerActiveWeaponState weapState[2]; //0x01E8
 	unsigned int weaponsEquipped[15]; //0x0220
 	PlayerEquippedWeaponState weapEquippedData[15];
-	//char pad_025C[76]; //0x025C
 	int offHandIndex; //0x02A8
 	int offhandPrimary; //0x02AC
 	int offhandSecondary; //0x02B0
@@ -1001,6 +1000,35 @@ struct __declspec(align(4)) Turret
 };
 struct Vehicle;
 
+typedef struct {
+	char _0x0000[2]; //0x0000 
+	BYTE Valid; //0x0002
+	char _0x0003[21];
+	vec3_t mPos; //0x0018 
+	vec3_t Angle; //0x0024
+	char N0B4867E0[48]; //0x0030
+	__int32 Flags; //0x0060  
+	char N0B4D8B96[20]; //0x0064 
+	vec3_t mPos2; //0x0078 
+	char N0B4B45DC[76]; //0x0084 
+	__int32 ClientNumber; //0x00D0 
+	__int32 EntityType; //0x00D4
+	char _0x00D8[4];
+	BYTE N0B4B4612; //0x00DC 
+	BYTE Zoomed; //0x00DD 
+	BYTE Shooting; //0x00DE 
+	BYTE PlayerPose; //0x00DF 
+	char _0x00E0[20];
+	vec3_t mPos3; //0x00F4 
+	char _0x0100[88];
+	int scavWeaponID; //0x0158 
+	char _0x015C[64];
+	short WeaponNum; //0x019C 
+	char N0B4B4662[50]; //0x01A0 
+	__int32 isAlive; //0x01D0
+	char _0x01D4[36];
+}CEntity, * pCentity_t;; //Size=0x01F8
+
 class CClient
 {
 public:
@@ -1028,12 +1056,43 @@ public:
 	char _0x051C[40];
 }; //544
 
-struct cg_s
+class cRefdef
 {
-	playerState_s predictedPlayerState;	//0x0000
-	CClient ClientInfo[18];
+public:
+	char _0x0000[8];
+	__int32 iWidth; //0x0008 
+	__int32 iHeight; //0x000C 
+	float fov_X; //0x0010 
+	float fov_Y; //0x0014 
+	vec3_t EyePos; //0x0018 
+	vec3_t ViewAxis[3]; //0x0024 
 };
 
+class cg_t
+{
+public:
+	int ServerTime; // 0x00
+	char _0x0004[0x18];
+	vec3_t Origin; // 0x1C
+	char _0x0028[0x88];
+	int Stance;
+	char _0x00B4[0x50];
+	__int32 clientNumber; //0x0104
+	char _0x0108[4];
+	vec3_t ViewAngle;
+	char _0x0118[56];
+	__int32 Health; //0x0150 
+	char _0x0154[4];
+	__int32 Health2; //0x0158 
+	char _0x015C[0x168];
+	float aimSpreadScale; // 0x2C4
+	char _0x02C8[0x36D34];
+	playerState_s ps; // 0x36FFC
+	char _padding[211720];
+	cRefdef refdef; //CG + 6AC28
+	char _padding2[573968];
+	CClient ClientInfo[18];
+};
 
 struct gclient_s
 {
@@ -1376,7 +1435,28 @@ enum clientStateStatus_t {
 
 struct client_t
 {
+	char padding1[0x21294];
+	gentity_s* gentity;
+	char padding2[0x76CE8];
+};
+
+enum testClientType_t {
+	TC_NONE = 0x0,
+	TC_TEST_CLIENT = 0x1,
+	TC_BOT = 0x2,
+	TC_COUNT = 0x3,
+};
+struct client_s {
 	clientStateStatus_t state;
+	char unk0[0x20E90];
+	int lastClientCommand;
+	char lastClientCommandString[1024];
+	char unk1[0x4];
+	char name[32];
+	char unk2[0x10844];
+	testClientType_t testClient;
+	int serverId;
+	char unk3[0x66478];
 };
 
 struct serverStatic_t
@@ -1388,7 +1468,7 @@ struct serverStatic_t
 	int time;
 	int snapFlagServerBit;
 	int clientCount;
-	client_t* clients;
+	client_s* clients;
 	char padding[0x381C];
 };
 struct CmdArgs
@@ -1432,24 +1512,7 @@ struct clientSnapshot_t
 	int timeDelta;
 	unsigned __int8 padding[92];
 };
-enum testClientType_t {
-	TC_NONE = 0x0,
-	TC_TEST_CLIENT = 0x1,
-	TC_BOT = 0x2,
-	TC_COUNT = 0x3,
-};
-struct client_s {
-	clientStateStatus_t state;
-	char unk0[0x20E90];
-	int lastClientCommand;
-	char lastClientCommandString[1024];
-	char unk1[0x4];
-	char name[32];
-	char unk2[0x10844];
-	testClientType_t testClient;
-	int serverId;
-	char unk3[0x66478];
-};
+
 struct ucmd_t
 {
 	char* name;
@@ -2662,6 +2725,7 @@ struct cgs_t
 	int32_t maxclients; //0x0144
 	char pad_0148[84]; //0x0148
 };
+
 struct pmove_t
 {
 	playerState_s* ps;
@@ -2981,17 +3045,93 @@ struct cgs_tBO2 {
 	char _0x80B84[0x6B7C];
 };
 
+struct button_bits
+{
+	int buttons[2];
+};
+
+struct PlayerHeldWeapon
+{
+	int weapon;
+	int renderOptions;
+	float heatPercent;
+	int fuelTankTime;
+	int adsZoomSelect;
+	bool overHeating;
+	bool needsRechamber;
+	bool heldBefore;
+	bool quickReload;
+	bool blockWeaponPickup;
+	char model;
+};
+
+struct gclient_sBO2
+{
+	char _0x0[0xC];
+	int pm_flags;
+	int weapFlags;
+	char _0x14[0x4];
+	int otherFlags;
+	char _0x1C[0xC];
+	vec3_t origin;
+	char _0x34[0x50];
+	bool bThirdPerson;
+	char _0x85[0x77];
+	int eFlags; //0xFC
+	char _0x100[0xA4];
+	int offHand; //0x1A4
+	char _0x1A8[0x10];
+	int weapon;
+	char _0x1BC[0x2C];
+	int spreadOverride;
+	int spreadOverrideState;
+	char _0x1F0[0x8];
+	vec3_t viewangles;
+	char _0x204[0x44];
+	PlayerHeldWeapon weapons[15];
+	char _0x3EC[0x4C];
+	int lethalAmmo; //0x438
+	int tacticalAmmo; //0x43C
+	char _0x440[0x70];
+	int locationSelectionInfo;
+	int locationSelectionType;
+	char _0x4B8[0x4F74];
+	usercmd_s cmd;
+	char _0x5448[0x78];
+	float moveSpeedScale;
+	char _0x54E4[0x10];
+	int team;
+	char _0x54F8[0x3C];
+	char name[0x20];
+	char _0x5554[0x4];
+	int rank;
+	int prestige;
+	char _0x5560[0x40];
+	char clantag[4];
+	char _0x55A4[0x60];
+	int clientUIVisibilityFlag;
+	char _0x5608[0x7C];
+	int flags;
+	char _0x5688[0x4];
+	button_bits buttons;
+	button_bits oldbuttons;
+	button_bits latchedbuttons;
+	button_bits buttonsSinceLastFrame;
+	char _0x56AC[0x14C];
+};
+
 #define scrPlace ((ScreenPlacement*)0x82690F40)
 
 #define uiContext ((UiContext*)0x83647860)
 #define uiContextBO2 ((UiContext_t*)0x83BA29F0)
 
-#define cgsBO2 (*(cgs_tBO2**)0x82BBAE44)
+#define cgsBO2 (*(cgs_tBO2**)0x82BBAE68)
+#define g_clientsBO2 ((gclient_sBO2*)0x83551A10)
 
 #define scrVmPub ((scrVmPub_t*)0x835C49D8)
-#define cgameGlob (*(cg_s**)0x825B8638)
+#define cgs (*(cg_t**)0x825B8638)
 #define g_entities ((gentity_s*)0x82F03600)
 #define g_clients ((gclient_s*)0x830CBF80)
-#define cgs (*(cgs_t**)0x825B861C)
+#define globals (*(cgs_t**)0x825B861C)
 #define svs ((serverStatic_t*)0x83620380)
 #define g_lobbyData ((PartyData_s*)0x8268EE78)

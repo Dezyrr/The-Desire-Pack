@@ -54,6 +54,8 @@ namespace game
 {
 	bool moduleunloading();
 	extern int current_title;
+	
+	extern volatile bool shouldstop_callingcard_thread;
 	extern PHANDLE callingcard_thread;
 }
 #endif

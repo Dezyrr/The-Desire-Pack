@@ -24,6 +24,23 @@ char* va(const char* fmt, ...);
 char* concat(const char* text, ...);
 BOOL FileExists(CONST PCHAR FilePath);
 HRESULT SetMemory(VOID* Destination, VOID* Source, DWORD Length);
+template<typename T>
+inline T GetMemory(void* pSource)
+{
+	if (pSource == nullptr)
+	{
+		return T();
+	}
+
+	return *static_cast<T*>(pSource);
+}
+
+template<typename T>
+inline T GetMemory(uintptr_t address)
+{
+	return GetMemory<T>(reinterpret_cast<void*>(address));
+}
+
 extern XINPUT_STATE Buttons;
 bool KeyIsDown(XINPUT_STATE xState, short button);
 int auth();
