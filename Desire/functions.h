@@ -71,7 +71,7 @@ namespace game
 	int (*G_GetWeaponIndexForName)(const char* weaponname) = reinterpret_cast<int(*)(const char*)>(0x822105A8);
 	int (*G_GivePlayerWeapon)(playerState_s* playerstate, int weaponidx, int camo, int akimbo) = reinterpret_cast<int(*)(playerState_s*, int, int, int)>(0x82210B30);
 	int (*Add_Ammo)(gentity_s* ent, int weaponidx, char weaponmodel, int count, int fillclip) = reinterpret_cast<int(*)(gentity_s*, int, char, int, int)>(0x821E1EF8);
-	int (*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel, unsigned int tag) = reinterpret_cast<int(*)(gentity_s*, int, char, unsigned int)>(0x821E36A8);
+	int (*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel) = reinterpret_cast<int(*)(gentity_s*, int, char)>(0x821E36A8);
 	bool(__cdecl* SV_IsClientBot)(int clientNum) = (bool(*)(int))0x822597F0;
 	const char* (__cdecl* G_GetWeaponNameForIndex)(int weaponIndex) = (const char* (*)(int))0x820E22F0;
 	void (*Scr_AddString)(const char* string) = reinterpret_cast<void(*)(const char*)>(0x8224C620);

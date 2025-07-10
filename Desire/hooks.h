@@ -429,7 +429,6 @@ namespace game
 			MinHook[_("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
 		}
 
-		// from jokers tu9 base
 		void SV_ExecuteClientCommand(unsigned long client, const char* s, int ok)
 		{
 			DWORD clientidx = (client - *(int*)0x83623B98) / 0x97F80;

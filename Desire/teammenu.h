@@ -205,10 +205,10 @@ namespace game
 								G_GivePlayerWeapon(&player.client->ps, weaponidx, 0, 0);
 								Add_Ammo(&player, weaponidx, 0, 9999, 1);
 
-								if (validweapon != 3)
-								{
-									Drop_Weapon(&player, weaponidx, 0, SL_GetString("j_gun", 0));
-								}
+								//if (validweapon != 3)
+								//{
+								//	Drop_Weapon(&player, weaponidx, 0, SL_GetString("j_gun", 0));
+								//}
 
 								break;
 							}

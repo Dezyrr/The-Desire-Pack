@@ -22,6 +22,8 @@ namespace game
 				int camocolor_g;
 				int camocolor_b;
 
+				int camo_select;
+
 				void init()
 				{
 					hudcolor_r = 255;
@@ -61,6 +63,14 @@ namespace game
 						weapon_camo_blue_tiger : [64, 64, 438305106, 1, 7]
 						weapon_camo_orange_fall : [64, 64, 438305106, 1, 7]
 					*/
+
+					switch (features::customisation::vars.camo_select)
+					{ 
+						case 0: helpers::replacematerial("weapon_camo_red_urban", "hdd:\\desire\\camos\\mw2\\white.bin"); break;
+						case 1: helpers::replacematerial("weapon_camo_red_urban", "hdd:\\desire\\camos\\mw2\\pink.bin"); break;
+						case 2: helpers::replacematerial("weapon_camo_red_urban", "hdd:\\desire\\camos\\mw2\\green.bin"); break;
+						case 3: helpers::replacematerial("weapon_camo_red_urban", "hdd:\\desire\\camos\\mw2\\blue.bin"); break;
+					}
 				}
 
 				if (CURGAME == BO2)

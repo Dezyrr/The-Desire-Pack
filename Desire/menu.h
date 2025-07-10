@@ -228,16 +228,23 @@ namespace game
 						{
 							case 0:
 							{
+								if (left)
+								{
+									features::customisation::vars.camo_select--;
+									if (features::customisation::vars.camo_select < 0)
+										features::customisation::vars.camo_select = 3;
+								}
+								else
+								{
+									features::customisation::vars.camo_select++;
+									if (features::customisation::vars.camo_select > 3)
+										features::customisation::vars.camo_select = 0;
+								}
+
 								break;
 							}
 
-							case 1:
-							{
-
-								break;
-							}
-
-							case 2:
+							case 3:
 							{								
 								if (left)
 								{
@@ -254,7 +261,7 @@ namespace game
 								break;
 							}
 
-							case 3:
+							case 4:
 							{								
 								if (left)
 								{
@@ -271,7 +278,7 @@ namespace game
 								break;
 							}
 
-							case 4:
+							case 5:
 							{
 								if (left)
 								{
@@ -285,24 +292,6 @@ namespace game
 									if (features::customisation::vars.hudcolor_b > 255)
 										features::customisation::vars.hudcolor_b = 0;
 								}
-								break;
-							}
-
-							case 5:
-							{
-
-								break;
-							}
-
-							case 6:
-							{
-
-								break;
-							}
-
-							case 7:
-							{
-
 								break;
 							}
 						}
@@ -428,17 +417,17 @@ namespace game
 							{
 								if (CURGAME == MW2)
 								{
-									auto weap = g_entities[cgs->clientNumber].client->ps.weapon.data;
+									//auto weap = g_entities[cgs->clientNumber].client->ps.weapon.data;
 
-									auto text = fmt("info: [num: %d, weapid: %d, weapname: %s]\n", 
-										cgs->clientNumber,
-										weap,
-										G_GetWeaponNameForIndex(weap)
-									);
+									//auto text = fmt("info: [num: %d, weapid: %d, weapname: %s]\n", 
+									//	cgs->clientNumber,
+									//	weap,
+									//	G_GetWeaponNameForIndex(weap)
+									//);
 
-									printf(text);
+									//printf(text);
 
-									//helpers::replacematerial("weapon_camo_blue_tiger", "Hdd:\\Desire\\camos\\mw2\\weapon_camo_blue_tiger.bin");
+									helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\camo_mw2.bin");
 								}
 
 								if (CURGAME == BO2)
@@ -677,7 +666,7 @@ namespace game
 						{
 							case 5:
 							{
-								features::ingame::dropweapon("spas12_grip_mp", 8);
+								features::ingame::dropweapon("cheytac_mp", CAMO_URBAN);
 								break;
 							}
 
@@ -692,6 +681,12 @@ namespace game
 						{
 							case 0:
 							{
+								features::customisation::customcamos();
+								break;
+							}
+
+							case 1:
+							{									
 								if (!features::customisation::vars.custom_callingcards_enabled)
 								{
 									if (CURGAME == MW2)
@@ -726,8 +721,8 @@ namespace game
 								break;
 							}
 
-							case 1:
-							{									
+							case 2:
+							{
 								features::customisation::vars.custom_hud_color = !features::customisation::vars.custom_hud_color;
 								break;
 							}
@@ -839,7 +834,13 @@ namespace game
 							doslidercrement(false);
 
 							if (handler::menuvars.current_submenu == sm_customisation)
-								controls.wait = 6;
+							{
+								// only make rgb sliders fast
+								if (controls.currentoption == 3 || controls.currentoption == 4 || controls.currentoption == 5)
+									controls.wait = 6;
+								else
+									controls.wait = 0;
+							}
 							else
 								controls.wait = 0;
 						}
@@ -1083,11 +1084,13 @@ namespace game
 
 							case handler::sm_customisation:
 							{
-								handler::widgets::addoption(0, _("custom calling cards"));
-								handler::widgets::addcheckbox(1, _("custom hud color"), features::customisation::vars.custom_hud_color);
-								handler::widgets::addslider(2, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255);
-								handler::widgets::addslider(3, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255);
-								handler::widgets::addslider(4, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255);
+								const char* camos[] = { "white", "pink", "green", "blue" };
+								handler::widgets::addcombo(0, _("custom bluetiger preset"), camos, features::customisation::vars.camo_select);
+								handler::widgets::addcheckbox(1, _("custom calling cards"), features::customisation::vars.custom_callingcards_enabled);
+								handler::widgets::addcheckbox(2, _("custom hud color"), features::customisation::vars.custom_hud_color);
+								handler::widgets::addslider(3, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255);
+								handler::widgets::addslider(4, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255);
+								handler::widgets::addslider(5, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255);
 								//handler::widgets::addcheckbox(4, _("custom camo color"), features::customisation::vars.custom_camo_color);
 								//handler::widgets::addslider(5, _("camo r"), features::customisation::vars.camocolor_r, 0, 255);
 								//handler::widgets::addslider(6, _("camo g"), features::customisation::vars.camocolor_g, 0, 255);

@@ -193,15 +193,14 @@ namespace game
 				gentity_s player = g_entities[cgs->clientNumber];
 
 				int weaponidx = G_GetWeaponIndexForName(name);
-				int validweapon = *(int*)(BG_GetWeaponDef(weaponidx) + 0x38);
 
 				G_GivePlayerWeapon(&player.client->ps, weaponidx, camo, 0);
 				Add_Ammo(&player, weaponidx, 0, 9999, 1);
 
-				if (*(int*)(BG_GetWeaponDef(weaponidx) + 0x38) == 3)
-					return;
+			    //if (*(int*)(BG_GetWeaponDef(weaponidx) + 0x38) == 3)
+				//return;
 
-				Drop_Weapon(&player, weaponidx, 0, 0);
+				//Drop_Weapon(&player, weaponidx, 0);
 			}
 
 			void handle_in_game_features()
