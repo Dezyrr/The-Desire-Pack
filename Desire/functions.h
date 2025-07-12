@@ -3,6 +3,15 @@
 
 namespace game
 {
+	// shit ive found in ida
+	// 0x820E2EC8 - GetWeaponModel
+	// 0x820E22C0 - BG_GetWeaponDef
+	// 0x820E22D8 - BG_GetWeaponCompleteDef
+	// 0x821E2E18 - Item_SetDefaultVelocity
+	// 0x821E2188 - CurrentPrimaryWeapon
+	// 0x821E4360 - G_EntEnablePhysics
+	// 0x820E2EC8 - BG_GetWeaponModel
+
 	void(_cdecl* SV)(int clientNum, int type, const char* text);
 	void (*SV_ExecuteClientCommand)(client_t* client, const char* s, int clientOK, int fromOldServer) = reinterpret_cast<void (*)(client_t*, const char*, int, int)>(0x82253140);
 
@@ -77,6 +86,9 @@ namespace game
 	void (*Scr_AddString)(const char* string) = reinterpret_cast<void(*)(const char*)>(0x8224C620);
 	void (*Scr_Notify)(int* ent, short stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int*, short, unsigned int)>(0x82209710);
 	void (*Scr_NotifyNum)(int entnum, unsigned int classnum, unsigned int stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int, unsigned int, unsigned int, unsigned int)>(0x82209710);
+	int (*Item_SetDefaultVelocity)(gentity_s* ent, int weaponidx) = reinterpret_cast<int(*)(gentity_s*, int)>(0x821E2E18);
+	int (*G_EntEnablePhysics)(gentity_s* ent, int physcollmap) = reinterpret_cast<int(*)(gentity_s*, int)>(0x821E4360);
+	int (*BG_GetWeaponModel)(playerState_s* playerstate, int weaponidx) = reinterpret_cast<int(*)(playerState_s*, int)>(0x820E2EC8);
 
 	void UI_OpenToastPopup(const char* title, const char* description, const char* material, int displayTime)  {
 		((void(*)(...))0x82454800)(0, material, title, description, displayTime);
@@ -159,6 +171,29 @@ namespace game
 			return false;
 		}
 
+		bool isbot(int clientIndex)
+		{
+			return SV_IsClientBot(clientIndex);
+		}
+
+		int getlocalidx()
+		{
+			if (cgs)
+				return cgs->clientNumber;
+
+			return -1;
+		}
+
+		bool isalive(int idx)
+		{
+			gentity_s* player = &g_entities[idx];
+			
+			if (player->health > 0)
+				return true;
+
+			return false;
+		}
+
 		void printimageinfomw2(XAssetHeader img)
 		{
 			printf(_("%s: [%d, %d, %d, %d, %d]\n"), img.image->name, img.image->width, img.image->height, img.image->depth, img.image->levelCount, img.image->Format);
@@ -213,6 +248,47 @@ namespace game
 			return G_GetWeaponNameForIndex(weapon);
 		}
 
+		void printmodelinfomw2(const char* weapon)
+		{
+			auto gunXModel = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->gunXModel[0];
+			auto worldModel = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->worldModel[0];
+			auto handXModel = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->handXModel;
+			auto szXAnims = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->szXAnims[0];
+			auto szXAnimsL = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->szXAnimsL[0];
+			auto szXAnimsR = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->szXAnimsR[0];
+			auto xmodel = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, weapon).xmodel;
+			//auto xanim = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XANIMPARTS, weapon).xanim;
+
+			printf(_("------------------------------------------------------------------------------------------------------------------------\n"));
+			printf(_("gunXModel: %s: [%d]\n"), gunXModel->name, gunXModel->numBones);
+			printf(_("worldModel: %s: [%d]\n"), worldModel->name, worldModel->numBones);
+			printf(_("handXModel: %s: [%d]\n"), handXModel->name, handXModel->numBones);
+			printf(_("szXAnims: %s\n"), szXAnims);
+			printf(_("szXAnimsL: %s\n"), szXAnimsL);
+			printf(_("szXAnimsR: %s\n"), szXAnimsR);
+			printf(_("xmodel: %s: [%d]\n"), xmodel->name, xmodel->numBones);
+			//printf(_("xanim: %s\n"), xanim->name);
+			printf(_("------------------------------------------------------------------------------------------------------------------------\n"));
+			printf(_("\n"));
+		}
+
+		void replaceweaponmodel(const char* weapon, const char* model)
+		{
+			DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->gunXModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, model).weapon->weapDef->gunXModel[0];
+			DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->worldModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, model).weapon->weapDef->worldModel[0];
+		}
+
+		void replaceweaponmodelwithxmodel(const char* weapon, const char* model)
+		{
+			//DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->gunXModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, model).xmodel;
+			//DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->worldModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, model).xmodel;
+		}
+
+		void replaceweaponanimation(const char* weapon, const char* anim)
+		{
+			//DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XANIMPARTS, weapon).xanim = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XANIMPARTS, weapon).xanim;
+		}
+
 		bool isholdingsniper(int idx)
 		{
 			if (!g_entities[idx].client)
@@ -244,7 +320,7 @@ namespace game
 			return false;
 		}
 
-		bool isholdingspas(int idx)
+		bool isholdingakimboweapon(int idx)
 		{
 			if (!g_entities[idx].client)
 				return false;
@@ -252,7 +328,22 @@ namespace game
 			auto weapidx = g_entities[idx].client->ps.weapon.data;
 			auto weapstr = G_GetWeaponNameForIndex(weapidx);
 
-			if (strstr(weapstr, "spas"))
+			if (strstr(weapstr, "akimbo"))
+				return true;
+
+			return false;
+		}
+
+		bool isholdingpumpshotgun(int idx)
+		{
+			if (!g_entities[idx].client)
+				return false;
+
+			auto weapidx = g_entities[idx].client->ps.weapon.data;
+			auto weapstr = G_GetWeaponNameForIndex(weapidx);
+
+			if (strstr(weapstr, "spas") || 
+				strstr(weapstr, "1887"))
 				return true;
 
 			return false;
@@ -297,9 +388,20 @@ namespace game
 			return -1;
 		}
 
-		void kickclient(int idx, const char* reason, ...)
+		void kickclient(int idx)
 		{
+			if (!ishost(cgs->clientNumber))
+				return;
 
+			if (!isingame())
+				return;
+
+			if (!g_entities[idx].client)
+				return;
+
+			client_t* client = &GetMemory<client_t*>(0x83620380 + 0x3818)[idx];
+
+			SV_DropClient(client, "Player Kicked.", true);
 		}
 
 		bool isonhostteam(int idx)
@@ -307,31 +409,7 @@ namespace game
 			if (!isingame())
 				return false;
 
-			if (!cgs || !cgs[idx].ClientInfo)
-				return false;
-
-			short hostteam = -1;
-
-			for (int i = 0; i < 18; i++)
-			{
-				if (!g_entities[i].client)
-					continue;
-
-				if (ishost(i))
-				{
-					hostteam = g_entities[i].client->sess.cs.team;
-					break;
-				}
-			}
-
-			if (hostteam == -1)
-			{
-				return false;
-			}
-
-			short playerteam = g_entities[idx].client->sess.cs.team;
-
-			return playerteam == hostteam;
+			return g_entities[idx].client->sess.cs.team == g_entities[getlocalidx()].client->sess.cs.team;
 		}
 
 		void iprintln(int idx, const char* text)
@@ -346,7 +424,7 @@ namespace game
 
 		bool shouldrunonteamorself(int feature_value, int clientidx)
 		{
-			return (feature_value == 1 && clientidx == cgs->clientNumber) || (feature_value == 2 && helpers::isonhostteam(clientidx));
+			return (feature_value == 1 && clientidx == helpers::getlocalidx()) || (feature_value == 2 && helpers::isonhostteam(clientidx));
 		}
 	}
 

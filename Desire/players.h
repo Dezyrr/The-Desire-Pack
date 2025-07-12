@@ -11,7 +11,7 @@ namespace game
 			{
 				void kick(int i)
 				{
-					helpers::kickclient(i, "Player Kicked.");
+					helpers::kickclient(i);
 				}
 			}
 		}

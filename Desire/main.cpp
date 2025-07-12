@@ -17,6 +17,7 @@ namespace game
 
 	volatile bool shouldstop_callingcard_thread = false;
 	PHANDLE callingcard_thread = nullptr;
+	bool begin_set = false;
 }
 
 void titlecheck(DWORD TitleID)
@@ -43,11 +44,11 @@ void titlecheck(DWORD TitleID)
 	case BO2:
 		if (!strcmp((char*)0x82003580, "multiplayer"))
 		{
-			Sleep(1500);
-			MountPath("hdd:", "\\Device\\Harddisk0\\Partition1", TRUE);
+			//Sleep(1500);
+			//MountPath("hdd:", "\\Device\\Harddisk0\\Partition1", TRUE);
 
-			game::hooks::init();
-			starthooks();
+			//game::hooks::init();
+			//starthooks();
 		}
 		break;
 	default:

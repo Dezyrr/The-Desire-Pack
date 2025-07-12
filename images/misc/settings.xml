@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-16" ?>
+<RDF Version="XPR2">
+<Texture
+   Name   = "iw_logo"
+   Source = "C:\Users\leann\Desktop\background\iw_logo.png"
+   Format = "D3DFMT_A8R8G8B8"
+   Width =  "256"
+   Height = "128"
+   Levels = "1"
+/>
+</RDF>

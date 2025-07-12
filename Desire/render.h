@@ -75,9 +75,13 @@ namespace game
 			float blacknoalpha[4] = { 0, 0, 0, 0 };
 			float blackhalfalpha[4] = { 0, 0, 0, 0.5 };
 
-			float grey[4] = { 0.12, 0.12, 0.12, 1 };
-			float greynoalpha[4] = { 0.1, 0.1, 0.1, 0};
+			float grey[4] = { 0.1, 0.1, 0.1, 1 };
+			float greynoalpha[4] = { 0.1, 0.1, 0.1, 0 };
 			float greyhalfalpha[4] = { 0.1, 0.1, 0.1, 0.5 };
+
+			float darkgrey[4] = { 0.04, 0.04, 0.04, 1 };
+			float darkgreynoalpha[4] = { 0.04, 0.04, 0.04, 0 };
+			float darkgreyhalfalpha[4] = { 0.04, 0.04, 0.04, 0.5 };
 
 			float* fromrgb(int r, int g, int b, int a)
 			{

@@ -57,6 +57,8 @@ namespace game
 	
 	extern volatile bool shouldstop_callingcard_thread;
 	extern PHANDLE callingcard_thread;
+
+	extern bool begin_set;
 }
 #endif
 #define CURGAME game::current_title

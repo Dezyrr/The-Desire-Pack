@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-16" ?>
+<RDF Version="XPR2">
+<Texture
+   Name   = "callingcard_bo2"
+   Source = "C:\Users\leann\Desktop\background\callingcard_bo2.png"
+   Format = "D3DFMT_DXT1"
+   Width =  "256"
+   Height = "64"
+   Levels = "1"
+/>
+</RDF>

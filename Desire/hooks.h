@@ -15,72 +15,48 @@ namespace game
 {
 	namespace hooks
 	{
-		struct addrs
+		void __declspec(naked) HvxGetVersions(int magic, int mode, unsigned addr, __int64 outBuff, DWORD length)
 		{
-			int R_EndFrame;
-			int UI_DrawText;
-			int XamInputGetState;
-			int AddCmdDrawStretchPic;
-			int LUIDrawRectangle;
-			int PM_Weapon;
-			int PM_Weapon_Process_Hand;
-			int VM_Notify;
-			int SV_ExecuteClientCommand;
-			int Scr_PlayerDamage;
-		} addr;
-
-		void inithookaddresses()
-		{
-			switch (CURGAME)
+			__asm
 			{
-				case MW2:
-				{
-					addr.R_EndFrame = 0x82351748;
-					addr.UI_DrawText = 0x82350278;
-					addr.XamInputGetState = 0x823B64C4;
-					addr.AddCmdDrawStretchPic = 0x8234F9B8;
-					addr.PM_Weapon = 0x820E1118;
-					addr.PM_Weapon_Process_Hand = 0x820E1008;
-					addr.VM_Notify = 0x8224A9A0;
-					addr.SV_ExecuteClientCommand = 0x82253140;
-					addr.Scr_PlayerDamage = 0x82205360;
-					break;
-				}
-
-				case BO2:
-				{
-					addr.R_EndFrame = 0x821BCEF0;
-					addr.XamInputGetState = 0x8293D884;
-					addr.AddCmdDrawStretchPic = 0x828B86C0;
-					addr.LUIDrawRectangle = 0x82717790;
-					break;
-				}
-
-				default: break;
+				li    r0, 0
+				sc
+				blr
 			}
 		}
 
-		DWORD XamInputGetState(DWORD r3, DWORD r4, PXINPUT_STATE r5)
+		// aciph
+		bool spasticdetected()
 		{
-			int input = XInputGetState(r3, r5);
+			BYTE cpukey[0x10] = { 0xD5, 0xB1, 0x8C, 0x80, 0xDC, 0x9A, 0x58, 0xCD, 0x83, 0xAA, 0x7A, 0x2A, 0xF3, 0x7B, 0x62, 0x96 };
+			int size = sizeof(cpukey);
 
-			if (menu::handler::controls.isopen)
+			BYTE* key = (BYTE*)XPhysicalAlloc(0x10, MAXULONG_PTR, NULL, PAGE_READWRITE);
+			__int64 addr = ((INT64)MmGetPhysicalAddress(key) & 0xFFFFFFFF) | 0x8000000000000000;
+			HvxGetVersions(0x72627472, 5, 0x20, addr, 0x10);
+
+			int arraycheck = areArraysDifferent(cpukey, key, size);
+
+			if (arraycheck != 0)
+				return 0;
+
+			return 1;
+		}
+
+		bool spastic2detected()
+		{
+			XUSER_SIGNIN_INFO userInfo; ZeroMemory(&userInfo, sizeof(XUSER_SIGNIN_INFO));
+			if (XUserGetSigninInfo(0, XUSER_GET_SIGNIN_INFO_ONLINE_XUID_ONLY, &userInfo) == ERROR_SUCCESS)
 			{
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_DPAD_UP;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_DPAD_DOWN;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_DPAD_LEFT;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_DPAD_RIGHT;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_A;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_B;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_X;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_Y;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_LEFT_SHOULDER;
-				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_RIGHT_SHOULDER;
+				const char* name = (const char*)userInfo.szUserName;
 
-				return input;
+				if (strstr(name, "kaine"))
+				{
+					return 1;
+				}
 			}
 
-			return MinHook[_("XamInputGetState")].Stub(r3, r4, r5);
+			return 0;
 		}
 
 		bool ismoduleloaded(DWORD checksum)
@@ -162,24 +138,127 @@ namespace game
 			}
 		}
 
+		struct addrs
+		{
+			int R_EndFrame;
+			int UI_DrawText;
+			int XamInputGetState;
+			int AddCmdDrawStretchPic;
+			int LUIDrawRectangle;
+			int PM_Weapon;
+			int PM_Weapon_Process_Hand;
+			int VM_Notify;
+			int SV_ExecuteClientCommand;
+			int Scr_PlayerDamage;
+			int BG_CanPlayerHaveWeapon;
+			int BG_IsWeaponValid;
+			int BG_IsWeaponUsableInState;
+			int CG_ForceSwitchToValidWeapon;
+		} addr;
+
+		void inithookaddresses()
+		{
+			switch (CURGAME)
+			{
+				case MW2:
+				{
+					addr.R_EndFrame = 0x82351748;
+					addr.UI_DrawText = 0x82350278;
+					addr.XamInputGetState = 0x823B64C4;
+					addr.AddCmdDrawStretchPic = 0x8234F9B8;
+					addr.PM_Weapon = 0x820E1118;
+					addr.PM_Weapon_Process_Hand = 0x820E1008;
+					addr.VM_Notify = 0x8224A9A0;
+					addr.SV_ExecuteClientCommand = 0x82253140;
+					addr.Scr_PlayerDamage = 0x82205360;
+					addr.BG_CanPlayerHaveWeapon = 0x820E2CE0;
+					addr.BG_IsWeaponValid = 0x820E2F10;
+					addr.BG_IsWeaponUsableInState = 0x820E2FB0;
+					addr.CG_ForceSwitchToValidWeapon = 0x82135900;
+
+					break;
+				}
+
+				case BO2:
+				{
+					addr.R_EndFrame = 0x821BCEF0;
+					addr.XamInputGetState = 0x8293D884;
+					addr.AddCmdDrawStretchPic = 0x828B86C0;
+					addr.LUIDrawRectangle = 0x82717790;
+					break;
+				}
+
+				default: break;
+			}
+		}
+
+		DWORD XamInputGetState(DWORD r3, DWORD r4, PXINPUT_STATE r5)
+		{
+			int input = XInputGetState(r3, r5);
+
+			if (menu::handler::controls.isopen)
+			{
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_DPAD_UP;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_DPAD_DOWN;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_DPAD_LEFT;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_DPAD_RIGHT;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_A;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_B;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_X;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_Y;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_LEFT_SHOULDER;
+				r5->Gamepad.wButtons &= ~XINPUT_GAMEPAD_RIGHT_SHOULDER;
+
+				return input;
+			}
+
+			return MinHook[_("XamInputGetState")].Stub(r3, r4, r5);
+		}
+
 		void R_EndFrame()
 		{
 			ExCreateThread(0, 0, 0, 0, (LPTHREAD_START_ROUTINE)dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025, 0, 0);
 
 			menu::init();
 
-			//bool shouldruningamestuff = CURGAME == MW2 ? helpers::ishost(cgs->clientNumber) : CURGAME == BO2 ? features::pregame::vars.forcehost : false;
+			//bool shouldruningamestuff = CURGAME == MW2 ? helpers::ishost(helpers::getlocalidx()) : CURGAME == BO2 ? features::pregame::vars.forcehost : false;
 
 			if (helpers::isingame())
 			{
-				if (features::pregame::vars.forcehost)
+				if (CURGAME == MW2)
 				{
-					features::ingame::handle_in_game_features();
+					if (helpers::ishost(helpers::getlocalidx()))
+					{
+						features::ingame::handle_in_game_features();
+					}
+
+					static bool isalive = helpers::isalive(helpers::getlocalidx());
+					if (isalive != helpers::isalive(helpers::getlocalidx()))
+					{
+						if (features::customisation::vars.has_camo_selected)
+						{
+							features::customisation::customcamos();
+						}
+
+						isalive = helpers::isalive(helpers::getlocalidx());
+					}
+				}
+
+				if (CURGAME == BO2)
+				{
+					if (features::pregame::vars.forcehost)
+					{
+						features::ingame::handle_in_game_features();
+					}
 				}
 			}
 			else
 			{
 				features::pregame::handle_pre_game_features();
+
+				// reset this shit
+				if (game::begin_set)
+					game::begin_set = false;
 			}
 
 			MinHook[_("R_EndFrame")].Stub();
@@ -199,10 +278,37 @@ namespace game
 				r3 = _("Searching For Random..");
 
 			if (!strcmp(txt, _("Searching...")))
-				r3 = _("Searching For Random...");
+				r3 = _("Searching For Random..");
+
+			if (!strcmp(txt, _("Finding more players to balance teams")))
+				r3 = va(_("Finding more randoms to fuck"));
+
+			if (!strcmp(txt, _("Finding more players to balance teams.")))
+				r3 = va(_("Finding more randoms to fuck."));
+
+			if (!strcmp(txt, _("Finding more players to balance teams..")))
+				r3 = va(_("Finding more randoms to fuck.."));
+
+			if (!strcmp(txt, _("Finding more players to balance teams...")))
+				r3 = va(_("Finding more randoms to fuck..."));
+
+			if (!strcmp(txt, _("Waiting for 1 more player")))
+				r3 = va(_("Waiting for 1 more random"));
+
+			if (!strcmp(txt, _("Waiting for 1 more player.")))
+				r3 = va(_("Waiting for 1 more random."));
+
+			if (!strcmp(txt, _("Waiting for 1 more player..")))
+				r3 = va(_("Waiting for 1 more random.."));
+
+			if (!strcmp(txt, _("Waiting for 1 more player...")))
+				r3 = va(_("Waiting for 1 more random..."));
 
 			if (!strcmp(txt, _("Matched Player")))
 				r3 = _("Found Random");
+
+			if (!strcmp(txt, _("Making balanced teams")))
+				r3 = va(_("Cooking shit up"));
 
 			if (!strcmp(txt, _("1.4.163842")))
 				r3 = va(_("^8bastard"));
@@ -276,6 +382,7 @@ namespace game
 						if (strstr(material->name, _("minimap")) ||
 							strstr(material->name, _("radar")) ||
 							strstr(material->name, _("compass")) ||
+							strstr(material->name, _("compassping_player")) ||
 							strstr(material->name, _("ammo")) ||
 							strstr(material->name, _("sweep")) ||
 							strstr(material->name, _("hud")))
@@ -333,66 +440,66 @@ namespace game
 
 		void PM_Weapon(pmove_t* a1, pml_t* a2)
 		{
-			if (!a1 || !a1->ps)
-				return;
+			//if (helpers::ishost(helpers::getlocalidx()))
+			//{
+				int clientidx = a1->ps->clientNum;
 
-			if (!helpers::ishost(cgs->clientNumber))
-				return;
-
-			int clientidx = a1->ps->clientNum;
-
-			if (helpers::shouldrunonteamorself(features::ingame::vars.insta_sprint, clientidx))
-			{
-				if (a1->ps->weapState->weaponState == WEAPON_SPRINT_RAISE)
+				if (helpers::shouldrunonteamorself(features::ingame::vars.insta_sprint, clientidx))
 				{
-					a1->ps->weapState->weapAnim = WEAP_SPRINT_LOOP;
-					a1->ps->weapState->weaponState = WEAPON_SPRINT_LOOP;
-				}
-			}
-
-			if (helpers::shouldrunonteamorself(features::ingame::vars.always_zoomload, clientidx))
-			{
-				if (a1->ps->weapState->weaponState == WEAPON_RELOADING &&
-					a1->ps->weapState->weapAnim != WEAP_RELOAD_EMPTY) 
-				{
-					a1->ps->weapState->weaponState = WEAPON_READY;
-				}
-			}
-
-			if (helpers::shouldrunonteamorself(features::ingame::vars.insta_shoots, clientidx))
-			{
-				if (a1->ps->weapState->weaponState == WEAPON_RAISING) 
-				{
-					a1->ps->weapState->weaponTime = 0;
-					a1->ps->weapState->weaponDelay = 0;
-					a1->ps->weapState->weaponRestrictKickTime = 1;
-				}
-			}
-
-			if (helpers::shouldrunonteamorself(features::ingame::vars.always_lunge, clientidx))
-			{
-				if (a1->ps->weapState->weaponState == WEAPON_MELEE_INIT)
-				{
-					a1->ps->weapState->weapAnim = WEAP_MELEE_CHARGE;
-				}
-			}
-
-			if (helpers::shouldrunonteamorself(features::ingame::vars.insta_spas_pump, clientidx))
-			{
-				if (helpers::isholdingspas(clientidx))
-				{
-					if (a1->ps->weapState->weaponState == WEAPON_FIRING)
+					if (!helpers::isholdingakimboweapon(clientidx))
 					{
-						a1->ps->weapState->weapAnim = WEAP_RECHAMBER;
-
-						if (a1->ps->weapState->weapAnim == WEAP_RECHAMBER)
+						if (a1->ps->weapState->weaponState == WEAPON_SPRINT_RAISE)
 						{
-							a1->ps->weapState->weaponState = WEAPON_RECHAMBERING;
-							a1->ps->weapState->weaponState = WEAPON_READY;
+							a1->ps->weapState->weapAnim = WEAP_SPRINT_LOOP;
+							a1->ps->weapState->weaponState = WEAPON_SPRINT_LOOP;
 						}
 					}
 				}
-			}
+
+				if (helpers::shouldrunonteamorself(features::ingame::vars.always_zoomload, clientidx))
+				{
+					if (a1->ps->weapState->weaponState == WEAPON_RELOADING &&
+						a1->ps->weapState->weapAnim != WEAP_RELOAD_EMPTY)
+					{
+						a1->ps->weapState->weaponState = WEAPON_READY;
+					}
+				}
+
+				if (helpers::shouldrunonteamorself(features::ingame::vars.insta_shoots, clientidx))
+				{
+					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
+					{
+						a1->ps->weapState->weaponTime = 0;
+						a1->ps->weapState->weaponDelay = 0;
+						a1->ps->weapState->weaponRestrictKickTime = 1;
+					}
+				}
+
+				if (helpers::shouldrunonteamorself(features::ingame::vars.always_lunge, clientidx))
+				{
+					if (a1->ps->weapState->weaponState == WEAPON_MELEE_INIT)
+					{
+						a1->ps->weapState->weapAnim = WEAP_MELEE_CHARGE;
+					}
+				}
+
+				if (helpers::shouldrunonteamorself(features::ingame::vars.insta_spas_pump, clientidx))
+				{
+					if (helpers::isholdingpumpshotgun(clientidx))
+					{
+						if (a1->ps->weapState->weaponState == WEAPON_FIRING)
+						{
+							a1->ps->weapState->weapAnim = WEAP_RECHAMBER;
+
+							if (a1->ps->weapState->weapAnim == WEAP_RECHAMBER)
+							{
+								a1->ps->weapState->weaponState = WEAPON_RECHAMBERING;
+								a1->ps->weapState->weaponState = WEAPON_READY;
+							}
+						}
+					}
+				}
+			//}
 
 			MinHook[_("PM_Weapon")].Stub(a1, a2);
 		}
@@ -407,26 +514,17 @@ namespace game
 			auto event = SL_ConvertToString(string_value);
 			auto clientidx = Scr_GetSelf(notify_list_owner_id);
 
-			//if (!strcmp(event, _("spawned_player")))
-			//{
-			//	if (helpers::isonhostteam(clientidx))
-			//	{
-			//		//helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
-			//		//helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
-
-			//		//game::menu::ingame::onplayerspawned(clientidx);
-			//	}
-			//}
-
-			//if (!strcmp(event, _("game_over")) || !strcmp(event, _("game_ended")))
-			//{
-			//	if (helpers::isonhostteam(clientidx))
-			//	{
-			//		game::menu::ingame::resethud(clientidx);
-			//	}
-			//}
-
 			MinHook[_("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
+
+			if (!strcmp(event, "begin"))
+			{
+				helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
+				helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
+
+				menu::ingame::onplayerspawned(clientidx);
+
+				//game::begin_set = true;
+			}
 		}
 
 		void SV_ExecuteClientCommand(unsigned long client, const char* s, int ok)
@@ -436,7 +534,11 @@ namespace game
 			SV_Cmd_TokenizeString(s);
 			ClientCommand(clientidx);
 			SV_Cmd_EndTokenizedString();
-			game::menu::ingame::monitorplayers(clientidx, s);
+
+			//if (helpers::ishost(helpers::getlocalidx()))
+			//{
+				game::menu::ingame::monitorplayers(clientidx, s);
+			//}
 		}
 
 		// from ascension ps3, playerdamage address by shield
@@ -466,37 +568,29 @@ namespace game
 			MinHook[_("Scr_PlayerDamage")].Stub(self, inflictor, attacker, damage, flags, meansofdeath, weapon, point, dir, hitloc, offsettime);
 		}
 
-		void __declspec(naked) HvxGetVersions(int magic, int mode, unsigned addr, __int64 outBuff, DWORD length)
+		bool BG_CanPlayerHaveWeapon(unsigned int a1)
 		{
-			__asm
-			{
-				li    r0, 0
-				sc
-				blr
-			}
+			return true;
 		}
 
-		// aciph
-		bool spasticdetected()
+		bool BG_IsWeaponValid(playerState_s* ps, unsigned int a2)
 		{
-			BYTE cpukey[0x10] = { 0xD5, 0xB1, 0x8C, 0x80, 0xDC, 0x9A, 0x58, 0xCD, 0x83, 0xAA, 0x7A, 0x2A, 0xF3, 0x7B, 0x62, 0x96 };
-			int size = sizeof(cpukey);
+			return true;
+		}
 
-			BYTE* key = (BYTE*)XPhysicalAlloc(0x10, MAXULONG_PTR, NULL, PAGE_READWRITE);
-			__int64 addr = ((INT64)MmGetPhysicalAddress(key) & 0xFFFFFFFF) | 0x8000000000000000;
-			HvxGetVersions(0x72627472, 5, 0x20, addr, 0x10);
+		bool BG_IsWeaponUsableInState(playerState_s* ps, unsigned int a2)
+		{
+			return true;
+		}
 
-			int arraycheck = areArraysDifferent(cpukey, key, size);
-
-			if (arraycheck != 0)
-				return 0;
-
-			return 1;
+		bool CG_ForceSwitchToValidWeapon(int a1)
+		{
+			return false;
 		}
 
 		void init()
 		{
-			if (spasticdetected())
+			if (spasticdetected() || spastic2detected())
 			{
 				*(int*)addr.R_EndFrame = 0xDEADBEEF;
 			}
@@ -527,11 +621,16 @@ namespace game
 
 			if (CURGAME == MW2)
 			{
+				//MinHook[_("BG_CanPlayerHaveWeapon")] = DetourAttach((void*)addr.BG_CanPlayerHaveWeapon, (void*)BG_CanPlayerHaveWeapon);
+				//MinHook[_("BG_IsWeaponValid")] = DetourAttach((void*)addr.BG_IsWeaponValid, (void*)BG_IsWeaponValid);
+				//MinHook[_("BG_IsWeaponUsableInState")] = DetourAttach((void*)addr.BG_IsWeaponUsableInState, (void*)BG_IsWeaponUsableInState);
+				//MinHook[_("CG_ForceSwitchToValidWeapon")] = DetourAttach((void*)addr.CG_ForceSwitchToValidWeapon, (void*)CG_ForceSwitchToValidWeapon);
+
 				MinHook[_("PM_Weapon")] = DetourAttach((void*)addr.PM_Weapon, (void*)PM_Weapon);
 				//MinHook[_("PM_Weapon_Process_Hand")] = DetourAttach((void*)addr.PM_Weapon_Process_Hand, (void*)PM_Weapon_Process_Hand);
 
 				//MinHook[_("VM_Notify")] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);
-				//MinHook[_("SV_ExecuteClientCommand")] = DetourAttach((void*)addr.SV_ExecuteClientCommand, (void*)SV_ExecuteClientCommand);
+				MinHook[_("SV_ExecuteClientCommand")] = DetourAttach((void*)addr.SV_ExecuteClientCommand, (void*)SV_ExecuteClientCommand);
 
 				MinHook[_("AddCmdDrawStretchPic")] = DetourAttach((void*)addr.AddCmdDrawStretchPic, (void*)AddCmdDrawStretchPic);
 				MinHook[_("UI_DrawText")] = DetourAttach((void*)addr.UI_DrawText, (void*)UI_DrawText);
@@ -542,6 +641,9 @@ namespace game
 			if (CURGAME == MW2)
 			{
 				XNotify(_("Desire's S&D Loaded! (MW2)"), XNOTIFYQUEUEUI_TYPE::XNOTIFYUI_TYPE_PREFERRED_REVIEW);
+
+				// replace IW logo with our cool epic swag drawn one
+				helpers::replacematerial("logo_iw", "hdd:\\desire\\backgrounds\\logo_iw.bin");
 			}
 
 			if (CURGAME == BO2)

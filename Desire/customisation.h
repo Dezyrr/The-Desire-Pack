@@ -23,6 +23,7 @@ namespace game
 				int camocolor_b;
 
 				int camo_select;
+				bool has_camo_selected;
 
 				void init()
 				{
@@ -39,19 +40,11 @@ namespace game
 
 			void customcamos()
 			{
+				if (!helpers::isingame())
+					return;
+
 				if (CURGAME == MW2)
 				{
-					//auto weapon_camo_woodland = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, _("weapon_camo_woodland"));
-					//auto weapon_camo_desert = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, _("weapon_camo_desert"));
-					//auto weapon_camo_arctic = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, _("weapon_camo_arctic"));
-					//auto weapon_camo_digital = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, _("weapon_camo_digital"));
-					//auto weapon_camo_red_urban = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, _("weapon_camo_red_urban"));
-					//auto weapon_camo_red_tiger = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, _("weapon_camo_red_tiger"));
-					//auto weapon_camo_blue_tiger = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, _("weapon_camo_blue_tiger"));
-					//auto weapon_camo_orange_fall = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, _("weapon_camo_orange_fall"));
-
-					//helpers::injectimage((int)weapon_camo_blue_tiger.image->pixels, "Hdd:\\Desire\\camos\\camo.bin");
-
 					/*
 						name: [width, height, format, depth, levelCount]
 						weapon_camo_woodland: [64, 64, 438305106, 1, 7]
@@ -66,18 +59,23 @@ namespace game
 
 					switch (features::customisation::vars.camo_select)
 					{ 
-						case 0: helpers::replacematerial("weapon_camo_red_urban", "hdd:\\desire\\camos\\mw2\\white.bin"); break;
-						case 1: helpers::replacematerial("weapon_camo_red_urban", "hdd:\\desire\\camos\\mw2\\pink.bin"); break;
-						case 2: helpers::replacematerial("weapon_camo_red_urban", "hdd:\\desire\\camos\\mw2\\green.bin"); break;
-						case 3: helpers::replacematerial("weapon_camo_red_urban", "hdd:\\desire\\camos\\mw2\\blue.bin"); break;
+						case 0: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\white.bin"); break;
+						case 1: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\pink.bin"); break;
+						case 2: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\green.bin"); break;
+						case 3: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\blue.bin"); break;
+						case 4: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\red.bin"); break;
+						case 5: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\orange.bin"); break;
+						case 6: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\purple.bin"); break;
 					}
 				}
 
 				if (CURGAME == BO2)
 				{
-					//helpers::replacematerial(_("t6_camo_blossom_pattern"), _("hdd:\\desire\\camos\\bo2\\t6_camo_blossom_pattern.bin"));
-					//auto temp = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, "t6_camo_blossom_pattern", false, 0);
-					//helpers::printimageinfo(temp);
+					//helpers::replacematerial(_("t6_camo_mango_pattern"), _("hdd:\\desire\\camos\\bo2\\camo_bo2.bin"));
+
+					//auto t6_camo_mango_pattern = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, "t6_camo_mango_pattern", false, 0);
+
+					//helpers::printimageinfobo2(t6_camo_mango_pattern);
 				}
 			}
 

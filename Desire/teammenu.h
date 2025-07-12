@@ -157,91 +157,30 @@ namespace game
 
 			void monitorplayers(int idx, const char* str)
 			{
-				if (helpers::isonhostteam(idx))
+				static bool isalive[18];
+
+				gentity_s* player = &g_entities[idx];
+
+				if (helpers::isonhostteam(player->client->ps.clientNum))
 				{
-					gentity_s player = g_entities[idx];
-
-					if (!structure[idx].isopen)
+					if (isalive[player->client->ps.clientNum] != helpers::isalive(player->client->ps.clientNum))
 					{
-						if (buttondown(str, BUTTON_DPADLEFT))
+						helpers::setclientdvar(player->client->ps.clientNum, _("loc_warnings"), _("0"));
+						helpers::setclientdvar(player->client->ps.clientNum, _("loc_warnings"), _("0"));
+
+						if (helpers::isalive(player->client->ps.clientNum))
 						{
-							openmenu(idx);
-							updateselectedoption(idx);
+							helpers::iprintln(player->client->ps.clientNum, "^6[{+actionslot 2}] for unstuck");
 						}
+
+						isalive[player->client->ps.clientNum] = helpers::isalive(player->client->ps.clientNum);
 					}
-					else if (structure[idx].isopen)
+
+					if (buttondown(str, BUTTON_DPADDOWN))
 					{
-						if (buttondown(str, BUTTON_RS))
+						if (helpers::isalive(player->client->ps.clientNum))
 						{
-							closemenu(idx);
-						}
-
-						if (buttondown(str, BUTTON_X))
-						{
-							switch (structure[idx].currentoption)
-							{
-							case 0:
-							{
-								SetClientOrigin(&player, vec3_t(player.client->ps.origin.x, player.client->ps.origin.y, player.client->ps.origin.z + 10));
-								break;
-							}
-							case 1:
-							{
-								ent_handlr.insta_sprint_enabled[idx] = !ent_handlr.insta_sprint_enabled[idx];
-								helpers::notifyclient(idx, ent_handlr.insta_sprint_enabled[idx] ? "^2instasprint" : "^1instasprint");
-								break;
-							}
-							case 2:
-							{
-								ent_handlr.always_zoomload_enabled[idx] = !ent_handlr.always_zoomload_enabled[idx];
-								helpers::notifyclient(idx, ent_handlr.always_zoomload_enabled[idx] ? "^2zoomloads" : "^1zoomloads");
-								break;
-							}
-							case 3:
-							{
-								int weaponidx = G_GetWeaponIndexForName("kriss_mp");
-								int validweapon = *(int*)(BG_GetWeaponDef(weaponidx) + 0x38);
-
-								G_GivePlayerWeapon(&player.client->ps, weaponidx, 0, 0);
-								Add_Ammo(&player, weaponidx, 0, 9999, 1);
-
-								//if (validweapon != 3)
-								//{
-								//	Drop_Weapon(&player, weaponidx, 0, SL_GetString("j_gun", 0));
-								//}
-
-								break;
-							}
-							default: break;
-							}
-						}
-
-						if (buttondown(str, BUTTON_DPADDOWN))
-						{
-							if (structure[idx].currentoption == structure[idx].maxoption)
-							{
-								structure[idx].currentoption = 0;
-							}
-							else
-							{
-								structure[idx].currentoption++;
-							}
-
-							updateselectedoption(idx);
-						}
-
-						if (buttondown(str, BUTTON_DPADUP))
-						{
-							if (structure[idx].currentoption == 0)
-							{
-								structure[idx].currentoption = structure[idx].maxoption;
-							}
-							else
-							{
-								structure[idx].currentoption--;
-							}
-
-							updateselectedoption(idx);
+							SetClientOrigin(player, vec3_t(player->client->ps.origin.x, player->client->ps.origin.y, player->client->ps.origin.z + 10));
 						}
 					}
 				}
@@ -256,3 +195,88 @@ namespace game
 		}
 	}
 }
+
+
+//if (!structure[idx].isopen)
+//{
+//	if (buttondown(str, BUTTON_DPADLEFT))
+//	{
+//		openmenu(idx);
+//		updateselectedoption(idx);
+//	}
+//}
+//else if (structure[idx].isopen)
+//{
+//	if (buttondown(str, BUTTON_RS))
+//	{
+//		closemenu(idx);
+//	}
+
+//	if (buttondown(str, BUTTON_X))
+//	{
+//		switch (structure[idx].currentoption)
+//		{
+//		case 0:
+//		{
+//			SetClientOrigin(&player, vec3_t(player.client->ps.origin.x, player.client->ps.origin.y, player.client->ps.origin.z + 10));
+//			break;
+//		}
+//		case 1:
+//		{
+//			ent_handlr.insta_sprint_enabled[idx] = !ent_handlr.insta_sprint_enabled[idx];
+//			helpers::notifyclient(idx, ent_handlr.insta_sprint_enabled[idx] ? "^2instasprint" : "^1instasprint");
+//			break;
+//		}
+//		case 2:
+//		{
+//			ent_handlr.always_zoomload_enabled[idx] = !ent_handlr.always_zoomload_enabled[idx];
+//			helpers::notifyclient(idx, ent_handlr.always_zoomload_enabled[idx] ? "^2zoomloads" : "^1zoomloads");
+//			break;
+//		}
+//		case 3:
+//		{
+//			int weaponidx = G_GetWeaponIndexForName("kriss_mp");
+//			int validweapon = *(int*)(BG_GetWeaponDef(weaponidx) + 0x38);
+
+//			G_GivePlayerWeapon(&player.client->ps, weaponidx, 0, 0);
+//			Add_Ammo(&player, weaponidx, 0, 9999, 1);
+
+//			//if (validweapon != 3)
+//			//{
+//			//	Drop_Weapon(&player, weaponidx, 0, SL_GetString("j_gun", 0));
+//			//}
+
+//			break;
+//		}
+//		default: break;
+//		}
+//	}
+
+//	if (buttondown(str, BUTTON_DPADDOWN))
+//	{
+//		if (structure[idx].currentoption == structure[idx].maxoption)
+//		{
+//			structure[idx].currentoption = 0;
+//		}
+//		else
+//		{
+//			structure[idx].currentoption++;
+//		}
+
+//		updateselectedoption(idx);
+//	}
+
+//	if (buttondown(str, BUTTON_DPADUP))
+//	{
+//		if (structure[idx].currentoption == 0)
+//		{
+//			structure[idx].currentoption = structure[idx].maxoption;
+//		}
+//		else
+//		{
+//			structure[idx].currentoption--;
+//		}
+
+//		updateselectedoption(idx);
+//	}
+//}

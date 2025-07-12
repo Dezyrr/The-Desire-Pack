@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-16" ?>
+<RDF Version="XPR2">
+<Texture
+   Name   = "settings"
+   Source = "C:\Github\The-Desire-Pack\images\callingcards\mw2\callingcard.png"
+   Format = "D3DFMT_DXT5"
+   Width =  "240"
+   Height = "48"
+   Levels = "1"
+/>
+</RDF>

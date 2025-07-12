@@ -296,14 +296,15 @@ enum hitLocation_t : __int32
 	HITLOC_SHIELD = 0x13,
 	HITLOC_NUM = 0x14,
 };
+
 enum XAssetType
 {
 	ASSET_TYPE_XMODELPIECES = 0x0,
 	ASSET_TYPE_PHYSPRESET = 0x1,
 	ASSET_TYPE_PHYSCONSTRAINTS = 0x2,
 	ASSET_TYPE_DESTRUCTIBLEDEF = 0x3,
-	ASSET_TYPE_XANIMPARTS = 0x4,
-	ASSET_TYPE_XMODEL = 0x5,
+	ASSET_TYPE_XANIMPARTS = 0x5,
+	ASSET_TYPE_XMODEL = 0x4,
 	ASSET_TYPE_MATERIAL = 0x6,
 	ASSET_TYPE_TECHNIQUE_SET = 0x7,
 	ASSET_TYPE_IMAGE = 0x8,
@@ -2809,11 +2810,130 @@ struct dvar_t
 	dvar_t* hashNext;
 };
 
+struct XAnimNotifyInfo
+{
+	short name;
+	float time;
+};
+
+union XAnimIndices
+{
+	char* _1;
+	unsigned __int16* _2;
+	void* data;
+};
+
+union XAnimDynamicFrames
+{
+	char(*_1)[3];
+	unsigned __int16(*_2)[3];
+};
+
+union XAnimDynamicIndices
+{
+	char _1[1];
+	unsigned __int16 _2[1];
+};
+
+struct XAnimPartTransFrames
+{
+	float mins[3];
+	float size[3];
+	XAnimDynamicFrames frames;
+	XAnimDynamicIndices indices;
+};
+
+union XAnimPartTransData
+{
+	XAnimPartTransFrames frames;
+	float frame0[3];
+};
+
+struct XAnimPartTrans
+{
+	unsigned __int16 size;
+	char smallTrans;
+	__declspec(align(2)) XAnimPartTransData u;
+};
+
+struct XAnimDeltaPartQuatDataFrames2
+{
+	__int16* frames;
+	char indices[1];
+};
+
+union XAnimDeltaPartQuatData2
+{
+	XAnimDeltaPartQuatDataFrames2 frames;
+	__int16 frame0[2];
+};
+
+struct XAnimDeltaPartQuat2
+{
+	unsigned __int16 size;
+	XAnimDeltaPartQuatData2 u;
+};
+
+struct XAnimDeltaPartQuatDataFrames
+{
+	__int16(*frames)[2];
+	XAnimDynamicIndices indices;
+};
+
+union XAnimDeltaPartQuatData
+{
+	XAnimDeltaPartQuatDataFrames frames;
+	__int16 frame0[2];
+};
+
+struct XAnimDeltaPartQuat
+{
+	unsigned __int16 size;
+	__declspec(align(4)) XAnimDeltaPartQuatData u;
+};
+
+struct XAnimDeltaPart
+{
+	XAnimPartTrans* trans;
+	XAnimDeltaPartQuat2* quat2;
+	XAnimDeltaPartQuat* quat;
+};
+
+struct XAnimParts
+{
+	char* name; // 0
+	unsigned short dataByteCount; // 4
+	unsigned short dataShortCount; // 6
+	unsigned short dataIntCount; // 8
+	unsigned short randomDataByteCount; // 10 - 0xA
+	unsigned short randomDataIntCount; // 12 - 0xC
+	unsigned short framecount; // 14 - 0xE
+	char flags; // 16
+	unsigned char boneCount[10]; // 17
+	char notifyCount; // 27
+	char assetType; // 30
+	bool isDefault; // 31
+	unsigned int randomDataShortCount; // 32 - 0x20
+	unsigned int indexcount; // 36 - 0x24
+	float framerate; // 40 - 0x28
+	float frequency; // 44 - 0x2C
+	unsigned short* tagnames; // 48 - 0x30
+	char* dataByte; // 52 - 0x34
+	short* dataShort; // 56 - 0x38
+	int* dataInt; // 60 - 0x3C
+	short* randomDataShort; // 64 - 0x40
+	char* randomDataByte; // 68 - 0x44
+	int* randomDataInt; // 72 - 0x48
+	XAnimIndices indices; // 76 - 0x4C
+	XAnimNotifyInfo* notify; // 80 - 0x50
+	XAnimDeltaPart* delta; // 84 - 0x54
+};
+
 union XAssetHeader
 {
 	void* PHYSPRESET;
 	void* phys_collmap;
-	void* xanim;
+	XAnimParts* xanim;
 	void* xmodelsurfs;
 	XModel* xmodel;
 	Material* material;

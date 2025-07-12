@@ -10,6 +10,8 @@ namespace game
 		bool insta_shoots_enabled[18];
 		bool always_zoomload_enabled[18];
 		bool insta_spas_pump[18];
+		bool unstuck[18];
+		bool gflip[18];
 	};
 	entity_handler ent_handlr;
 
@@ -81,6 +83,12 @@ namespace game
 
 					Sleep(150);
 
+					SetDvar("testClients_watchKillcam", "0");
+					SetDvar("testclients_doReload", "0");
+					SetDvar("testclients_doMove", "0");
+					SetDvar("testclients_doAttack", "0");
+					SetDvar("testclients_doCrouch", "0");
+
 					return 0;
 				}
 
@@ -93,8 +101,7 @@ namespace game
 						return;
 					}
 
-					bot = SV_AddTestClient();
-					botent = bot;
+					botent = SV_AddTestClient();
 
 					CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(spawnbotthread), 0, 0, nullptr);
 				}
@@ -150,7 +157,30 @@ namespace game
 						return;
 
 					int botclientnum = static_cast<gentity_s*>(botent)->client->ps.clientNum;
-					helpers::setclientname(botclientnum, "Waiting for player");
+
+					if (helpers::isbot(botclientnum))
+					{
+						helpers::setclientname(botclientnum, "Waiting for player");
+					}
+				}
+
+				void tpbottoself()
+				{
+					if (!helpers::ishost(helpers::getlocalidx()))
+						return;
+
+					int botclientnum = static_cast<gentity_s*>(botent)->client->ps.clientNum;
+
+					gentity_s player = g_entities[botclientnum];
+					gentity_s self = g_entities[helpers::getlocalidx()];
+
+					if (player.client && self.client)
+					{
+						if (helpers::isbot(botclientnum))
+						{
+							SetClientOrigin(&player, vec3_t(self.client->ps.origin.x, self.client->ps.origin.y, self.client->ps.origin.z));
+						}
+					}
 				}
 			}
 
@@ -161,46 +191,56 @@ namespace game
 					if (!g_entities[i].client)
 						continue;
 
-					gentity_s player = g_entities[i];
+					gentity_s* player = &g_entities[i];
 
-					if (!helpers::isonhostteam(i) || player.health < 1)
+					if (!helpers::isonhostteam(player->client->ps.clientNum))
 					{
-						if (ent_handlr.is_uav_enabled[i])
+						if (ent_handlr.is_uav_enabled[player->client->ps.clientNum])
 						{
-							*(byte*)(0x830CF264 + (player.client->ps.clientNum * 0x3700)) = 0x00;
-							ent_handlr.is_uav_enabled[i] = false;
+							*(byte*)(0x830CF264 + (player->client->ps.clientNum * 0x3700)) = 0x00;
+							ent_handlr.is_uav_enabled[player->client->ps.clientNum] = false;
 						}
 
 						continue;
 					}
 
-					if (features::ingame::vars.sweeping_uav && !ent_handlr.is_uav_enabled[i])
+					if (features::ingame::vars.sweeping_uav && !ent_handlr.is_uav_enabled[player->client->ps.clientNum])
 					{
-						*(byte*)(0x830CF264 + (player.client->ps.clientNum * 0x3700)) = 0x01;
-						ent_handlr.is_uav_enabled[i] = true;
+						*(byte*)(0x830CF264 + (player->client->ps.clientNum * 0x3700)) = 0x01;
+						ent_handlr.is_uav_enabled[player->client->ps.clientNum] = true;
 					}
 
-					if (!features::ingame::vars.sweeping_uav && ent_handlr.is_uav_enabled[i])
+					if (!features::ingame::vars.sweeping_uav && ent_handlr.is_uav_enabled[player->client->ps.clientNum])
 					{
-						*(byte*)(0x830CF264 + (player.client->ps.clientNum * 0x3700)) = 0x00;
-						ent_handlr.is_uav_enabled[i] = false;
+						*(byte*)(0x830CF264 + (player->client->ps.clientNum * 0x3700)) = 0x00;
+						ent_handlr.is_uav_enabled[player->client->ps.clientNum] = false;
 					}
 				}
 			}
 
 			void dropweapon(const char* name, int camo)
 			{
-				gentity_s player = g_entities[cgs->clientNumber];
+				if (!helpers::ishost(helpers::getlocalidx()))
+					return;
+
+				gentity_s* player = &g_entities[helpers::getlocalidx()];
+				playerState_s* playerstate = &player->client->ps;
 
 				int weaponidx = G_GetWeaponIndexForName(name);
+				int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
 
-				G_GivePlayerWeapon(&player.client->ps, weaponidx, camo, 0);
-				Add_Ammo(&player, weaponidx, 0, 9999, 1);
+				G_GivePlayerWeapon(playerstate, weaponidx, camo, 0);
+				Add_Ammo(player, weaponidx, 0, 9999, 1);
+				Drop_Weapon(player, weaponidx, weaponmodel);
+			}
 
-			    //if (*(int*)(BG_GetWeaponDef(weaponidx) + 0x38) == 3)
-				//return;
-
-				//Drop_Weapon(&player, weaponidx, 0);
+			void refillammo()
+			{
+				if (!helpers::ishost(helpers::getlocalidx()))
+					return;
+				
+				gentity_s player = g_entities[helpers::getlocalidx()];
+				Add_Ammo(&player, g_entities[helpers::getlocalidx()].client->ps.weapon.data, 0, 9999, 1);
 			}
 
 			void handle_in_game_features()
@@ -217,7 +257,12 @@ namespace game
 						if (features::ingame::preventforfeit::botent != nullptr)
 						{
 							int botclientnum = static_cast<gentity_s*>(features::ingame::preventforfeit::botent)->client->ps.clientNum;
-							helpers::kickclient(botclientnum, _("Hello Skid! From Desire. Don't worry though, I am also a skid. :D"));
+
+							if (helpers::isbot(botclientnum))
+							{
+								helpers::kickclient(botclientnum);
+								features::ingame::preventforfeit::botent = nullptr;
+							}
 						}
 					}
 
