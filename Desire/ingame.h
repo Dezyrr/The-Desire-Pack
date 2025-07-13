@@ -191,56 +191,14 @@ namespace game
 					if (!g_entities[i].client)
 						continue;
 
-					gentity_s* player = &g_entities[i];
-
-					if (!helpers::isonhostteam(player->client->ps.clientNum))
-					{
-						if (ent_handlr.is_uav_enabled[player->client->ps.clientNum])
-						{
-							*(byte*)(0x830CF264 + (player->client->ps.clientNum * 0x3700)) = 0x00;
-							ent_handlr.is_uav_enabled[player->client->ps.clientNum] = false;
-						}
-
+					if (!helpers::isonhostteam(i))
 						continue;
-					}
 
-					if (features::ingame::vars.sweeping_uav && !ent_handlr.is_uav_enabled[player->client->ps.clientNum])
-					{
-						*(byte*)(0x830CF264 + (player->client->ps.clientNum * 0x3700)) = 0x01;
-						ent_handlr.is_uav_enabled[player->client->ps.clientNum] = true;
-					}
-
-					if (!features::ingame::vars.sweeping_uav && ent_handlr.is_uav_enabled[player->client->ps.clientNum])
-					{
-						*(byte*)(0x830CF264 + (player->client->ps.clientNum * 0x3700)) = 0x00;
-						ent_handlr.is_uav_enabled[player->client->ps.clientNum] = false;
-					}
+					if (!helpers::isalive(i))
+						continue;
+					
+					helpers::enableuav(i, vars.sweeping_uav);
 				}
-			}
-
-			void dropweapon(const char* name, int camo)
-			{
-				if (!helpers::ishost(helpers::getlocalidx()))
-					return;
-
-				gentity_s* player = &g_entities[helpers::getlocalidx()];
-				playerState_s* playerstate = &player->client->ps;
-
-				int weaponidx = G_GetWeaponIndexForName(name);
-				int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
-
-				G_GivePlayerWeapon(playerstate, weaponidx, camo, 0);
-				Add_Ammo(player, weaponidx, 0, 9999, 1);
-				Drop_Weapon(player, weaponidx, weaponmodel);
-			}
-
-			void refillammo()
-			{
-				if (!helpers::ishost(helpers::getlocalidx()))
-					return;
-				
-				gentity_s player = g_entities[helpers::getlocalidx()];
-				Add_Ammo(&player, g_entities[helpers::getlocalidx()].client->ps.weapon.data, 0, 9999, 1);
 			}
 
 			void handle_in_game_features()

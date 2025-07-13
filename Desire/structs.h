@@ -559,9 +559,10 @@ struct Cursor
 	float x;
 	float y;
 };
+
 struct UiContext
 {
-	int localClientNum;
+	int contextIndex;
 	float bias;
 	int realTime;
 	int frameTime;
@@ -574,7 +575,6 @@ struct UiContext
 	float FPS;
 	float blurRadiusOut;
 };
-
 
 enum trType_t {
 	TR_STATIONARY,

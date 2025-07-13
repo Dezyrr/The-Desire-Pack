@@ -20,6 +20,14 @@ namespace Concurrency
 //std::uint32_t ResolveImport(const char* importName, std::int32_t index);
 //void XNotify(const char* text, XNOTIFYQUEUEUI_TYPE icon = XNOTIFYUI_TYPE_PREFERRED_REVIEW);
 
+template <typename T>
+T clamp(T value, T min, T max)
+{
+	if (value < min) return min;
+	if (value > max) return max;
+	return value;
+}
+
 char* va(const char* fmt, ...);
 char* concat(const char* text, ...);
 BOOL FileExists(CONST PCHAR FilePath);

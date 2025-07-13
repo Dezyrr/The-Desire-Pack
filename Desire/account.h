@@ -31,18 +31,26 @@ namespace game
 
 			void setprestige()
 			{
-				if (helpers::isingame())
-					return;
+				static int old = features::account::vars.prestige;
 
 				if (CURGAME == MW2)
 				{
-					*(char*)0x831A0DD4 = features::account::vars.prestige;
+					if (features::account::vars.prestige != old)
+					{
+						*(char*)0x831A0DD4 = features::account::vars.prestige;
+						old = features::account::vars.prestige;
+					}
 				}
 
 				if (CURGAME == BO2)
 				{
-					*(char*)0x843491A4 = features::account::vars.prestige;
-					Cbuf_AddText(0, "updategamerprofile;uploadstats;");
+					if (features::account::vars.prestige != old)
+					{
+						*(char*)0x843491A4 = features::account::vars.prestige;
+						Cbuf_AddText(0, "updategamerprofile;uploadstats;");
+
+						old = features::account::vars.prestige;
+					}
 				}
 			}
 
@@ -91,9 +99,6 @@ namespace game
 
 			void docustomgamertag()
 			{
-				if (helpers::isingame())
-					return;
-
 				ExCreateThread(0, 0, 0, 0, (LPTHREAD_START_ROUTINE)gamertagthread, 0, 0);
 			}
 

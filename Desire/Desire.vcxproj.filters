@@ -47,6 +47,9 @@
     <ClInclude Include="xorstr.h">
       <Filter>utils</Filter>
     </ClInclude>
+    <ClInclude Include="notifications.h">
+      <Filter>notifications</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -90,6 +93,9 @@
     </Filter>
     <Filter Include="features\customisation">
       <UniqueIdentifier>{611cc412-6de1-42a8-9e54-6c6f696785bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="notifications">
+      <UniqueIdentifier>{9f9afb01-1f35-421f-8e16-0e4c8b44f6b1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

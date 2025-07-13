@@ -80,14 +80,14 @@ namespace game
 	int (*G_GetWeaponIndexForName)(const char* weaponname) = reinterpret_cast<int(*)(const char*)>(0x822105A8);
 	int (*G_GivePlayerWeapon)(playerState_s* playerstate, int weaponidx, int camo, int akimbo) = reinterpret_cast<int(*)(playerState_s*, int, int, int)>(0x82210B30);
 	int (*Add_Ammo)(gentity_s* ent, int weaponidx, char weaponmodel, int count, int fillclip) = reinterpret_cast<int(*)(gentity_s*, int, char, int, int)>(0x821E1EF8);
-	int (*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel) = reinterpret_cast<int(*)(gentity_s*, int, char)>(0x821E36A8);
+	gentity_s*(*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel) = reinterpret_cast<gentity_s*(*)(gentity_s*, int, char)>(0x821E36A8);
 	bool(__cdecl* SV_IsClientBot)(int clientNum) = (bool(*)(int))0x822597F0;
 	const char* (__cdecl* G_GetWeaponNameForIndex)(int weaponIndex) = (const char* (*)(int))0x820E22F0;
 	void (*Scr_AddString)(const char* string) = reinterpret_cast<void(*)(const char*)>(0x8224C620);
 	void (*Scr_Notify)(int* ent, short stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int*, short, unsigned int)>(0x82209710);
 	void (*Scr_NotifyNum)(int entnum, unsigned int classnum, unsigned int stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int, unsigned int, unsigned int, unsigned int)>(0x82209710);
-	int (*Item_SetDefaultVelocity)(gentity_s* ent, int weaponidx) = reinterpret_cast<int(*)(gentity_s*, int)>(0x821E2E18);
-	int (*G_EntEnablePhysics)(gentity_s* ent, int physcollmap) = reinterpret_cast<int(*)(gentity_s*, int)>(0x821E4360);
+	void (*Item_SetDefaultVelocity)(gentity_s* ent, gentity_s* weaponidx) = reinterpret_cast<void(*)(gentity_s*, gentity_s*)>(0x821E2E18);
+	void (*G_EntEnablePhysics)(gentity_s* ent, int physcollmap) = reinterpret_cast<void(*)(gentity_s*, int)>(0x821E4360);
 	int (*BG_GetWeaponModel)(playerState_s* playerstate, int weaponidx) = reinterpret_cast<int(*)(playerState_s*, int)>(0x820E2EC8);
 
 	void UI_OpenToastPopup(const char* title, const char* description, const char* material, int displayTime)  {
@@ -402,6 +402,113 @@ namespace game
 			client_t* client = &GetMemory<client_t*>(0x83620380 + 0x3818)[idx];
 
 			SV_DropClient(client, "Player Kicked.", true);
+		}
+
+		void enableuav(int idx, bool on)
+		{
+			int radar = on ? 0x1 : 0x0;
+
+			memset(&g_clients[idx].sess.hasRadar, radar, sizeof(int));
+		}
+
+		const char* getstance(int idx) {
+			gclient_s* client = &g_clients[idx];
+
+			if ((client->ps.pm_flags & 1))
+				return "prone";
+
+			if ((client->ps.pm_flags & 2))
+				return "crouch";
+
+			return "stand";
+		}
+
+		void giveweapon(int idx, const char* name, int camo)
+		{
+			gentity_s* player = &g_entities[idx];
+			playerState_s* playerstate = &player->client->ps;
+
+			int weaponidx = G_GetWeaponIndexForName(name);
+			int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
+
+			G_GivePlayerWeapon(playerstate, weaponidx, camo, 0);
+			Add_Ammo(player, weaponidx, 0, 9999, 1);
+		}
+
+		void dropweapon(int idx, const char* name)
+		{
+			gentity_s* player = &g_entities[idx];
+			playerState_s* playerstate = &player->client->ps;
+
+			int weaponidx = G_GetWeaponIndexForName(name);
+			int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
+
+			if (*(int*)(BG_GetWeaponDef(weaponidx) + 0x38) == 3)
+				return;
+
+			gentity_s* weaponent = Drop_Weapon(player, weaponidx, weaponmodel);
+			if (weaponent)
+			{
+				Item_SetDefaultVelocity(player, weaponent);
+				G_EntEnablePhysics(player, *(int*)(BG_GetWeaponDef(weaponidx) + 0x3C8));
+			}
+		}
+
+		void refillammo(int idx)
+		{
+			gentity_s* player = &g_entities[idx];
+			//Add_Ammo(&player, g_entities[idx].client->ps.weapon.data, 0, 9999, 1);
+
+			Weapon* weapons = (Weapon*)player->client->ps.weaponsEquipped;
+			int weaponsEquipped = 15;
+			do
+			{
+				if (weapons->data)
+					Add_Ammo(player, weapons->data, 0, 9999, 1);
+
+				++weapons;
+				--weaponsEquipped;
+			} while (weaponsEquipped);
+		}
+
+		int getsecondaryweaponidx(int idx)
+		{
+			gentity_s* player = &g_entities[idx];
+
+			Weapon* weapons = (Weapon*)player->client->ps.weaponsEquipped;
+
+			return weapons[0].data;
+		}
+
+		int getprimaryweaponidx(int idx)
+		{
+			gentity_s* player = &g_entities[idx];
+
+			Weapon* weapons = (Weapon*)player->client->ps.weaponsEquipped;
+
+			return weapons[2].data;
+		}
+
+		void givesecondaryweaponcamo(int idx, int camo)
+		{
+			gentity_s* player = &g_entities[idx];
+
+			if (!player->client)
+				return;
+
+			if (!isalive(idx))
+				return;
+
+			playerState_s* playerstate = &player->client->ps;
+
+			int weaponidx = getsecondaryweaponidx(idx);
+			int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
+
+			// temporary take weapon
+			Drop_Weapon(player, weaponidx, weaponmodel);
+
+			G_GivePlayerWeapon(playerstate, weaponidx, camo, 0);
+			Add_Ammo(player, weaponidx, 0, 9999, 1);
 		}
 
 		bool isonhostteam(int idx)

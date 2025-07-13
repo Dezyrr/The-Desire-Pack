@@ -9,6 +9,7 @@
 #include "gsc.h"
 #include "players.h"
 #include "customisation.h"
+#include "notifications.h"
 
 namespace game
 {
@@ -230,25 +231,59 @@ namespace game
 					{
 						switch (controls.currentoption)
 						{
-							case 0:
+							case 1:
 							{
 								if (left)
 								{
-									features::customisation::vars.camo_select--;
-									if (features::customisation::vars.camo_select < 0)
-										features::customisation::vars.camo_select = 6;
+									features::customisation::vars.custom_camo_select--;
+									if (features::customisation::vars.custom_camo_select < 0)
+										features::customisation::vars.custom_camo_select = 6;
 								}
 								else
 								{
-									features::customisation::vars.camo_select++;
-									if (features::customisation::vars.camo_select > 6)
-										features::customisation::vars.camo_select = 0;
+									features::customisation::vars.custom_camo_select++;
+									if (features::customisation::vars.custom_camo_select > 6)
+										features::customisation::vars.custom_camo_select = 0;
 								}
 
 								break;
 							}
 
-							case 3:
+							case 2:
+							{
+								if (left)
+								{
+									features::customisation::vars.custom_camo_replace--;
+									if (features::customisation::vars.custom_camo_replace < 0)
+										features::customisation::vars.custom_camo_replace = 7;
+								}
+								else
+								{
+									features::customisation::vars.custom_camo_replace++;
+									if (features::customisation::vars.custom_camo_replace > 7)
+										features::customisation::vars.custom_camo_replace = 0;
+								}
+								break;
+							}
+
+							case 4:
+							{
+								if (left)
+								{
+									features::customisation::vars.secondary_camo--;
+									if (features::customisation::vars.secondary_camo < 0)
+										features::customisation::vars.secondary_camo = 7;
+								}
+								else
+								{
+									features::customisation::vars.secondary_camo++;
+									if (features::customisation::vars.secondary_camo > 7)
+										features::customisation::vars.secondary_camo = 0;
+								}
+								break;
+							}
+
+							case 6:
 							{								
 								if (left)
 								{
@@ -265,7 +300,7 @@ namespace game
 								break;
 							}
 
-							case 4:
+							case 7:
 							{								
 								if (left)
 								{
@@ -282,7 +317,7 @@ namespace game
 								break;
 							}
 
-							case 5:
+							case 8:
 							{
 								if (left)
 								{
@@ -442,6 +477,8 @@ namespace game
 									//helpers::replaceweaponmodel("viewmodel_desert_eagle_tac_pullout", "viewmodel_uspmgs_pullout");
 
 								//	helpers::printmodelinfomw2(G_GetWeaponNameForIndex(weap));
+
+									game::notify::add("ran test function");
 								}
 
 								if (CURGAME == BO2)
@@ -687,7 +724,7 @@ namespace game
 							case 5:
 							{
 								//features::ingame::dropweapon("usp_mp", 0);
-								features::ingame::refillammo();
+								helpers::refillammo(helpers::getlocalidx());
 								break;
 							}
 
@@ -702,24 +739,29 @@ namespace game
 						{
 							case 0:
 							{
-								features::customisation::customcamos();
-								features::customisation::vars.has_camo_selected = true;
-								break;
-							}
-
-							case 1:
-							{									
 								if (!features::customisation::vars.custom_callingcards_enabled)
 								{
 									if (CURGAME == MW2)
 									{
-										features::customisation::vars.wasingame = true;
-
-										if (!helpers::isingame() && features::customisation::vars.wasingame)
+										if (!helpers::isingame())
 										{
-											// thread this so that we can keep a constant check wether we are in game or not
-											ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcardsthread, 0, 0);
-											features::customisation::vars.custom_callingcards_enabled = true;
+											features::customisation::vars.wasingame = true;
+											if (features::customisation::vars.wasingame)
+											{
+												// thread this so that we can keep a constant check wether we are in game or not
+												ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcardsthread, 0, 0);
+												features::customisation::vars.custom_callingcards_enabled = true;
+											}
+										}
+										else
+										{
+											features::customisation::vars.wasingame = false;
+											if (!features::customisation::vars.wasingame)
+											{
+												// thread this so that we can keep a constant check wether we are in game or not
+												ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcardsthread, 0, 0);
+												features::customisation::vars.custom_callingcards_enabled = true;
+											}
 										}
 									}
 
@@ -743,7 +785,36 @@ namespace game
 								break;
 							}
 
-							case 2:
+							case 1:
+							{			
+								features::customisation::vars.has_camo_selected = true;
+								features::customisation::customcamos();
+								break;
+							}
+
+							case 3:
+							{
+								features::customisation::vars.give_secondary_camo = !features::customisation::vars.give_secondary_camo;
+
+								if (features::customisation::vars.give_secondary_camo)
+								{
+									switch (features::customisation::vars.secondary_camo)
+									{
+										case 0: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_WOODLAND); break;
+										case 1: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DIGITAL); break;
+										case 2: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DESERT); break;
+										case 3: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_ARCTIC); break;
+										case 4: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_URBAN); break;
+										case 5: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_RED_TIGER); break;
+										case 6: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_BLUE_TIGER); break;
+										case 7: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_FALL); break;
+									}
+								}
+
+								break;
+							}
+
+							case 5:
 							{
 								features::customisation::vars.custom_hud_color = !features::customisation::vars.custom_hud_color;
 								break;
@@ -764,7 +835,7 @@ namespace game
 						switch (controls.currentoption)
 						{
 							// set prestige
-							case 0: game::features::account::setprestige(); break;
+							case 0:/* game::features::account::setprestige();*/ break;
 
 							// gamertag
 							case 1: game::features::account::docustomgamertag(); break;
@@ -858,7 +929,7 @@ namespace game
 							if (handler::menuvars.current_submenu == sm_customisation)
 							{
 								// only make rgb sliders fast
-								if (controls.currentoption == 3 || controls.currentoption == 4 || controls.currentoption == 5)
+								if (controls.currentoption == 6 || controls.currentoption == 7 || controls.currentoption == 8)
 									controls.wait = 6;
 								else
 									controls.wait = 0;
@@ -874,7 +945,7 @@ namespace game
 							if (handler::menuvars.current_submenu == sm_customisation)
 							{
 								// only make rgb sliders fast
-								if (controls.currentoption == 3 || controls.currentoption == 4 || controls.currentoption == 5)
+								if (controls.currentoption == 6 || controls.currentoption == 7 || controls.currentoption == 8)
 									controls.wait = 6;
 								else
 									controls.wait = 0;
@@ -890,6 +961,10 @@ namespace game
 			{
 				return (controls.lastoption * 18) + 30;
 			}
+
+			// used in lerp
+			static int lasttime = uiContext->realTime;
+			static float deltatime = 0.0f;
 
 			struct bound
 			{
@@ -922,13 +997,17 @@ namespace game
 
 				void updatebounds()
 				{
+					bool open = handler::controls.isopen;
+
 					backgroundsizex = 280;
-					backgroundsizey = 4 + handler::calcmenuheight() + 4;
+				//	backgroundsizey = 4 + handler::calcmenuheight() + 4;
+
+					backgroundsizey = render::lerp(backgroundsizey, 4 + handler::calcmenuheight() + 4, clamp(12.75f * deltatime, 0.0f, 1.0f));
 
 					if (CURGAME == MW2)
 					{
 						backgroundposx = uiContext->screenWidth / 2 - backgroundsizex / 2;
-						backgroundposy = uiContext->screenHeight / 2 - backgroundsizey / 2;
+						backgroundposy = render::lerp(backgroundposy, open ? uiContext->screenHeight / 2 - backgroundsizey / 2 : - backgroundsizey - tooltipbackgroundsizey - 10, clamp(12.75f * deltatime, 0.0f, 1.0f));
 					}
 
 					if (CURGAME == BO2)
@@ -963,50 +1042,97 @@ namespace game
 
 			namespace widgets
 			{
+				struct animations
+				{
+					float selected_bar_alpha;
+					float enabled_checkbox_alpha;
+				};
+				static animations anims[255];
+
+				bool overlap_prevented(int i)
+				{
+					if (bounds.optionposy + (i * 18) > bounds.optionposy + bounds.backgroundsizey - bounds.titlebackgroundsizey - 13)
+						return true;
+
+					return false;
+				}
+
 				void addoption(int i, const char* text, const char* tooltip = "")
 				{
+					bool clipped = overlap_prevented(i);
+
 					if (i == handler::controls.currentoption)
 					{
-						render::shader(bounds.optionposx - 4, bounds.optionposy + (i * 18) - 16, bounds.backgroundsizex, 16, render::colors::accent, "white");
 						handler::menuvars.tooltip = tooltip;
 					}
 
-					render::text(text, bounds.optionposx, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::def);
+					anims[i].selected_bar_alpha = render::lerp(anims[i].selected_bar_alpha, (i == handler::controls.currentoption) ? 255.f : 0.f, clamp(12.75f * deltatime, 0.0f, 1.0f));
+
+					if (!clipped)
+					{
+						render::shader(bounds.optionposx - 4, bounds.optionposy + (i * 18) - 16, bounds.backgroundsizex, 16, render::colors::fromrgb(255, 169, 215, anims[i].selected_bar_alpha), "white");
+
+						render::text(text, bounds.optionposx, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::def);
+					}
 
 					handler::controls.lastoption = i;
 				}
 
 				void addsubtab(int i, const char* text, const char* tooltip = "")
 				{
+					bool clipped = overlap_prevented(i);
+
 					addoption(i, text, tooltip);
-					render::shader(bounds.optionposx + bounds.backgroundsizex - 8 - 10, bounds.optionposy + (i * 18) - 14, 14, 12, render::colors::white, "ui_arrow_right");
+
+					if (!clipped)
+					{
+						render::shader(bounds.optionposx + bounds.backgroundsizex - 8 - 10, bounds.optionposy + (i * 18) - 14, 14, 12, render::colors::white, _("ui_arrow_right"));
+					}
+
 					handler::controls.lastoption = i;
 				}
 
 				void addslider(int i, const char* text, int var, int min, int max, const char* tooltip = "")
 				{
+					bool clipped = overlap_prevented(i);
+
 					addoption(i, text, tooltip);
-					render::text(va("%i", var), bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
+
+					if (!clipped)
+					{
+						render::text(va(_("%i"), var), bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
+					}
+
 					handler::controls.lastoption = i;
 				}
 
 				void addcombo(int i, const char* text, const char** items, int selected, const char* tooltip = "")
 				{
+					bool clipped = overlap_prevented(i);
+
 					addoption(i, text, tooltip);
-					const char* selecteditem = items[selected];
-					render::text(selecteditem, bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
+
+					if (!clipped)
+					{
+						const char* selecteditem = items[selected];
+						render::text(va(_("%s"), selecteditem), bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
+					}
+
 					handler::controls.lastoption = i;
 				}
 
 				void addcheckbox(int i, const char* text, bool var, const char* tooltip = "")
 				{
+					bool clipped = overlap_prevented(i);
+
 					addoption(i, text, tooltip);
 
-					render::shader(bounds.optionposx + bounds.backgroundsizex - 12 - 8, bounds.optionposy + (i * 18) - 14, 12, 12, render::colors::grey, "white");
+					anims[i].enabled_checkbox_alpha = render::lerp(anims[i].enabled_checkbox_alpha, var ? 255.f : 0.f, clamp(12.75f * deltatime, 0.0f, 1.0f));
 
-					if (var)
+					if (!clipped)
 					{
-						render::shader(bounds.optionposx + bounds.backgroundsizex - 11 - 8, bounds.optionposy + (i * 18) - 13, 10, 10, render::colors::accent, "white");
+						render::shader(bounds.optionposx + bounds.backgroundsizex - 12 - 8, bounds.optionposy + (i * 18) - 14, 12, 12, render::colors::grey, "white");
+						render::shader(bounds.optionposx + bounds.backgroundsizex - 11 - 8, bounds.optionposy + (i * 18) - 13, 10, 10, render::colors::fromrgb(255, 169, 215, anims[i].enabled_checkbox_alpha), "white");
 					}
 
 					//render::text(va("%s", var ? "on" : "off"), bounds.optionposx + bounds.backgroundsizex - 8, bounds.optionposy + (i * 18), CURGAME == MW2 ? normalfont : CURGAME == BO2 ? FONT_SMALLBO2 : "", CURGAME == MW2 ? 0.5 : CURGAME == BO2 ? 0.6 : 0, render::colors::white, false, render_alignment::right);
@@ -1053,9 +1179,12 @@ namespace game
 				default: break;
 			}
 
-			if (handler::controls.isopen)
-			{
-				title = fmt(_("desire %s - %s"), CURGAME == MW2 ? "mw2" : CURGAME == BO2 ? "bo2" : "", handler::menuvars.current_submenu_name);
+			//if (handler::controls.isopen)
+			//{
+				handler::deltatime = (uiContext->realTime - handler::lasttime) / 1000.0f;
+				handler::lasttime = uiContext->realTime;
+
+				title = fmt(_("desire %s"), CURGAME == MW2 ? "mw2" : CURGAME == BO2 ? "bo2" : "");
 
 				render::shader(handler::bounds.backgroundposx - 1, handler::bounds.backgroundposy - 1, handler::bounds.backgroundsizex + 2, handler::bounds.backgroundsizey + handler::bounds.tooltipbackgroundsizey + 2, render::colors::accent, "white");
 				render::shader(handler::bounds.backgroundposx, handler::bounds.backgroundposy, handler::bounds.backgroundsizex, handler::bounds.backgroundsizey, render::colors::darkgrey, "white");
@@ -1065,6 +1194,8 @@ namespace game
 				render::shader(handler::bounds.tooltipbackgroundposx, handler::bounds.tooltipbackgroundposy, handler::bounds.tooltipbackgroundsizex, handler::bounds.tooltipbackgroundsizey, render::colors::grey, "white");
 				render::shader(handler::bounds.tooltipbackgroundposx, handler::bounds.tooltipbackgroundposy, handler::bounds.tooltipbackgroundsizex, 1, render::colors::accent, "white");
 				render::text(handler::menuvars.tooltip, handler::bounds.tooltipposx, handler::bounds.tooltipposy, font, 0.5, render::colors::white, false, render_alignment::def);
+
+				render::text(fmt("%i/%i", handler::controls.currentoption + 1, handler::controls.lastoption + 1), handler::bounds.backgroundposx + handler::bounds.backgroundsizex - 4, handler::bounds.tooltipposy, font, 0.5, render::colors::white, false, render_alignment::right);
 
 				switch (CURGAME)
 				{
@@ -1083,7 +1214,7 @@ namespace game
 								handler::widgets::addsubtab(4, _("kick players"), _("kick retards"));
 								handler::widgets::addsubtab(5, _("account"), _("modify yo account fool"));
 								handler::widgets::addsubtab(6, _("misc"), _("other shit"));
-								handler::widgets::addsubtab(7, _("testing"), _("test function"));
+								//handler::widgets::addoption(7, _("testing"), _("test function"));
 
 								break;
 							}
@@ -1106,19 +1237,62 @@ namespace game
 							{
 								handler::menuvars.current_submenu_name = "game settings";
 
-								handler::widgets::addcheckbox(0, _("prevent enemy forfeit"), features::ingame::vars.prevent_enemy_forfeit, _("prevent enemy forfeit"));
-								handler::widgets::addoption(1, _("tp bot to you"), _("teleport the bot to you"));
-								handler::widgets::addcheckbox(2, _("depatch bounces"), features::ingame::vars.depatch_bounces, _("allows you to bounce"));
-								handler::widgets::addcheckbox(3, _("easy eles"), features::ingame::vars.easy_eles, _("allows you to ele easy af"));
-								handler::widgets::addcheckbox(4, _("prone anywhere"), features::ingame::vars.prone_anywhere, _("allows you to prone anywhere"));
-								handler::widgets::addcheckbox(5, _("sweeping uav"), features::ingame::vars.sweeping_uav, _("sweeping uav for your team"));
-								handler::widgets::addcheckbox(6, _("wallbang everything"), features::ingame::vars.wallbang_everything, _("bullets go through all surfaces"));
-								handler::widgets::addcheckbox(7, _("infinite bullet dist"), features::ingame::vars.infinite_bullet_dist, _("bullets do not have a distance limit"));
-								handler::widgets::addcheckbox(8, _("miniscule health"), features::ingame::vars.miniscule_health, _("enemies have miniscule health"));
-								handler::widgets::addcheckbox(9, _("no fall damage"), features::ingame::vars.no_fall_damage, _("no fall damage for your team"));
-								//handler::widgets::addcheckbox(9, _("soft lands"), features::ingame::vars.soft_lands);
-								handler::widgets::addcheckbox(10, _("prone spins"), features::ingame::vars.prone_spins, _("spin while prone"));
-								handler::widgets::addcheckbox(11, _("ladder spins"), features::ingame::vars.ladder_spins, _("spin on ladders"));
+								if (helpers::isingame() && !helpers::ishost(helpers::getlocalidx()))
+								{
+									if (features::ingame::vars.prevent_enemy_forfeit != false)
+										features::ingame::vars.prevent_enemy_forfeit = false;
+
+									if (features::ingame::vars.depatch_bounces != false)
+										features::ingame::vars.depatch_bounces = false;
+
+									if (features::ingame::vars.easy_eles != false)
+										features::ingame::vars.easy_eles = false;
+
+									if (features::ingame::vars.prone_anywhere != false)
+										features::ingame::vars.prone_anywhere = false;
+
+									if (features::ingame::vars.sweeping_uav != false)
+										features::ingame::vars.sweeping_uav = false;
+
+									if (features::ingame::vars.wallbang_everything != false)
+										features::ingame::vars.wallbang_everything = false;
+
+									if (features::ingame::vars.infinite_bullet_dist != false)
+										features::ingame::vars.infinite_bullet_dist = false;
+
+									if (features::ingame::vars.miniscule_health != false)
+										features::ingame::vars.miniscule_health = false;
+
+									if (features::ingame::vars.no_fall_damage != false)
+										features::ingame::vars.no_fall_damage = false;
+
+									if (features::ingame::vars.prone_spins != false)
+										features::ingame::vars.prone_spins = false;
+
+									if (features::ingame::vars.ladder_spins != false)
+										features::ingame::vars.ladder_spins = false;
+								}
+
+								if ((helpers::isingame() && helpers::ishost(helpers::getlocalidx())) || !helpers::isingame())
+								{
+									handler::widgets::addcheckbox(0, _("prevent enemy forfeit"), features::ingame::vars.prevent_enemy_forfeit, _("prevent enemy forfeit"));
+									handler::widgets::addoption(1, _("tp bot to you"), _("teleport the bot to you"));
+									handler::widgets::addcheckbox(2, _("depatch bounces"), features::ingame::vars.depatch_bounces, _("allows you to bounce"));
+									handler::widgets::addcheckbox(3, _("easy eles"), features::ingame::vars.easy_eles, _("allows you to ele easy af"));
+									handler::widgets::addcheckbox(4, _("prone anywhere"), features::ingame::vars.prone_anywhere, _("allows you to prone anywhere"));
+									handler::widgets::addcheckbox(5, _("sweeping uav"), features::ingame::vars.sweeping_uav, _("sweeping uav for your team"));
+									handler::widgets::addcheckbox(6, _("wallbang everything"), features::ingame::vars.wallbang_everything, _("bullets go through all surfaces"));
+									handler::widgets::addcheckbox(7, _("infinite bullet dist"), features::ingame::vars.infinite_bullet_dist, _("bullets do not have a distance limit"));
+									handler::widgets::addcheckbox(8, _("miniscule health"), features::ingame::vars.miniscule_health, _("enemies have miniscule health"));
+									handler::widgets::addcheckbox(9, _("no fall damage"), features::ingame::vars.no_fall_damage, _("no fall damage for your team"));
+									//handler::widgets::addcheckbox(9, _("soft lands"), features::ingame::vars.soft_lands);
+									handler::widgets::addcheckbox(10, _("prone spins"), features::ingame::vars.prone_spins, _("spin while prone"));
+									handler::widgets::addcheckbox(11, _("ladder spins"), features::ingame::vars.ladder_spins, _("spin on ladders"));
+								}
+								else
+								{
+									handler::widgets::addoption(0, _("you must be host to use these features!"), _("gotta be host dawg"));
+								}
 
 								break;
 							}
@@ -1127,13 +1301,39 @@ namespace game
 							{
 								handler::menuvars.current_submenu_name = "trickshotting";
 
-								const char* modes[] = { "off", "self", "team" };
-								handler::widgets::addcombo(0, "insta shoots", modes, features::ingame::vars.insta_shoots, _("insta shoots"));
-								handler::widgets::addcombo(1, "insta sprint", modes, features::ingame::vars.insta_sprint, _("insta sprint"));
-								handler::widgets::addcombo(2, "insta shotgun pump", modes, features::ingame::vars.insta_spas_pump, _("insta shotgun pump"));
-								handler::widgets::addcombo(3, "always zoomload", modes, features::ingame::vars.always_zoomload, _("always zoomload (weird)"));
-								handler::widgets::addcombo(4, "always lunge", modes, features::ingame::vars.always_lunge, _("always knife lunge"));
-								handler::widgets::addoption(5, "refill ammo", _("refill ammo on held weapon"));
+								if (helpers::isingame() && !helpers::ishost(helpers::getlocalidx()))
+								{
+									if (features::ingame::vars.insta_shoots != 0)
+										features::ingame::vars.insta_shoots = 0;
+
+									if (features::ingame::vars.insta_sprint != 0)
+										features::ingame::vars.insta_sprint = 0;
+
+									if (features::ingame::vars.insta_spas_pump != 0)
+										features::ingame::vars.insta_spas_pump = 0;
+
+									if (features::ingame::vars.always_zoomload != 0)
+										features::ingame::vars.always_zoomload = 0;
+
+									if (features::ingame::vars.always_lunge != 0)
+										features::ingame::vars.always_lunge = 0;
+								}
+
+								if ((helpers::isingame() && helpers::ishost(helpers::getlocalidx())) || !helpers::isingame())
+								{
+									const char* modes[] = { "off", "self", "team" };
+									handler::widgets::addcombo(0, "insta shoots", modes, features::ingame::vars.insta_shoots, _("insta shoots"));
+									handler::widgets::addcombo(1, "insta sprint", modes, features::ingame::vars.insta_sprint, _("insta sprint"));
+									handler::widgets::addcombo(2, "insta shotgun pump", modes, features::ingame::vars.insta_spas_pump, _("insta shotgun pump"));
+									handler::widgets::addcombo(3, "always zoomload", modes, features::ingame::vars.always_zoomload, _("always zoomload (weird)"));
+									handler::widgets::addcombo(4, "always lunge", modes, features::ingame::vars.always_lunge, _("always knife lunge"));
+									handler::widgets::addoption(5, "refill ammo", _("refill ammo on held weapon"));
+								}
+								else
+								{
+									handler::widgets::addoption(0, _("you must be host to use these features!"), _("gotta be host dawg"));
+								}
+
 								break;
 							}
 
@@ -1142,12 +1342,20 @@ namespace game
 								handler::menuvars.current_submenu_name = "customisation";
 
 								const char* camos[] = { "white", "pink", "green", "blue", "red", "orange", "purple" };
-								handler::widgets::addcombo(0, _("custom bluetiger preset"), camos, features::customisation::vars.camo_select, _("custom camo color"));
-								handler::widgets::addcheckbox(1, _("custom calling cards"), features::customisation::vars.custom_callingcards_enabled, _("custom calling cards"));
-								handler::widgets::addcheckbox(2, _("custom hud color"), features::customisation::vars.custom_hud_color, _("custom hud color"));
-								handler::widgets::addslider(3, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255, _("custom hud color r"));
-								handler::widgets::addslider(4, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255, _("custom hud color g"));
-								handler::widgets::addslider(5, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255, _("custom hud color b"));
+								const char* camonames[] = { "woodland", "desert", "arctic", "digital", "urban", "red tiger", "blue tiger", "fall" };
+
+								handler::widgets::addcheckbox(0, _("custom calling cards"), features::customisation::vars.custom_callingcards_enabled, _("enable some swag callingcards"));
+
+								handler::widgets::addcombo(1, _("custom camo color"), camos, features::customisation::vars.custom_camo_select, _("select a custom camo"));
+								handler::widgets::addcombo(2, _("custom camo select"), camonames, features::customisation::vars.custom_camo_replace, _("select a camo to replace"));
+
+								handler::widgets::addcheckbox(3, _("camos on secondary weapon"), features::customisation::vars.give_secondary_camo, _("apply camos on secondary"));
+								handler::widgets::addcombo(4, _("secondary camo select"), camonames, features::customisation::vars.secondary_camo, _("select a camo to apply on secondary"));
+
+								handler::widgets::addcheckbox(5, _("custom hud color"), features::customisation::vars.custom_hud_color, _("custom hud color"));
+								handler::widgets::addslider(6, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255, _("custom hud color r"));
+								handler::widgets::addslider(7, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255, _("custom hud color g"));
+								handler::widgets::addslider(8, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255, _("custom hud color b"));
 								break;
 							}
 
@@ -1157,15 +1365,19 @@ namespace game
 
 								if (helpers::isingame())
 								{
-									for (int i = 0; i < 18; i++)
+									if (helpers::ishost(helpers::getlocalidx()))
 									{
-										if (!g_entities[i].client)
+										for (int i = 0; i < 18; i++)
 										{
-											handler::widgets::addoption(i, "-");
-											continue;
-										}
+											if (!g_entities[i].client)
+												continue;
 
-										handler::widgets::addoption(i, g_entities[i].client->sess.cs.name, _("kick this guy"));
+											handler::widgets::addoption(i, g_entities[i].client->sess.cs.name, _("kick this guy"));
+										}
+									}
+									else
+									{
+										handler::widgets::addoption(0, _("you must be host to use these features!"), _("gotta be host dawg"));
 									}
 								}
 								else
@@ -1255,7 +1467,7 @@ namespace game
 							case handler::sm_customisation:
 							{
 								const char* camos[] = { "white", "pink", "green", "blue" };
-								handler::widgets::addcombo(0, _("custom camo"), camos, features::customisation::vars.camo_select);
+								handler::widgets::addcombo(0, _("custom camo"), camos, features::customisation::vars.custom_camo_select);
 								handler::widgets::addoption(1, _("custom calling cards"));
 								//handler::widgets::addoption(1, _("custom camos"));
 								break;
@@ -1292,7 +1504,7 @@ namespace game
 
 					default: break;
 				}
-			}
+			//}
 
 			if (handler::menuvars.watermark)
 			{

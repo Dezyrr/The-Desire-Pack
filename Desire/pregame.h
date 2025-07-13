@@ -1,5 +1,6 @@
 #pragma once
 #include "functions.h"
+#include "account.h"
 
 namespace game
 {
@@ -46,11 +47,10 @@ namespace game
 				{
 					if (CURGAME == MW2)
 					{
-						// taken from shake, seems to just crash when queueing
-						//*(BYTE*)(0x82690E38 + 8) = features::pregame::vars.minplayerstostart;
-						//*(BYTE*)(0x8268DC6C + 8) = 0x12;
+						//*(DWORD*)(0x82690E38 + 8) = features::pregame::vars.minplayerstostart;
+						//*(DWORD*)(0x8268DC6C + 8) = 0x12;
 
-						// so i guess use this instead, for now
+						SetDvar("party_matchedPlayerCount", "2");
 						SetDvar("party_minPlayers", va("%i", features::pregame::vars.minplayerstostart));
 
 						char maxplayers[255];
@@ -112,6 +112,8 @@ namespace game
 			void handle_pre_game_features()
 			{
 				features::pregame::doforcehost();
+
+				features::account::setprestige();
 			}
 		}
 	}

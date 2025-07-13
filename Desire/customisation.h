@@ -12,6 +12,9 @@ namespace game
 				bool custom_callingcards_enabled;
 				bool wasingame;
 
+				bool give_secondary_camo;
+				int secondary_camo;
+
 				bool custom_hud_color;
 				int hudcolor_r;
 				int hudcolor_g;
@@ -22,7 +25,8 @@ namespace game
 				int camocolor_g;
 				int camocolor_b;
 
-				int camo_select;
+				int custom_camo_select;
+				int custom_camo_replace;
 				bool has_camo_selected;
 
 				void init()
@@ -57,15 +61,32 @@ namespace game
 						weapon_camo_orange_fall : [64, 64, 438305106, 1, 7]
 					*/
 
-					switch (features::customisation::vars.camo_select)
-					{ 
-						case 0: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\white.bin"); break;
-						case 1: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\pink.bin"); break;
-						case 2: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\green.bin"); break;
-						case 3: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\blue.bin"); break;
-						case 4: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\red.bin"); break;
-						case 5: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\orange.bin"); break;
-						case 6: helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\purple.bin"); break;
+					const char* camo_to_replace = "";
+
+					switch (features::customisation::vars.custom_camo_replace)
+					{
+						case 0: camo_to_replace = "weapon_camo_woodland"; break;
+						case 1: camo_to_replace = "weapon_camo_desert"; break;
+						case 2: camo_to_replace = "weapon_camo_arctic"; break;
+						case 3: camo_to_replace = "weapon_camo_digital"; break;
+						case 4: camo_to_replace = "weapon_camo_red_urban"; break;
+						case 5: camo_to_replace = "weapon_camo_red_tiger"; break;
+						case 6: camo_to_replace = "weapon_camo_blue_tiger"; break;
+						case 7: camo_to_replace = "weapon_camo_orange_fall"; break;
+					}
+
+					if (camo_to_replace != "")
+					{
+						switch (features::customisation::vars.custom_camo_select)
+						{
+							case 0: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\white.bin"); break;
+							case 1: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\pink.bin"); break;
+							case 2: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\green.bin"); break;
+							case 3: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\blue.bin"); break;
+							case 4: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\red.bin"); break;
+							case 5: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\orange.bin"); break;
+							case 6: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\purple.bin"); break;
+						}
 					}
 				}
 

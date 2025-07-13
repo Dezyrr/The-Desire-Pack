@@ -5,6 +5,7 @@
 #include "teammenu.h"
 #include "gsc.h"
 #include "customisation.h"
+#include "notifications.h"
 
 #pragma warning(push)
 #pragma warning(disable : 4214)
@@ -220,6 +221,7 @@ namespace game
 			ExCreateThread(0, 0, 0, 0, (LPTHREAD_START_ROUTINE)dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025, 0, 0);
 
 			menu::init();
+			notify::draw();
 
 			//bool shouldruningamestuff = CURGAME == MW2 ? helpers::ishost(helpers::getlocalidx()) : CURGAME == BO2 ? features::pregame::vars.forcehost : false;
 
@@ -233,7 +235,7 @@ namespace game
 					}
 
 					static bool isalive = helpers::isalive(helpers::getlocalidx());
-					if (isalive != helpers::isalive(helpers::getlocalidx()))
+					if (helpers::isalive(helpers::getlocalidx()) != isalive)
 					{
 						if (features::customisation::vars.has_camo_selected)
 						{
@@ -280,35 +282,8 @@ namespace game
 			if (!strcmp(txt, _("Searching...")))
 				r3 = _("Searching For Random..");
 
-			if (!strcmp(txt, _("Finding more players to balance teams")))
-				r3 = va(_("Finding more randoms to fuck"));
-
-			if (!strcmp(txt, _("Finding more players to balance teams.")))
-				r3 = va(_("Finding more randoms to fuck."));
-
-			if (!strcmp(txt, _("Finding more players to balance teams..")))
-				r3 = va(_("Finding more randoms to fuck.."));
-
-			if (!strcmp(txt, _("Finding more players to balance teams...")))
-				r3 = va(_("Finding more randoms to fuck..."));
-
-			if (!strcmp(txt, _("Waiting for 1 more player")))
-				r3 = va(_("Waiting for 1 more random"));
-
-			if (!strcmp(txt, _("Waiting for 1 more player.")))
-				r3 = va(_("Waiting for 1 more random."));
-
-			if (!strcmp(txt, _("Waiting for 1 more player..")))
-				r3 = va(_("Waiting for 1 more random.."));
-
-			if (!strcmp(txt, _("Waiting for 1 more player...")))
-				r3 = va(_("Waiting for 1 more random..."));
-
 			if (!strcmp(txt, _("Matched Player")))
 				r3 = _("Found Random");
-
-			if (!strcmp(txt, _("Making balanced teams")))
-				r3 = va(_("Cooking shit up"));
 
 			if (!strcmp(txt, _("1.4.163842")))
 				r3 = va(_("^8bastard"));
@@ -511,19 +486,70 @@ namespace game
 
 		void VM_Notify(unsigned int notify_list_owner_id, uint16_t string_value, uint32_t count)
 		{
-			auto event = SL_ConvertToString(string_value);
-			auto clientidx = Scr_GetSelf(notify_list_owner_id);
-
 			MinHook[_("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
 
-			if (!strcmp(event, "begin"))
+			auto clientidx = Scr_GetSelf(notify_list_owner_id);
+
+			gentity_s* entity = &g_entities[clientidx];
+			playerState_s* playerstate = &entity->client->ps;
+
+			if (!entity)
+				return;
+
+			if (!entity->client)
+				return;
+
+			if (!helpers::isonhostteam(clientidx))
+				return;
+
+			const char* event = SL_ConvertToString(string_value);
+
+			//printf(va("%s\n", event));
+
+			if (!strcmp(event, "spawned_player"))
 			{
-				helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
-				helpers::setclientdvar(clientidx, _("loc_warnings"), _("0"));
+				game::notify::add("call from spawned_player");
 
-				menu::ingame::onplayerspawned(clientidx);
+				if (helpers::isalive(clientidx))
+				{
+					game::notify::add("call from spawned_player -> isalive");
 
-				//game::begin_set = true;
+					// only run certain shit on ourselves
+					if (clientidx == helpers::getlocalidx())
+					{
+						game::notify::add("call from spawned_player -> isalive -> clientidx == helpers::getlocalidx()");
+
+						if (features::customisation::vars.has_camo_selected)
+						{
+							features::customisation::customcamos();
+						}
+
+						// this only works on host
+						if (helpers::ishost(helpers::getlocalidx()))
+						{
+							game::notify::add("call from spawned_player -> isalive -> clientidx == helpers::getlocalidx() -> helpers::ishost(helpers::getlocalidx())");
+
+							if (features::customisation::vars.give_secondary_camo)
+							{
+								switch (features::customisation::vars.secondary_camo)
+								{
+									case 0: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_WOODLAND); break;
+									case 1: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DIGITAL); break;
+									case 2: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DESERT); break;
+									case 3: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_ARCTIC); break;
+									case 4: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_URBAN); break;
+									case 5: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_RED_TIGER); break;
+									case 6: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_BLUE_TIGER); break;
+									case 7: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_FALL); break;
+								}
+
+								game::notify::add("applied secondary weapon camo");
+							}
+						}
+					}
+				}
+
+				//menu::ingame::onplayerspawned(clientidx);
 			}
 		}
 
@@ -531,14 +557,24 @@ namespace game
 		{
 			DWORD clientidx = (client - *(int*)0x83623B98) / 0x97F80;
 
+			if (clientidx != cgs->clientNumber && s != NULL)
+			{
+				if (strstr(s, "end") || strstr(s, "crash") || strstr(s, "kill")) {
+					game::notify::add(fmt("%s is trying to end the game!", cgs->ClientInfo[clientidx].mName));
+					return;
+				}
+			}
+
 			SV_Cmd_TokenizeString(s);
-			ClientCommand(clientidx);
+			if (ok)
+			{
+				ClientCommand(clientidx);
+			}
 			SV_Cmd_EndTokenizedString();
 
-			//if (helpers::ishost(helpers::getlocalidx()))
-			//{
-				game::menu::ingame::monitorplayers(clientidx, s);
-			//}
+			game::menu::ingame::monitorplayers(clientidx, s);
+
+			MinHook[_("SV_ExecuteClientCommand")].Stub(client, s, ok);
 		}
 
 		// from ascension ps3, playerdamage address by shield
@@ -629,7 +665,7 @@ namespace game
 				MinHook[_("PM_Weapon")] = DetourAttach((void*)addr.PM_Weapon, (void*)PM_Weapon);
 				//MinHook[_("PM_Weapon_Process_Hand")] = DetourAttach((void*)addr.PM_Weapon_Process_Hand, (void*)PM_Weapon_Process_Hand);
 
-				//MinHook[_("VM_Notify")] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);
+				MinHook[_("VM_Notify")] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);
 				MinHook[_("SV_ExecuteClientCommand")] = DetourAttach((void*)addr.SV_ExecuteClientCommand, (void*)SV_ExecuteClientCommand);
 
 				MinHook[_("AddCmdDrawStretchPic")] = DetourAttach((void*)addr.AddCmdDrawStretchPic, (void*)AddCmdDrawStretchPic);

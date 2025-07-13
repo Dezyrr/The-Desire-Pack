@@ -24,32 +24,38 @@ c:\github\the-desire-pack\desire\render.h(162): warning C4482: nonstandard exten
 c:\github\the-desire-pack\desire\render.h(167): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
 c:\github\the-desire-pack\desire\render.h(181): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
 c:\github\the-desire-pack\desire\pregame.h(107): warning C4309: '=' : truncation of constant value
-c:\github\the-desire-pack\desire\menu.h(926): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(974): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(974): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(989): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(989): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(997): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(997): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1063): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1067): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1314): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1314): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1325): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1325): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1340): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1340): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1350): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1350): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\teammenu.h(92): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\teammenu.h(92): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\notifications.h(54): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\notifications.h(55): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\notifications.h(111): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1005): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1073): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1075): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1075): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1103): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1103): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1118): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1118): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1135): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1192): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1196): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1198): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1526): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1526): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1537): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1537): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1552): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1552): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\menu.h(1562): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
+c:\github\the-desire-pack\desire\menu.h(1562): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
 c:\github\the-desire-pack\desire\teammenu.h(93): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\teammenu.h(134): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\hooks.h(35): warning C4826: Conversion from 'PVOID' to 'INT64' is sign-extended. This may cause unexpected runtime behavior.
-c:\github\the-desire-pack\desire\hooks.h(215): warning C4244: 'return' : conversion from '__int64' to 'DWORD', possible loss of data
-c:\github\the-desire-pack\desire\hooks.h(438): warning C4244: 'return' : conversion from '__int64' to 'int', possible loss of data
-c:\github\the-desire-pack\desire\hooks.h(643): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
-c:\github\the-desire-pack\desire\hooks.h(651): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
+c:\github\the-desire-pack\desire\teammenu.h(93): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\teammenu.h(94): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\teammenu.h(135): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+c:\github\the-desire-pack\desire\hooks.h(36): warning C4826: Conversion from 'PVOID' to 'INT64' is sign-extended. This may cause unexpected runtime behavior.
+c:\github\the-desire-pack\desire\hooks.h(216): warning C4244: 'return' : conversion from '__int64' to 'DWORD', possible loss of data
+c:\github\the-desire-pack\desire\hooks.h(413): warning C4244: 'return' : conversion from '__int64' to 'int', possible loss of data
+c:\github\the-desire-pack\desire\hooks.h(679): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
+c:\github\the-desire-pack\desire\hooks.h(687): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
   Generating code
   Finished generating code
   state: load

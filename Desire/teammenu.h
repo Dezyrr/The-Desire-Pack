@@ -1,5 +1,6 @@
 #pragma once
 #include "ingame.h"
+#include "notifications.h"
 
 #define BUTTON_A         "n 25"
 #define BUTTON_B         "n 23"
@@ -170,10 +171,22 @@ namespace game
 
 						if (helpers::isalive(player->client->ps.clientNum))
 						{
+							helpers::iprintln(player->client->ps.clientNum, "^6crouch + [{+actionslot 1}] to refill ammo");
 							helpers::iprintln(player->client->ps.clientNum, "^6[{+actionslot 2}] for unstuck");
 						}
 
 						isalive[player->client->ps.clientNum] = helpers::isalive(player->client->ps.clientNum);
+					}
+
+					if (buttondown(str, BUTTON_DPADUP))
+					{
+						if (helpers::isalive(player->client->ps.clientNum))
+						{
+							if (helpers::getstance(player->client->ps.clientNum) == "crouch")
+							{
+								helpers::refillammo(player->client->ps.clientNum);
+							}
+						}
 					}
 
 					if (buttondown(str, BUTTON_DPADDOWN))
