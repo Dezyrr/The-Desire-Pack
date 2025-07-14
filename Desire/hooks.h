@@ -216,6 +216,10 @@ namespace game
 			return MinHook[_("XamInputGetState")].Stub(r3, r4, r5);
 		}
 
+		static int secondary_camo_lasttime = uiContext->realTime;
+		static float secondary_camo_deltatime = 0.0f;
+		static float secondary_camo_timer = 1;
+		static bool secondary_camo_start_count_down = false;
 		void R_EndFrame()
 		{
 			ExCreateThread(0, 0, 0, 0, (LPTHREAD_START_ROUTINE)dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025, 0, 0);
@@ -229,20 +233,41 @@ namespace game
 			{
 				if (CURGAME == MW2)
 				{
+					secondary_camo_deltatime = (uiContext->realTime - secondary_camo_lasttime) / 1000.0f;
+					secondary_camo_lasttime = uiContext->realTime;
+
 					if (helpers::ishost(helpers::getlocalidx()))
 					{
 						features::ingame::handle_in_game_features();
 					}
 
-					static bool isalive = helpers::isalive(helpers::getlocalidx());
-					if (helpers::isalive(helpers::getlocalidx()) != isalive)
+					if (secondary_camo_start_count_down)
 					{
-						if (features::customisation::vars.has_camo_selected)
-						{
-							features::customisation::customcamos();
-						}
+						secondary_camo_timer -= secondary_camo_deltatime;
+					}
 
-						isalive = helpers::isalive(helpers::getlocalidx());
+					if (secondary_camo_timer <= 0.f)
+					{
+						secondary_camo_start_count_down = false;
+
+						features::customisation::applycamosonsecondaryweapon();
+
+						// fuckit just refill all guns aswell
+						helpers::refillammo(helpers::getlocalidx());
+
+						secondary_camo_timer = 1.f;
+					}
+
+					static int old_secondary_camo = features::customisation::vars.secondary_camo;
+
+					if (features::customisation::vars.give_secondary_camo)
+					{
+						if (features::customisation::vars.secondary_camo != old_secondary_camo)
+						{
+							features::customisation::applycamosonsecondaryweapon();
+
+							old_secondary_camo = features::customisation::vars.secondary_camo;
+						}
 					}
 				}
 
@@ -491,60 +516,31 @@ namespace game
 			auto clientidx = Scr_GetSelf(notify_list_owner_id);
 
 			gentity_s* entity = &g_entities[clientidx];
-			playerState_s* playerstate = &entity->client->ps;
-
 			if (!entity)
 				return;
 
-			if (!entity->client)
-				return;
-
-			if (!helpers::isonhostteam(clientidx))
+			playerState_s* playerstate = &entity->client->ps;
+			if (!playerstate)
 				return;
 
 			const char* event = SL_ConvertToString(string_value);
-
-			//printf(va("%s\n", event));
+			if (!event)
+				return;
 
 			if (!strcmp(event, "spawned_player"))
 			{
-				game::notify::add("call from spawned_player");
-
-				if (helpers::isalive(clientidx))
+				if (clientidx == helpers::getlocalidx())
 				{
-					game::notify::add("call from spawned_player -> isalive");
-
-					// only run certain shit on ourselves
-					if (clientidx == helpers::getlocalidx())
+					if (features::customisation::vars.has_camo_selected)
 					{
-						game::notify::add("call from spawned_player -> isalive -> clientidx == helpers::getlocalidx()");
+						features::customisation::customcamos();
+					}
 
-						if (features::customisation::vars.has_camo_selected)
+					if (helpers::ishost(helpers::getlocalidx()))
+					{
+						if (features::customisation::vars.give_secondary_camo)
 						{
-							features::customisation::customcamos();
-						}
-
-						// this only works on host
-						if (helpers::ishost(helpers::getlocalidx()))
-						{
-							game::notify::add("call from spawned_player -> isalive -> clientidx == helpers::getlocalidx() -> helpers::ishost(helpers::getlocalidx())");
-
-							if (features::customisation::vars.give_secondary_camo)
-							{
-								switch (features::customisation::vars.secondary_camo)
-								{
-									case 0: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_WOODLAND); break;
-									case 1: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DIGITAL); break;
-									case 2: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DESERT); break;
-									case 3: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_ARCTIC); break;
-									case 4: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_URBAN); break;
-									case 5: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_RED_TIGER); break;
-									case 6: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_BLUE_TIGER); break;
-									case 7: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_FALL); break;
-								}
-
-								game::notify::add("applied secondary weapon camo");
-							}
+							secondary_camo_start_count_down = true;
 						}
 					}
 				}

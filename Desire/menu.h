@@ -10,6 +10,7 @@
 #include "players.h"
 #include "customisation.h"
 #include "notifications.h"
+#include "weaponediting.h"
 
 namespace game
 {
@@ -24,6 +25,7 @@ namespace game
 				sm_gamesettings,
 				sm_trickshotting,
 				sm_customisation,
+				sm_weapon_editing,
 				sm_players,
 				sm_playeroptions,
 				sm_account,
@@ -338,6 +340,11 @@ namespace game
 						break;
 					}
 
+					case sm_weapon_editing:
+					{
+						break;
+					}
+
 					case sm_account:
 					{
 						switch (controls.currentoption)
@@ -430,7 +437,7 @@ namespace game
 
 							case 4:
 							{
-								menuvars.current_submenu = sm_players;
+								menuvars.current_submenu = sm_weapon_editing;
 								controls.currentoption = 0;
 
 								break;
@@ -438,7 +445,7 @@ namespace game
 
 							case 5:
 							{
-								menuvars.current_submenu = sm_account;
+								menuvars.current_submenu = sm_players;
 								controls.currentoption = 0;
 
 								break;
@@ -446,13 +453,21 @@ namespace game
 
 							case 6:
 							{
-								menuvars.current_submenu = sm_misc;
+								menuvars.current_submenu = sm_account;
 								controls.currentoption = 0;
 
 								break;
 							}
 
 							case 7:
+							{
+								menuvars.current_submenu = sm_misc;
+								controls.currentoption = 0;
+
+								break;
+							}
+
+							case 8:
 							{
 								if (CURGAME == MW2)
 								{
@@ -798,17 +813,7 @@ namespace game
 
 								if (features::customisation::vars.give_secondary_camo)
 								{
-									switch (features::customisation::vars.secondary_camo)
-									{
-										case 0: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_WOODLAND); break;
-										case 1: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DIGITAL); break;
-										case 2: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DESERT); break;
-										case 3: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_ARCTIC); break;
-										case 4: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_URBAN); break;
-										case 5: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_RED_TIGER); break;
-										case 6: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_BLUE_TIGER); break;
-										case 7: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_FALL); break;
-									}
+									features::customisation::applycamosonsecondaryweapon();
 								}
 
 								break;
@@ -821,6 +826,27 @@ namespace game
 							}
 						}
 
+						break;
+					}
+
+					case sm_weapon_editing:
+					{
+						switch (controls.currentoption)
+						{
+							case 0:
+							{
+								features::weapon_editing::replaceakwithcod4ak();
+								break;
+							}
+
+							case 1:
+							{
+								features::weapon_editing::replacedeaglewithcod4goldone();
+								break;
+							}
+
+							default: break;
+						}
 						break;
 					}
 
@@ -1211,9 +1237,10 @@ namespace game
 								handler::widgets::addsubtab(1, _("game settings"), _("modify game settings"));
 								handler::widgets::addsubtab(2, _("trickshotting"), _("shit to assist with trickshotting"));
 								handler::widgets::addsubtab(3, _("customisation"), _("custom shit that usually isn't possible"));
-								handler::widgets::addsubtab(4, _("kick players"), _("kick retards"));
-								handler::widgets::addsubtab(5, _("account"), _("modify yo account fool"));
-								handler::widgets::addsubtab(6, _("misc"), _("other shit"));
+								handler::widgets::addsubtab(4, _("weapon editing"), _("fuck up the weapons or something"));
+								handler::widgets::addsubtab(5, _("kick players"), _("kick retards"));
+								handler::widgets::addsubtab(6, _("account"), _("modify yo account fool"));
+								handler::widgets::addsubtab(7, _("misc"), _("other shit"));
 								//handler::widgets::addoption(7, _("testing"), _("test function"));
 
 								break;
@@ -1356,6 +1383,16 @@ namespace game
 								handler::widgets::addslider(6, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255, _("custom hud color r"));
 								handler::widgets::addslider(7, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255, _("custom hud color g"));
 								handler::widgets::addslider(8, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255, _("custom hud color b"));
+								break;
+							}
+
+							case handler::sm_weapon_editing:
+							{
+								handler::menuvars.current_submenu_name = "weapon editing";
+
+								handler::widgets::addoption(0, _("cod4 ak"), _("replace the ak with the cod4 one"));
+								handler::widgets::addoption(1, _("gold deagle"), _("replace deagle with the cod4 gold one"));
+
 								break;
 							}
 

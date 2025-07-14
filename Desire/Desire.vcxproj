@@ -260,6 +260,7 @@
     <ClInclude Include="teammenu.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="vector.h" />
+    <ClInclude Include="weaponediting.h" />
     <ClInclude Include="xorstr.h" />
   </ItemGroup>
   <ItemGroup>

@@ -50,6 +50,9 @@
     <ClInclude Include="notifications.h">
       <Filter>notifications</Filter>
     </ClInclude>
+    <ClInclude Include="weaponediting.h">
+      <Filter>features\weapon editing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -96,6 +99,9 @@
     </Filter>
     <Filter Include="notifications">
       <UniqueIdentifier>{9f9afb01-1f35-421f-8e16-0e4c8b44f6b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="features\weapon editing">
+      <UniqueIdentifier>{5abe1dfc-c9cf-4d75-b90e-2d548eb43b96}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

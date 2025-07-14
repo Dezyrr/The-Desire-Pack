@@ -89,6 +89,7 @@ namespace game
 	void (*Item_SetDefaultVelocity)(gentity_s* ent, gentity_s* weaponidx) = reinterpret_cast<void(*)(gentity_s*, gentity_s*)>(0x821E2E18);
 	void (*G_EntEnablePhysics)(gentity_s* ent, int physcollmap) = reinterpret_cast<void(*)(gentity_s*, int)>(0x821E4360);
 	int (*BG_GetWeaponModel)(playerState_s* playerstate, int weaponidx) = reinterpret_cast<int(*)(playerState_s*, int)>(0x820E2EC8);
+	int (*G_TakePlayerWeapon)(playerState_s* playerstate, unsigned int weaponidx) = reinterpret_cast<int(*)(playerState_s*, unsigned int)>(0x82210990);
 
 	void UI_OpenToastPopup(const char* title, const char* description, const char* material, int displayTime)  {
 		((void(*)(...))0x82454800)(0, material, title, description, displayTime);
@@ -280,8 +281,8 @@ namespace game
 
 		void replaceweaponmodelwithxmodel(const char* weapon, const char* model)
 		{
-			//DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->gunXModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, model).xmodel;
-			//DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->worldModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, model).xmodel;
+			DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->gunXModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, model).xmodel;
+			DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->worldModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, model).xmodel;
 		}
 
 		void replaceweaponanimation(const char* weapon, const char* anim)
@@ -477,7 +478,10 @@ namespace game
 
 			Weapon* weapons = (Weapon*)player->client->ps.weaponsEquipped;
 
-			return weapons[0].data;
+			if (weapons[0].data)
+				return weapons[0].data;
+
+			return -1;
 		}
 
 		int getprimaryweaponidx(int idx)
@@ -486,26 +490,25 @@ namespace game
 
 			Weapon* weapons = (Weapon*)player->client->ps.weaponsEquipped;
 
-			return weapons[2].data;
+			if (weapons[2].data)
+				return weapons[2].data;
+
+			return -1;
 		}
 
 		void givesecondaryweaponcamo(int idx, int camo)
 		{
 			gentity_s* player = &g_entities[idx];
-
-			if (!player->client)
-				return;
-
-			if (!isalive(idx))
-				return;
-
 			playerState_s* playerstate = &player->client->ps;
 
+			int weaponidx1 = getprimaryweaponidx(idx);
 			int weaponidx = getsecondaryweaponidx(idx);
-			int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
 
-			// temporary take weapon
-			Drop_Weapon(player, weaponidx, weaponmodel);
+			// fuck off
+			if (weaponidx && weaponidx1)
+			{
+				G_TakePlayerWeapon(playerstate, weaponidx);
+			}
 
 			G_GivePlayerWeapon(playerstate, weaponidx, camo, 0);
 			Add_Ammo(player, weaponidx, 0, 9999, 1);

@@ -665,6 +665,39 @@ namespace game
 					Sleep(1000);
 				}
 			}
+
+			void applycamosonsecondaryweapon()
+			{
+				auto weapidx = helpers::getsecondaryweaponidx(helpers::getlocalidx());
+				auto weapstr = G_GetWeaponNameForIndex(weapidx);
+
+				if (!weapidx || weapidx == -1)
+					return;
+
+				// shit doesn't work on models
+				if (strstr(weapstr, "1887"))
+					return;
+
+				// fuck all akimbo weapons
+				if (strstr(weapstr, "akimbo"))
+					return;
+
+				// fuck the gold deagle / normal one
+				if (strstr(weapstr, "eagle"))
+					return;
+
+				switch (features::customisation::vars.secondary_camo)
+				{
+					case 0: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_WOODLAND); break;
+					case 1: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DIGITAL); break;
+					case 2: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_DESERT); break;
+					case 3: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_ARCTIC); break;
+					case 4: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_URBAN); break;
+					case 5: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_RED_TIGER); break;
+					case 6: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_BLUE_TIGER); break;
+					case 7: helpers::givesecondaryweaponcamo(helpers::getlocalidx(), CAMO_FALL); break;
+				}
+			}
 		}
 	}
 }
