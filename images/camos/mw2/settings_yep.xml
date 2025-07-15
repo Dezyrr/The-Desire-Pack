@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-16" ?>
+<RDF Version="XPR2">
+<Texture
+   Name   = "mw2_callingcard"
+   Source = "C:\Github\The-Desire-Pack\images\camos\mw2\_weapon_cheytac_new_spc-r-20g_57348e7e.png"
+   Format = "D3DFMT_DXT5"
+   Width =  "1024"
+   Height = "1024"
+   Levels = "11"
+/>
+</RDF>

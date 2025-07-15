@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-16" ?>
+<RDF Version="XPR2">
+<Texture
+   Name   = "mw2_emblem"
+   Source = "C:\Github\The-Desire-Pack\images\emblems\mw2\cardicon_prestige10anim_02.png"
+   Format = "D3DFMT_DXT2"
+   Width =  "512"
+   Height = "256"
+   Levels = "1"
+/>
+</RDF>

@@ -108,6 +108,280 @@ namespace game
 				}
 			}
 
+			void customemblems()
+			{
+				if (CURGAME == MW2)
+				{
+					helpers::replacematerial(_("cardicon_prestige10_02"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige10_02.bin"));
+					helpers::replacematerial(_("cardicon_prestige10_01"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige10_01.bin"));
+					helpers::replacematerial(_("cardicon_8_bit_price"), _("hdd:\\desire\\emblems\\mw2\\cardicon_8_bit_price.bin"));
+					helpers::replacematerial(_("cardicon_8ball"), _("hdd:\\desire\\emblems\\mw2\\cardicon_8ball.bin"));
+					helpers::replacematerial(_("cardicon_abduction"), _("hdd:\\desire\\emblems\\mw2\\cardicon_abduction.bin"));
+					helpers::replacematerial(_("cardicon_abrams"), _("hdd:\\desire\\emblems\\mw2\\cardicon_abrams.bin"));
+					helpers::replacematerial(_("cardicon_ac130_angelflare"), _("hdd:\\desire\\emblems\\mw2\\cardicon_ac130_angelflare.bin"));
+					helpers::replacematerial(_("cardicon_aircraft_01"), _("hdd:\\desire\\emblems\\mw2\\cardicon_aircraft_01.bin"));
+					helpers::replacematerial(_("cardicon_animal"), _("hdd:\\desire\\emblems\\mw2\\cardicon_animal.bin"));
+					helpers::replacematerial(_("cardicon_assad"), _("hdd:\\desire\\emblems\\mw2\\cardicon_assad.bin"));
+					helpers::replacematerial(_("cardicon_award_jets"), _("hdd:\\desire\\emblems\\mw2\\cardicon_award_jets.bin"));
+					helpers::replacematerial(_("cardicon_b2"), _("hdd:\\desire\\emblems\\mw2\\cardicon_b2.bin"));
+					helpers::replacematerial(_("cardicon_ball_baseball_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_ball_baseball_1.bin"));
+					helpers::replacematerial(_("cardicon_ball_volleyball_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_ball_volleyball_1.bin"));
+					helpers::replacematerial(_("cardicon_bear"), _("hdd:\\desire\\emblems\\mw2\\cardicon_bear.bin"));
+					helpers::replacematerial(_("cardicon_binoculars_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_binoculars_1.bin"));
+					helpers::replacematerial(_("cardicon_biohazard"), _("hdd:\\desire\\emblems\\mw2\\cardicon_biohazard.bin"));
+					helpers::replacematerial(_("cardicon_birdbrain"), _("hdd:\\desire\\emblems\\mw2\\cardicon_birdbrain.bin"));
+					helpers::replacematerial(_("cardicon_blast_shield"), _("hdd:\\desire\\emblems\\mw2\\cardicon_blast_shield.bin"));
+					helpers::replacematerial(_("cardicon_booniehat"), _("hdd:\\desire\\emblems\\mw2\\cardicon_booniehat.bin"));
+					helpers::replacematerial(_("cardicon_boot"), _("hdd:\\desire\\emblems\\mw2\\cardicon_boot.bin"));
+					helpers::replacematerial(_("cardicon_boots_01"), _("hdd:\\desire\\emblems\\mw2\\cardicon_boots_01.bin"));
+					helpers::replacematerial(_("cardicon_boots_02"), _("hdd:\\desire\\emblems\\mw2\\cardicon_boots_02.bin"));
+					helpers::replacematerial(_("cardicon_brassknuckles"), _("hdd:\\desire\\emblems\\mw2\\cardicon_brassknuckles.bin"));
+					helpers::replacematerial(_("cardicon_brit_beret"), _("hdd:\\desire\\emblems\\mw2\\cardicon_brit_beret.bin"));
+					helpers::replacematerial(_("cardicon_bulb"), _("hdd:\\desire\\emblems\\mw2\\cardicon_bulb.bin"));
+					helpers::replacematerial(_("cardicon_bullet_case"), _("hdd:\\desire\\emblems\\mw2\\cardicon_bullet_case.bin"));
+					helpers::replacematerial(_("cardicon_bullets_50cal"), _("hdd:\\desire\\emblems\\mw2\\cardicon_bullets_50cal.bin"));
+					helpers::replacematerial(_("cardicon_burgertown"), _("hdd:\\desire\\emblems\\mw2\\cardicon_burgertown.bin"));
+					helpers::replacematerial(_("cardicon_c4"), _("hdd:\\desire\\emblems\\mw2\\cardicon_c4.bin"));
+					helpers::replacematerial(_("cardicon_car"), _("hdd:\\desire\\emblems\\mw2\\cardicon_car.bin"));
+					helpers::replacematerial(_("cardicon_chicken"), _("hdd:\\desire\\emblems\\mw2\\cardicon_chicken.bin"));
+					helpers::replacematerial(_("cardicon_circuit"), _("hdd:\\desire\\emblems\\mw2\\cardicon_circuit.bin"));
+					helpers::replacematerial(_("cardicon_claw"), _("hdd:\\desire\\emblems\\mw2\\cardicon_claw.bin"));
+					helpers::replacematerial(_("cardicon_claymore"), _("hdd:\\desire\\emblems\\mw2\\cardicon_claymore.bin"));
+					helpers::replacematerial(_("cardicon_cod4"), _("hdd:\\desire\\emblems\\mw2\\cardicon_cod4.bin"));
+					helpers::replacematerial(_("cardicon_comic_price"), _("hdd:\\desire\\emblems\\mw2\\cardicon_comic_price.bin"));
+					helpers::replacematerial(_("cardicon_comic_shepherd"), _("hdd:\\desire\\emblems\\mw2\\cardicon_comic_shepherd.bin"));
+					helpers::replacematerial(_("cardicon_compass"), _("hdd:\\desire\\emblems\\mw2\\cardicon_compass.bin"));
+					helpers::replacematerial(_("cardicon_copycat"), _("hdd:\\desire\\emblems\\mw2\\cardicon_copycat.bin"));
+					helpers::replacematerial(_("cardicon_default"), _("hdd:\\desire\\emblems\\mw2\\cardicon_default.bin"));
+					helpers::replacematerial(_("cardicon_devilfinger"), _("hdd:\\desire\\emblems\\mw2\\cardicon_devilfinger.bin"));
+					helpers::replacematerial(_("cardicon_dogtags_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_dogtags_1.bin"));
+					helpers::replacematerial(_("cardicon_doubletap"), _("hdd:\\desire\\emblems\\mw2\\cardicon_doubletap.bin"));
+					helpers::replacematerial(_("cardicon_eagle"), _("hdd:\\desire\\emblems\\mw2\\cardicon_eagle.bin"));
+					helpers::replacematerial(_("cardicon_electro"), _("hdd:\\desire\\emblems\\mw2\\cardicon_electro.bin"));
+					helpers::replacematerial(_("cardicon_expert_aa12"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_aa12.bin"));
+					helpers::replacematerial(_("cardicon_expert_ak47"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_ak47.bin"));
+					helpers::replacematerial(_("cardicon_expert_aug"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_aug.bin"));
+					helpers::replacematerial(_("cardicon_expert_barrett"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_barrett.bin"));
+					helpers::replacematerial(_("cardicon_expert_beretta"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_beretta.bin"));
+					helpers::replacematerial(_("cardicon_expert_beretta393"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_beretta393.bin"));
+					helpers::replacematerial(_("cardicon_expert_cheytac"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_cheytac.bin"));
+					helpers::replacematerial(_("cardicon_expert_coltanaconda"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_coltanaconda.bin"));
+					helpers::replacematerial(_("cardicon_expert_deserteagle"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_deserteagle.bin"));
+					helpers::replacematerial(_("cardicon_expert_fal"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_fal.bin"));
+					helpers::replacematerial(_("cardicon_expert_famas"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_famas.bin"));
+					helpers::replacematerial(_("cardicon_expert_fn2000"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_fn2000.bin"));
+					helpers::replacematerial(_("cardicon_expert_glock"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_glock.bin"));
+					helpers::replacematerial(_("cardicon_expert_kriss"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_kriss.bin"));
+					helpers::replacematerial(_("cardicon_expert_m1014"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_m1014.bin"));
+					helpers::replacematerial(_("cardicon_expert_m16"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_m16.bin"));
+					helpers::replacematerial(_("cardicon_expert_m21"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_m21.bin"));
+					helpers::replacematerial(_("cardicon_expert_m240"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_m240.bin"));
+					helpers::replacematerial(_("cardicon_expert_m4"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_m4.bin"));
+					helpers::replacematerial(_("cardicon_expert_masada"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_masada.bin"));
+					helpers::replacematerial(_("cardicon_expert_mg4"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_mg4.bin"));
+					helpers::replacematerial(_("cardicon_expert_model1887"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_model1887.bin"));
+					helpers::replacematerial(_("cardicon_expert_mp5k"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_mp5k.bin"));
+					helpers::replacematerial(_("cardicon_expert_p90"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_p90.bin"));
+					helpers::replacematerial(_("cardicon_expert_pp2000"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_pp2000.bin"));
+					helpers::replacematerial(_("cardicon_expert_ranger"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_ranger.bin"));
+					helpers::replacematerial(_("cardicon_expert_rpd"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_rpd.bin"));
+					helpers::replacematerial(_("cardicon_expert_sa80"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_sa80.bin"));
+					helpers::replacematerial(_("cardicon_expert_scar"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_scar.bin"));
+					helpers::replacematerial(_("cardicon_expert_spas12"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_spas12.bin"));
+					helpers::replacematerial(_("cardicon_expert_striker"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_striker.bin"));
+					helpers::replacematerial(_("cardicon_expert_tavor"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_tavor.bin"));
+					helpers::replacematerial(_("cardicon_expert_tmp"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_tmp.bin"));
+					helpers::replacematerial(_("cardicon_expert_ump45"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_ump45.bin"));
+					helpers::replacematerial(_("cardicon_expert_usp"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_usp.bin"));
+					helpers::replacematerial(_("cardicon_expert_uzi"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_uzi.bin"));
+					helpers::replacematerial(_("cardicon_expert_wa2000"), _("hdd:\\desire\\emblems\\mw2\\cardicon_expert_wa2000.bin"));
+					helpers::replacematerial(_("cardicon_f15"), _("hdd:\\desire\\emblems\\mw2\\cardicon_f15.bin"));
+					helpers::replacematerial(_("cardicon_final_stand"), _("hdd:\\desire\\emblems\\mw2\\cardicon_final_stand.bin"));
+					helpers::replacematerial(_("cardicon_flare"), _("hdd:\\desire\\emblems\\mw2\\cardicon_flare.bin"));
+					helpers::replacematerial(_("cardicon_fmj"), _("hdd:\\desire\\emblems\\mw2\\cardicon_fmj.bin"));
+					helpers::replacematerial(_("cardicon_frag_grenade"), _("hdd:\\desire\\emblems\\mw2\\cardicon_frag_grenade.bin"));
+					helpers::replacematerial(_("cardicon_gasmask"), _("hdd:\\desire\\emblems\\mw2\\cardicon_gasmask.bin"));
+					helpers::replacematerial(_("cardicon_gears"), _("hdd:\\desire\\emblems\\mw2\\cardicon_gears.bin"));
+					helpers::replacematerial(_("cardicon_ghillie"), _("hdd:\\desire\\emblems\\mw2\\cardicon_ghillie.bin"));
+					helpers::replacematerial(_("cardicon_ghost"), _("hdd:\\desire\\emblems\\mw2\\cardicon_ghost.bin"));
+					helpers::replacematerial(_("cardicon_ghost_bust"), _("hdd:\\desire\\emblems\\mw2\\cardicon_ghost_bust.bin"));
+					helpers::replacematerial(_("cardicon_ghost_mic"), _("hdd:\\desire\\emblems\\mw2\\cardicon_ghost_mic.bin"));
+					helpers::replacematerial(_("cardicon_girlskull"), _("hdd:\\desire\\emblems\\mw2\\cardicon_girlskull.bin"));
+					helpers::replacematerial(_("cardicon_gloss_grenade"), _("hdd:\\desire\\emblems\\mw2\\cardicon_gloss_grenade.bin"));
+					helpers::replacematerial(_("cardicon_gold"), _("hdd:\\desire\\emblems\\mw2\\cardicon_gold.bin"));
+					helpers::replacematerial(_("cardicon_grenadepulldeath"), _("hdd:\\desire\\emblems\\mw2\\cardicon_grenadepulldeath.bin"));
+					helpers::replacematerial(_("cardicon_grigsby"), _("hdd:\\desire\\emblems\\mw2\\cardicon_grigsby.bin"));
+					helpers::replacematerial(_("cardicon_gumby"), _("hdd:\\desire\\emblems\\mw2\\cardicon_gumby.bin"));
+					helpers::replacematerial(_("cardicon_harrier"), _("hdd:\\desire\\emblems\\mw2\\cardicon_harrier.bin"));
+					helpers::replacematerial(_("cardicon_hat_n_knife"), _("hdd:\\desire\\emblems\\mw2\\cardicon_hat_n_knife.bin"));
+					helpers::replacematerial(_("cardicon_hazard"), _("hdd:\\desire\\emblems\\mw2\\cardicon_hazard.bin"));
+					helpers::replacematerial(_("cardicon_headshot"), _("hdd:\\desire\\emblems\\mw2\\cardicon_headshot.bin"));
+					helpers::replacematerial(_("cardicon_heartbeatsensor"), _("hdd:\\desire\\emblems\\mw2\\cardicon_heartbeatsensor.bin"));
+					helpers::replacematerial(_("cardicon_helmet_army"), _("hdd:\\desire\\emblems\\mw2\\cardicon_helmet_army.bin"));
+					helpers::replacematerial(_("cardicon_helmet_brit_ww2"), _("hdd:\\desire\\emblems\\mw2\\cardicon_helmet_brit_ww2.bin"));
+					helpers::replacematerial(_("cardicon_helmet_medic"), _("hdd:\\desire\\emblems\\mw2\\cardicon_helmet_medic.bin"));
+					helpers::replacematerial(_("cardicon_helmet_pilot"), _("hdd:\\desire\\emblems\\mw2\\cardicon_helmet_pilot.bin"));
+					helpers::replacematerial(_("cardicon_helmet_ranger"), _("hdd:\\desire\\emblems\\mw2\\cardicon_helmet_ranger.bin"));
+					helpers::replacematerial(_("cardicon_helmet_samurai"), _("hdd:\\desire\\emblems\\mw2\\cardicon_helmet_samurai.bin"));
+					helpers::replacematerial(_("cardicon_hipflask"), _("hdd:\\desire\\emblems\\mw2\\cardicon_hipflask.bin"));
+					helpers::replacematerial(_("cardicon_honeybadger01"), _("hdd:\\desire\\emblems\\mw2\\cardicon_honeybadger01.bin"));
+					helpers::replacematerial(_("cardicon_humantrophy"), _("hdd:\\desire\\emblems\\mw2\\cardicon_humantrophy.bin"));
+					helpers::replacematerial(_("cardicon_hummer"), _("hdd:\\desire\\emblems\\mw2\\cardicon_hummer.bin"));
+					helpers::replacematerial(_("cardicon_hyena"), _("hdd:\\desire\\emblems\\mw2\\cardicon_hyena.bin"));
+					helpers::replacematerial(_("cardicon_illuminati"), _("hdd:\\desire\\emblems\\mw2\\cardicon_illuminati.bin"));
+					helpers::replacematerial(_("cardicon_iss"), _("hdd:\\desire\\emblems\\mw2\\cardicon_iss.bin"));
+					helpers::replacematerial(_("cardicon_joystick"), _("hdd:\\desire\\emblems\\mw2\\cardicon_joystick.bin"));
+					helpers::replacematerial(_("cardicon_juggernaut_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_juggernaut_1.bin"));
+					helpers::replacematerial(_("cardicon_juggernaut_2"), _("hdd:\\desire\\emblems\\mw2\\cardicon_juggernaut_2.bin"));
+					helpers::replacematerial(_("cardicon_kinggorilla"), _("hdd:\\desire\\emblems\\mw2\\cardicon_kinggorilla.bin"));
+					helpers::replacematerial(_("cardicon_launcher"), _("hdd:\\desire\\emblems\\mw2\\cardicon_launcher.bin"));
+					helpers::replacematerial(_("cardicon_league_grenade"), _("hdd:\\desire\\emblems\\mw2\\cardicon_league_grenade.bin"));
+					helpers::replacematerial(_("cardicon_loadedfinger"), _("hdd:\\desire\\emblems\\mw2\\cardicon_loadedfinger.bin"));
+					helpers::replacematerial(_("cardicon_locked"), _("hdd:\\desire\\emblems\\mw2\\cardicon_locked.bin"));
+					helpers::replacematerial(_("cardicon_makarov"), _("hdd:\\desire\\emblems\\mw2\\cardicon_makarov.bin"));
+					helpers::replacematerial(_("cardicon_marksman_aa12"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_aa12.bin"));
+					helpers::replacematerial(_("cardicon_marksman_ak47"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_ak47.bin"));
+					helpers::replacematerial(_("cardicon_marksman_aug"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_aug.bin"));
+					helpers::replacematerial(_("cardicon_marksman_barrett"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_barrett.bin"));
+					helpers::replacematerial(_("cardicon_marksman_beretta"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_beretta.bin"));
+					helpers::replacematerial(_("cardicon_marksman_beretta393"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_beretta393.bin"));
+					helpers::replacematerial(_("cardicon_marksman_cheytac"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_cheytac.bin"));
+					helpers::replacematerial(_("cardicon_marksman_coltanaconda"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_coltanaconda.bin"));
+					helpers::replacematerial(_("cardicon_marksman_deserteagle"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_deserteagle.bin"));
+					helpers::replacematerial(_("cardicon_marksman_fal"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_fal.bin"));
+					helpers::replacematerial(_("cardicon_marksman_famas"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_famas.bin"));
+					helpers::replacematerial(_("cardicon_marksman_fn2000"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_fn2000.bin"));
+					helpers::replacematerial(_("cardicon_marksman_glock"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_glock.bin"));
+					helpers::replacematerial(_("cardicon_marksman_kriss"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_kriss.bin"));
+					helpers::replacematerial(_("cardicon_marksman_m1014"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_m1014.bin"));
+					helpers::replacematerial(_("cardicon_marksman_m16"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_m16.bin"));
+					helpers::replacematerial(_("cardicon_marksman_m21"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_m21.bin"));
+					helpers::replacematerial(_("cardicon_marksman_m240"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_m240.bin"));
+					helpers::replacematerial(_("cardicon_marksman_m4"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_m4.bin"));
+					helpers::replacematerial(_("cardicon_marksman_masada"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_masada.bin"));
+					helpers::replacematerial(_("cardicon_marksman_mg4"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_mg4.bin"));
+					helpers::replacematerial(_("cardicon_marksman_model1887"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_model1887.bin"));
+					helpers::replacematerial(_("cardicon_marksman_mp5k"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_mp5k.bin"));
+					helpers::replacematerial(_("cardicon_marksman_p90"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_p90.bin"));
+					helpers::replacematerial(_("cardicon_marksman_pp2000"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_pp2000.bin"));
+					helpers::replacematerial(_("cardicon_marksman_ranger"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_ranger.bin"));
+					helpers::replacematerial(_("cardicon_marksman_rpd"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_rpd.bin"));
+					helpers::replacematerial(_("cardicon_marksman_sa80"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_sa80.bin"));
+					helpers::replacematerial(_("cardicon_marksman_scar"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_scar.bin"));
+					helpers::replacematerial(_("cardicon_marksman_spas12"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_spas12.bin"));
+					helpers::replacematerial(_("cardicon_marksman_striker"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_striker.bin"));
+					helpers::replacematerial(_("cardicon_marksman_tavor"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_tavor.bin"));
+					helpers::replacematerial(_("cardicon_marksman_tmp"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_tmp.bin"));
+					helpers::replacematerial(_("cardicon_marksman_ump45"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_ump45.bin"));
+					helpers::replacematerial(_("cardicon_marksman_usp"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_usp.bin"));
+					helpers::replacematerial(_("cardicon_marksman_uzi"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_uzi.bin"));
+					helpers::replacematerial(_("cardicon_marksman_wa2000"), _("hdd:\\desire\\emblems\\mw2\\cardicon_marksman_wa2000.bin"));
+					helpers::replacematerial(_("cardicon_mexican_blue"), _("hdd:\\desire\\emblems\\mw2\\cardicon_mexican_blue.bin"));
+					helpers::replacematerial(_("cardicon_mexican_red"), _("hdd:\\desire\\emblems\\mw2\\cardicon_mexican_red.bin"));
+					helpers::replacematerial(_("cardicon_mig"), _("hdd:\\desire\\emblems\\mw2\\cardicon_mig.bin"));
+					helpers::replacematerial(_("cardicon_minigun"), _("hdd:\\desire\\emblems\\mw2\\cardicon_minigun.bin"));
+					helpers::replacematerial(_("cardicon_missile_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_missile_1.bin"));
+					helpers::replacematerial(_("cardicon_moon"), _("hdd:\\desire\\emblems\\mw2\\cardicon_moon.bin"));
+					helpers::replacematerial(_("cardicon_motorcycle"), _("hdd:\\desire\\emblems\\mw2\\cardicon_motorcycle.bin"));
+					helpers::replacematerial(_("cardicon_nightvision_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_nightvision_1.bin"));
+					helpers::replacematerial(_("cardicon_nightvision_2"), _("hdd:\\desire\\emblems\\mw2\\cardicon_nightvision_2.bin"));
+					helpers::replacematerial(_("cardicon_noseart1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_noseart1.bin"));
+					helpers::replacematerial(_("cardicon_nvg_star"), _("hdd:\\desire\\emblems\\mw2\\cardicon_nvg_star.bin"));
+					helpers::replacematerial(_("cardicon_pacifier_blue"), _("hdd:\\desire\\emblems\\mw2\\cardicon_pacifier_blue.bin"));
+					helpers::replacematerial(_("cardicon_pacifier_pink"), _("hdd:\\desire\\emblems\\mw2\\cardicon_pacifier_pink.bin"));
+					helpers::replacematerial(_("cardicon_painkiller"), _("hdd:\\desire\\emblems\\mw2\\cardicon_painkiller.bin"));
+					helpers::replacematerial(_("cardicon_paratrooper"), _("hdd:\\desire\\emblems\\mw2\\cardicon_paratrooper.bin"));
+					helpers::replacematerial(_("cardicon_patch"), _("hdd:\\desire\\emblems\\mw2\\cardicon_patch.bin"));
+					helpers::replacematerial(_("cardicon_pavelow"), _("hdd:\\desire\\emblems\\mw2\\cardicon_pavelow.bin"));
+					helpers::replacematerial(_("cardicon_pirate_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_pirate_1.bin"));
+					helpers::replacematerial(_("cardicon_pirateflag_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_pirateflag_1.bin"));
+					helpers::replacematerial(_("cardicon_porterjustice"), _("hdd:\\desire\\emblems\\mw2\\cardicon_porterjustice.bin"));
+					helpers::replacematerial(_("cardicon_prestige10anim"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige10anim.bin"));
+					helpers::replacematerial(_("cardicon_prestige10anim_02"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige10anim_02.bin"));
+					helpers::replacematerial(_("cardicon_prestige_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_1.bin"));
+					helpers::replacematerial(_("cardicon_prestige_10"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_10.bin"));
+					helpers::replacematerial(_("cardicon_prestige_2"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_2.bin"));
+					helpers::replacematerial(_("cardicon_prestige_3"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_3.bin"));
+					helpers::replacematerial(_("cardicon_prestige_4"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_4.bin"));
+					helpers::replacematerial(_("cardicon_prestige_5"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_5.bin"));
+					helpers::replacematerial(_("cardicon_prestige_6"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_6.bin"));
+					helpers::replacematerial(_("cardicon_prestige_7"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_7.bin"));
+					helpers::replacematerial(_("cardicon_prestige_8"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_8.bin"));
+					helpers::replacematerial(_("cardicon_prestige_9"), _("hdd:\\desire\\emblems\\mw2\\cardicon_prestige_9.bin"));
+					helpers::replacematerial(_("cardicon_price_ww2"), _("hdd:\\desire\\emblems\\mw2\\cardicon_price_ww2.bin"));
+					helpers::replacematerial(_("cardicon_pricearctic"), _("hdd:\\desire\\emblems\\mw2\\cardicon_pricearctic.bin"));
+					helpers::replacematerial(_("cardicon_pricewoodland"), _("hdd:\\desire\\emblems\\mw2\\cardicon_pricewoodland.bin"));
+					helpers::replacematerial(_("cardicon_pushindaisies"), _("hdd:\\desire\\emblems\\mw2\\cardicon_pushindaisies.bin"));
+					helpers::replacematerial(_("cardicon_radiation"), _("hdd:\\desire\\emblems\\mw2\\cardicon_radiation.bin"));
+					helpers::replacematerial(_("cardicon_rank_1stlt1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_1stlt1.bin"));
+					helpers::replacematerial(_("cardicon_rank_2ndlt1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_2ndlt1.bin"));
+					helpers::replacematerial(_("cardicon_rank_bgen1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_bgen1.bin"));
+					helpers::replacematerial(_("cardicon_rank_capt1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_capt1.bin"));
+					helpers::replacematerial(_("cardicon_rank_cmdsgtmaj1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_cmdsgtmaj1.bin"));
+					helpers::replacematerial(_("cardicon_rank_col1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_col1.bin"));
+					helpers::replacematerial(_("cardicon_rank_comm"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_comm.bin"));
+					helpers::replacematerial(_("cardicon_rank_cpl1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_cpl1.bin"));
+					helpers::replacematerial(_("cardicon_rank_fsgt1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_fsgt1.bin"));
+					helpers::replacematerial(_("cardicon_rank_gen1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_gen1.bin"));
+					helpers::replacematerial(_("cardicon_rank_ltcol1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_ltcol1.bin"));
+					helpers::replacematerial(_("cardicon_rank_ltgen1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_ltgen1.bin"));
+					helpers::replacematerial(_("cardicon_rank_maj1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_maj1.bin"));
+					helpers::replacematerial(_("cardicon_rank_majgen1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_majgen1.bin"));
+					helpers::replacematerial(_("cardicon_rank_msgt1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_msgt1.bin"));
+					helpers::replacematerial(_("cardicon_rank_pfc1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_pfc1.bin"));
+					helpers::replacematerial(_("cardicon_rank_pvt1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_pvt1.bin"));
+					helpers::replacematerial(_("cardicon_rank_sgt1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_sgt1.bin"));
+					helpers::replacematerial(_("cardicon_rank_sgtfc1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_sgtfc1.bin"));
+					helpers::replacematerial(_("cardicon_rank_sgtmaj1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_sgtmaj1.bin"));
+					helpers::replacematerial(_("cardicon_rank_spc1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_spc1.bin"));
+					helpers::replacematerial(_("cardicon_rank_ssgt1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rank_ssgt1.bin"));
+					helpers::replacematerial(_("cardicon_red_devil"), _("hdd:\\desire\\emblems\\mw2\\cardicon_red_devil.bin"));
+					helpers::replacematerial(_("cardicon_redhand"), _("hdd:\\desire\\emblems\\mw2\\cardicon_redhand.bin"));
+					helpers::replacematerial(_("cardicon_redhead"), _("hdd:\\desire\\emblems\\mw2\\cardicon_redhead.bin"));
+					helpers::replacematerial(_("cardicon_rhino"), _("hdd:\\desire\\emblems\\mw2\\cardicon_rhino.bin"));
+					helpers::replacematerial(_("cardicon_riot_shield"), _("hdd:\\desire\\emblems\\mw2\\cardicon_riot_shield.bin"));
+					helpers::replacematerial(_("cardicon_russian_beret"), _("hdd:\\desire\\emblems\\mw2\\cardicon_russian_beret.bin"));
+					helpers::replacematerial(_("cardicon_sami"), _("hdd:\\desire\\emblems\\mw2\\cardicon_sami.bin"));
+					helpers::replacematerial(_("cardicon_seasnipers"), _("hdd:\\desire\\emblems\\mw2\\cardicon_seasnipers.bin"));
+					helpers::replacematerial(_("cardicon_semtex"), _("hdd:\\desire\\emblems\\mw2\\cardicon_semtex.bin"));
+					helpers::replacematerial(_("cardicon_shotgun_shells"), _("hdd:\\desire\\emblems\\mw2\\cardicon_shotgun_shells.bin"));
+					helpers::replacematerial(_("cardicon_shuriken"), _("hdd:\\desire\\emblems\\mw2\\cardicon_shuriken.bin"));
+					helpers::replacematerial(_("cardicon_simplegun"), _("hdd:\\desire\\emblems\\mw2\\cardicon_simplegun.bin"));
+					helpers::replacematerial(_("cardicon_skull"), _("hdd:\\desire\\emblems\\mw2\\cardicon_skull.bin"));
+					helpers::replacematerial(_("cardicon_skull_black"), _("hdd:\\desire\\emblems\\mw2\\cardicon_skull_black.bin"));
+					helpers::replacematerial(_("cardicon_skullaward"), _("hdd:\\desire\\emblems\\mw2\\cardicon_skullaward.bin"));
+					helpers::replacematerial(_("cardicon_skullnbones"), _("hdd:\\desire\\emblems\\mw2\\cardicon_skullnbones.bin"));
+					helpers::replacematerial(_("cardicon_snakeeyes"), _("hdd:\\desire\\emblems\\mw2\\cardicon_snakeeyes.bin"));
+					helpers::replacematerial(_("cardicon_sniper"), _("hdd:\\desire\\emblems\\mw2\\cardicon_sniper.bin"));
+					helpers::replacematerial(_("cardicon_sniperscope"), _("hdd:\\desire\\emblems\\mw2\\cardicon_sniperscope.bin"));
+					helpers::replacematerial(_("cardicon_snowmobile"), _("hdd:\\desire\\emblems\\mw2\\cardicon_snowmobile.bin"));
+					helpers::replacematerial(_("cardicon_soap_bar"), _("hdd:\\desire\\emblems\\mw2\\cardicon_soap_bar.bin"));
+					helpers::replacematerial(_("cardicon_stop"), _("hdd:\\desire\\emblems\\mw2\\cardicon_stop.bin"));
+					helpers::replacematerial(_("cardicon_stryker"), _("hdd:\\desire\\emblems\\mw2\\cardicon_stryker.bin"));
+					helpers::replacematerial(_("cardicon_sugarglider"), _("hdd:\\desire\\emblems\\mw2\\cardicon_sugarglider.bin"));
+					helpers::replacematerial(_("cardicon_tank_01"), _("hdd:\\desire\\emblems\\mw2\\cardicon_tank_01.bin"));
+					helpers::replacematerial(_("cardicon_taskforcearmy01"), _("hdd:\\desire\\emblems\\mw2\\cardicon_taskforcearmy01.bin"));
+					helpers::replacematerial(_("cardicon_tf141"), _("hdd:\\desire\\emblems\\mw2\\cardicon_tf141.bin"));
+					helpers::replacematerial(_("cardicon_thebomb"), _("hdd:\\desire\\emblems\\mw2\\cardicon_thebomb.bin"));
+					helpers::replacematerial(_("cardicon_thecow"), _("hdd:\\desire\\emblems\\mw2\\cardicon_thecow.bin"));
+					helpers::replacematerial(_("cardicon_throwing_knife_soda"), _("hdd:\\desire\\emblems\\mw2\\cardicon_throwing_knife_soda.bin"));
+					helpers::replacematerial(_("cardicon_throwing_knive"), _("hdd:\\desire\\emblems\\mw2\\cardicon_throwing_knive.bin"));
+					helpers::replacematerial(_("cardicon_tictacboom"), _("hdd:\\desire\\emblems\\mw2\\cardicon_tictacboom.bin"));
+					helpers::replacematerial(_("cardicon_tiger"), _("hdd:\\desire\\emblems\\mw2\\cardicon_tiger.bin"));
+					helpers::replacematerial(_("cardicon_tire"), _("hdd:\\desire\\emblems\\mw2\\cardicon_tire.bin"));
+					helpers::replacematerial(_("cardicon_toon_price_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_toon_price_1.bin"));
+					helpers::replacematerial(_("cardicon_treasurechest_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_treasurechest_1.bin"));
+					helpers::replacematerial(_("cardicon_treasuremap_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_treasuremap_1.bin"));
+					helpers::replacematerial(_("cardicon_tsunami"), _("hdd:\\desire\\emblems\\mw2\\cardicon_tsunami.bin"));
+					helpers::replacematerial(_("cardicon_umbracatervae"), _("hdd:\\desire\\emblems\\mw2\\cardicon_umbracatervae.bin"));
+					helpers::replacematerial(_("cardicon_vest_1"), _("hdd:\\desire\\emblems\\mw2\\cardicon_vest_1.bin"));
+					helpers::replacematerial(_("cardicon_veteran"), _("hdd:\\desire\\emblems\\mw2\\cardicon_veteran.bin"));
+					helpers::replacematerial(_("cardicon_warpig"), _("hdd:\\desire\\emblems\\mw2\\cardicon_warpig.bin"));
+					helpers::replacematerial(_("cardicon_weed"), _("hdd:\\desire\\emblems\\mw2\\cardicon_weed.bin"));
+					helpers::replacematerial(_("cardicon_xray"), _("hdd:\\desire\\emblems\\mw2\\cardicon_xray.bin"));
+				}
+			}
+
 			void customcallingcards()
 			{
 				if (CURGAME == MW2)
@@ -658,6 +932,7 @@ namespace game
 					if (vars.wasingame != helpers::isingame())
 					{
 						customcallingcards();
+						customemblems();
 
 						vars.wasingame = helpers::isingame();
 					}
@@ -682,8 +957,23 @@ namespace game
 				if (strstr(weapstr, "akimbo"))
 					return;
 
-				// fuck the gold deagle / normal one
-				if (strstr(weapstr, "eagle"))
+				// fuck the pistols
+				if (strstr(weapstr, "eagle") ||
+					strstr(weapstr, "anaconda") ||
+					strstr(weapstr, "usp") ||
+					strstr(weapstr, "beretta"))
+					return;
+
+				// fuck the launchers
+				if (strstr(weapstr, "m79_") ||
+					strstr(weapstr, "gl_") ||
+					strstr(weapstr, "at4_") ||
+					strstr(weapstr, "stinger_") ||
+					strstr(weapstr, "javelin_"))
+					return;
+
+				// fuck these too
+				if (strstr(weapstr, "beretta393_"))
 					return;
 
 				switch (features::customisation::vars.secondary_camo)

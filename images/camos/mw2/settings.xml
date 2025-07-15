@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-16" ?>
 <RDF Version="XPR2">
 <Texture
-   Name   = "mw2_callingcard"
-   Source = "C:\Users\leann\Desktop\background\camo_mw2.png"
+   Name   = "mw2_camo"
+   Source = "C:\Github\The-Desire-Pack\images\camos\mw2\camo.png"
    Format = "D3DFMT_DXT1"
    Width =  "128"
    Height = "128"

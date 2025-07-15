@@ -493,6 +493,11 @@ namespace game
 
 								//	helpers::printmodelinfomw2(G_GetWeaponNameForIndex(weap));
 
+									helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\camo_mw2.bin");
+
+									auto nigger = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, "cardtitle_camo_arctic");
+									helpers::printimageinfomw2(nigger);
+
 									game::notify::add("ran test function");
 								}
 
@@ -738,8 +743,9 @@ namespace game
 						{
 							case 5:
 							{
-								//features::ingame::dropweapon("usp_mp", 0);
-								helpers::refillammo(helpers::getlocalidx());
+								//helpers::giveweapon(helpers::getlocalidx(), "usp_mp", 0);
+								//helpers::dropweapon(helpers::getlocalidx(), "usp_mp");
+								//helpers::refillammo(helpers::getlocalidx());
 								break;
 							}
 
@@ -1241,7 +1247,7 @@ namespace game
 								handler::widgets::addsubtab(5, _("kick players"), _("kick retards"));
 								handler::widgets::addsubtab(6, _("account"), _("modify yo account fool"));
 								handler::widgets::addsubtab(7, _("misc"), _("other shit"));
-								//handler::widgets::addoption(7, _("testing"), _("test function"));
+								//handler::widgets::addoption(8, _("testing"), _("test function"));
 
 								break;
 							}
@@ -1354,7 +1360,7 @@ namespace game
 									handler::widgets::addcombo(2, "insta shotgun pump", modes, features::ingame::vars.insta_spas_pump, _("insta shotgun pump"));
 									handler::widgets::addcombo(3, "always zoomload", modes, features::ingame::vars.always_zoomload, _("always zoomload (weird)"));
 									handler::widgets::addcombo(4, "always lunge", modes, features::ingame::vars.always_lunge, _("always knife lunge"));
-									handler::widgets::addoption(5, "refill ammo", _("refill ammo on held weapon"));
+									//handler::widgets::addoption(5, "refill ammo", _("refill ammo on held weapon"));
 								}
 								else
 								{
@@ -1371,7 +1377,7 @@ namespace game
 								const char* camos[] = { "white", "pink", "green", "blue", "red", "orange", "purple" };
 								const char* camonames[] = { "woodland", "desert", "arctic", "digital", "urban", "red tiger", "blue tiger", "fall" };
 
-								handler::widgets::addcheckbox(0, _("custom calling cards"), features::customisation::vars.custom_callingcards_enabled, _("enable some swag callingcards"));
+								handler::widgets::addcheckbox(0, _("custom calling cards & emblems"), features::customisation::vars.custom_callingcards_enabled, _("enable swag calling cards & emblems"));
 
 								handler::widgets::addcombo(1, _("custom camo color"), camos, features::customisation::vars.custom_camo_select, _("select a custom camo"));
 								handler::widgets::addcombo(2, _("custom camo select"), camonames, features::customisation::vars.custom_camo_replace, _("select a camo to replace"));

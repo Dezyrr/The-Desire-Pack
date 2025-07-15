@@ -11,6 +11,7 @@ namespace game
 	// 0x821E2188 - CurrentPrimaryWeapon
 	// 0x821E4360 - G_EntEnablePhysics
 	// 0x820E2EC8 - BG_GetWeaponModel
+	// 0x821D53F0 - Player_SwitchToWeapon
 
 	void(_cdecl* SV)(int clientNum, int type, const char* text);
 	void (*SV_ExecuteClientCommand)(client_t* client, const char* s, int clientOK, int fromOldServer) = reinterpret_cast<void (*)(client_t*, const char*, int, int)>(0x82253140);
@@ -175,14 +176,6 @@ namespace game
 		bool isbot(int clientIndex)
 		{
 			return SV_IsClientBot(clientIndex);
-		}
-
-		int getlocalidx()
-		{
-			if (cgs)
-				return cgs->clientNumber;
-
-			return -1;
 		}
 
 		bool isalive(int idx)
@@ -389,6 +382,19 @@ namespace game
 			return -1;
 		}
 
+		int getlocalidx()
+		{
+			if (cgs)
+				return cgs->clientNumber;
+
+			return -1;
+		}
+
+		bool islocalplayerhost()
+		{
+			return getlocalidx() == gethostidx();
+		}
+
 		void kickclient(int idx)
 		{
 			if (!ishost(cgs->clientNumber))
@@ -424,6 +430,13 @@ namespace game
 			return "stand";
 		}
 
+		void switchtoweapon(int idx, const char* name)
+		{
+			char buffer[100];
+			sprintf(buffer, "a %i", G_GetWeaponIndexForName(name));
+			SV(idx, 1, buffer);
+		}
+
 		void giveweapon(int idx, const char* name, int camo)
 		{
 			gentity_s* player = &g_entities[idx];
@@ -444,8 +457,7 @@ namespace game
 			int weaponidx = G_GetWeaponIndexForName(name);
 			int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
 
-			if (*(int*)(BG_GetWeaponDef(weaponidx) + 0x38) == 3)
-				return;
+			switchtoweapon(idx, name);
 
 			gentity_s* weaponent = Drop_Weapon(player, weaponidx, weaponmodel);
 			if (weaponent)

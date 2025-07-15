@@ -12,6 +12,20 @@
 #include <xbdm.h>
 #pragma warning(pop)
 
+#include <wchar.h>
+
+bool UnicodeStringEqualsIgnoreCase(PUNICODE_STRING ustr, const wchar_t* str)
+{
+	size_t ustr_len = ustr->Length / sizeof(WCHAR);
+	size_t str_len = wcslen(str);
+
+	if (ustr_len != str_len)
+		return false;
+
+	int cmp = _wcsnicmp(ustr->Buffer, str, ustr_len);
+	return (cmp == 0);
+}
+
 namespace game
 {
 	namespace hooks
@@ -85,31 +99,64 @@ namespace game
 		{
 			const DWORD checksums[] =
 			{
-				0x66156, // jimbo
-				0x44969, // matrix
-				0x2E8E4, // medaka
-				0x447DB  // infinityloader
+				0x66156,  // jimbo
+				0x44969,  // matrix
+				0x2E8E4,  // medaka
+				0x447DB,  // infinityloader
+				0x244FA,  // shakemw2
+				0x1226A5, // myten free
+				0xC8D7B, // appendum LOL
 			};
 
-			for (int i = 0; i < 4; i++)
+			UNICODE_STRING desiredName;
+			desiredName.Buffer = (PWSTR)L"Desire.xex";
+			desiredName.Length = (USHORT)(wcslen(desiredName.Buffer) * sizeof(WCHAR));
+			desiredName.MaximumLength = desiredName.Length + sizeof(WCHAR);
+
+			const wchar_t* message = L"";
+			LPCWSTR buttons[1] = { __w(L"FUCK, NOW I CAN'T FAKE SHOTS") };
+			auto title = __w(L"Desire's S&D (Dual Loading Detected)");
+
+			for (int i = 0; i < sizeof(checksums) / sizeof(DWORD); i++)
 			{
 				if (ismoduleloaded(checksums[i]))
 				{
-					const wchar_t* message = L"";
-
 					if (ismoduleloaded(checksums[0]))
-						message = __w(L"So we're dual loading an azza with unsetup...?\n\nUnload jimbo and you can play retard");
+					{
+						message = __w(L"So we're dual loading an azza with unsetup...?");
+						buttons[0] = __w(L"FUCK, NOW I CAN'T FAKE SHOTS");
+					}
 
 					if (ismoduleloaded(checksums[1]))
-						message = __w(L"Dude tryna run matrix hahahahahahah faggot\n\nHonestly i should straight up blacklist your console from this but hey, unload matrix and you can play");
+					{
+						message = __w(L"Dude tryna run matrix hahahahahahah faggot");
+						buttons[0] = __w(L"i'm sorry, blow up my console");
+					}
 
 					if (ismoduleloaded(checksums[2]))
-						message = __w(L"I have no words for this one.. medaka.. in the big 25..\n\nUnload Medaka and you can play");
+					{
+						message = __w(L"I have no words for this one.. medaka.. in the big 25..");
+						buttons[0] = __w(L"im a retard");
+					}
 
 					if (ismoduleloaded(checksums[3]))
-						message = __w(L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...\n\nUnload infinityloader and shiitt i might let you play g");
+					{
+						message = __w(L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...");
+						buttons[0] = __w(L"my bad bro");
+					}
 
-					LPCWSTR buttons[1] = { __w(L"FUCK, NOW I CAN'T FAKE SHOTS") };
+					if (ismoduleloaded(checksums[4]))
+					{
+						message = __w(L"Bro is trying to load shake aswell like pick a pak bro");
+						buttons[0] = __w(L"my bad bro");
+					}
+
+					if (ismoduleloaded(checksums[5]))
+					{
+						message = __w(L"Aw hell nawww oohh ohhhhhh");
+						buttons[0] = __w(L"im a retard");
+					}
+
 					MESSAGEBOX_RESULT result;
 
 					XOVERLAPPED ol;
@@ -117,7 +164,7 @@ namespace game
 
 					XShowMessageBoxUI(
 						0,
-						__w(L"Desire's S&D (Dual Loading Detected)"),
+						title,
 						message,
 						1,
 						buttons,
@@ -132,11 +179,58 @@ namespace game
 						Sleep(25);
 					}
 
+					Sleep(5000);
+
+					XLaunchNewImage("dash.xex", 0);
+					return;
+				}
+			}
+
+			PLDR_DATA_TABLE_ENTRY entry = (PLDR_DATA_TABLE_ENTRY)XexExecutableModuleHandle;
+			PLDR_DATA_TABLE_ENTRY firstentry = entry;
+			int counted = 0;
+
+			do
+			{
+				if (UnicodeStringEqualsIgnoreCase(&entry->BaseDllName, L"Desire.xex") && entry->SizeOfFullImage != 0x3c000)
+				{
+					buttons[0] = __w(L"i'm sorry, blow up my console");
+
+					MESSAGEBOX_RESULT result;
+
+					XOVERLAPPED ol;
+					ZeroMemory(&ol, sizeof(ol));
+
+					XShowMessageBoxUI(
+						0,
+						__w(L"Desire's S&D (Anti Tamper)"),
+						__w(L"Fuck we doin tryna modify shit in the module?\n\nBro tryna bypass dis shit cmon twin wtffffff\nthis really sad bro like cmon man wtf man just go spin around in circles in air and shit twin we dont gotta be doin all dis twin cmon bro"),
+						1,
+						buttons,
+						0,
+						XMB_ERRORICON,
+						&result,
+						&ol
+					);
+
+					while (!XHasOverlappedIoCompleted(&ol))
+					{
+						Sleep(25);
+					}
+
+					Sleep(5000);
+
 					//XLaunchNewImage("dash.xex", 0);
 
 					return;
 				}
-			}
+
+				entry = (PLDR_DATA_TABLE_ENTRY)entry->InLoadOrderLinks.Flink;
+
+				if (++counted > 64)
+					break;
+
+			} while (entry != firstentry);
 		}
 
 		struct addrs
@@ -239,6 +333,21 @@ namespace game
 					if (helpers::ishost(helpers::getlocalidx()))
 					{
 						features::ingame::handle_in_game_features();
+					}
+
+					static bool old_alive = helpers::isalive(helpers::getlocalidx());
+
+					if (helpers::isalive(helpers::getlocalidx()) != old_alive)
+					{
+						if (helpers::isalive(helpers::getlocalidx()))
+						{
+							if (features::customisation::vars.has_camo_selected)
+							{
+								features::customisation::customcamos();
+							}
+						}
+
+						old_alive = helpers::isalive(helpers::getlocalidx());
 					}
 
 					if (secondary_camo_start_count_down)
@@ -527,16 +636,11 @@ namespace game
 			if (!event)
 				return;
 
-			if (!strcmp(event, "spawned_player"))
+			if (clientidx == helpers::getlocalidx())
 			{
-				if (clientidx == helpers::getlocalidx())
+				if (!strcmp(event, "spawned_player"))
 				{
-					if (features::customisation::vars.has_camo_selected)
-					{
-						features::customisation::customcamos();
-					}
-
-					if (helpers::ishost(helpers::getlocalidx()))
+					if (helpers::islocalplayerhost())
 					{
 						if (features::customisation::vars.give_secondary_camo)
 						{
@@ -544,8 +648,6 @@ namespace game
 						}
 					}
 				}
-
-				//menu::ingame::onplayerspawned(clientidx);
 			}
 		}
 
@@ -555,20 +657,24 @@ namespace game
 
 			if (clientidx != cgs->clientNumber && s != NULL)
 			{
-				if (strstr(s, "end") || strstr(s, "crash") || strstr(s, "kill")) {
+				if (strstr(s, "end") || strstr(s, "crash") || strstr(s, "kill")) 
+				{
 					game::notify::add(fmt("%s is trying to end the game!", cgs->ClientInfo[clientidx].mName));
 					return;
 				}
 			}
 
-			SV_Cmd_TokenizeString(s);
-			if (ok)
+			if (helpers::isonhostteam(clientidx))
 			{
-				ClientCommand(clientidx);
-			}
-			SV_Cmd_EndTokenizedString();
+				SV_Cmd_TokenizeString(s);
+				if (ok)
+				{
+					ClientCommand(clientidx);
+				}
+				SV_Cmd_EndTokenizedString();
 
-			game::menu::ingame::monitorplayers(clientidx, s);
+				game::menu::ingame::monitorplayers(clientidx, s);
+			}
 
 			MinHook[_("SV_ExecuteClientCommand")].Stub(client, s, ok);
 		}
