@@ -169,6 +169,9 @@ namespace game
 					if (!helpers::ishost(helpers::getlocalidx()))
 						return;
 
+					if (!botent)
+						return;
+
 					int botclientnum = static_cast<gentity_s*>(botent)->client->ps.clientNum;
 
 					gentity_s player = g_entities[botclientnum];

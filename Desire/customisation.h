@@ -943,6 +943,9 @@ namespace game
 
 			void applycamosonsecondaryweapon()
 			{
+				if (!helpers::isingame())
+					return;
+
 				auto weapidx = helpers::getsecondaryweaponidx(helpers::getlocalidx());
 				auto weapstr = G_GetWeaponNameForIndex(weapidx);
 

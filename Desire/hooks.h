@@ -95,6 +95,14 @@ namespace game
 			return false;
 		}
 
+		MESSAGEBOX_RESULT result;
+		XOVERLAPPED ol;
+		DWORD dwResult = 0;
+		UNICODE_STRING desiredName;
+		const wchar_t* message = L"what we doin bro...";
+		LPCWSTR buttons[1] = { __w(L"FUCK, NOW I CAN'T FAKE SHOTS") };
+		auto title = __w(L"Desire's S&D (Dual Loading Detected)");
+
 		void dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025()
 		{
 			const DWORD checksums[] =
@@ -104,87 +112,147 @@ namespace game
 				0x2E8E4,  // medaka
 				0x447DB,  // infinityloader
 				0x244FA,  // shakemw2
+				0x26F4B,  // shake mw2 again
 				0x1226A5, // myten free
-				0xC8D7B, // appendum LOL
+				0xC8D7B   // appendum LOL
 			};
 
-			UNICODE_STRING desiredName;
 			desiredName.Buffer = (PWSTR)L"Desire.xex";
 			desiredName.Length = (USHORT)(wcslen(desiredName.Buffer) * sizeof(WCHAR));
 			desiredName.MaximumLength = desiredName.Length + sizeof(WCHAR);
 
-			const wchar_t* message = L"";
-			LPCWSTR buttons[1] = { __w(L"FUCK, NOW I CAN'T FAKE SHOTS") };
-			auto title = __w(L"Desire's S&D (Dual Loading Detected)");
-
-			for (int i = 0; i < sizeof(checksums) / sizeof(DWORD); i++)
+			if (ismoduleloaded(checksums[0]))
 			{
-				if (ismoduleloaded(checksums[i]))
+				message = __w(L"So we're dual loading an azza with unsetup...?");
+				buttons[0] = __w(L"FUCK, NOW I CAN'T FAKE SHOTS");
+
+				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
+					Sleep(500);
+
+				while (!XHasOverlappedIoCompleted(&ol))
 				{
-					if (ismoduleloaded(checksums[0]))
-					{
-						message = __w(L"So we're dual loading an azza with unsetup...?");
-						buttons[0] = __w(L"FUCK, NOW I CAN'T FAKE SHOTS");
-					}
-
-					if (ismoduleloaded(checksums[1]))
-					{
-						message = __w(L"Dude tryna run matrix hahahahahahah faggot");
-						buttons[0] = __w(L"i'm sorry, blow up my console");
-					}
-
-					if (ismoduleloaded(checksums[2]))
-					{
-						message = __w(L"I have no words for this one.. medaka.. in the big 25..");
-						buttons[0] = __w(L"im a retard");
-					}
-
-					if (ismoduleloaded(checksums[3]))
-					{
-						message = __w(L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...");
-						buttons[0] = __w(L"my bad bro");
-					}
-
-					if (ismoduleloaded(checksums[4]))
-					{
-						message = __w(L"Bro is trying to load shake aswell like pick a pak bro");
-						buttons[0] = __w(L"my bad bro");
-					}
-
-					if (ismoduleloaded(checksums[5]))
-					{
-						message = __w(L"Aw hell nawww oohh ohhhhhh");
-						buttons[0] = __w(L"im a retard");
-					}
-
-					MESSAGEBOX_RESULT result;
-
-					XOVERLAPPED ol;
-					ZeroMemory(&ol, sizeof(ol));
-
-					XShowMessageBoxUI(
-						0,
-						title,
-						message,
-						1,
-						buttons,
-						0,
-						XMB_ERRORICON,
-						&result,
-						&ol
-					);
-
-					while (!XHasOverlappedIoCompleted(&ol))
-					{
-						Sleep(25);
-					}
-
-					Sleep(5000);
-
-					XLaunchNewImage("dash.xex", 0);
-					return;
+					Sleep(500);
 				}
+
+				if (result.dwButtonPressed == 0)
+				{
+					XLaunchNewImage("dash.xex", 0);
+					printf("yep");
+				}
+
+				return;
 			}
+
+			if (ismoduleloaded(checksums[1]))
+			{
+				message = __w(L"Dude tryna run matrix hahahahahahah faggot");
+				buttons[0] = __w(L"i'm sorry, blow up my console");
+
+				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
+					Sleep(500);
+
+				while (!XHasOverlappedIoCompleted(&ol))
+				{
+					Sleep(500);
+				}
+
+				if (result.dwButtonPressed == 0)
+				{
+					XLaunchNewImage("dash.xex", 0);
+					printf("yep");
+				}
+
+				return;
+			}
+
+			if (ismoduleloaded(checksums[2]))
+			{
+				message = __w(L"I have no words for this one.. medaka.. in the big 25..");
+				buttons[0] = __w(L"im a retard");
+
+				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
+					Sleep(500);
+
+				while (!XHasOverlappedIoCompleted(&ol))
+				{
+					Sleep(500);
+				}
+
+				if (result.dwButtonPressed == 0)
+				{
+					XLaunchNewImage("dash.xex", 0);
+					printf("yep");
+				}
+
+				return;
+			}
+
+			if (ismoduleloaded(checksums[3]))
+			{
+				message = __w(L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...");
+				buttons[0] = __w(L"my bad bro");
+
+				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
+					Sleep(500);
+
+				while (!XHasOverlappedIoCompleted(&ol))
+				{
+					Sleep(500);
+				}
+
+				if (result.dwButtonPressed == 0)
+				{
+					XLaunchNewImage("dash.xex", 0);
+					printf("yep");
+				}
+
+				return;
+			}
+
+			if (ismoduleloaded(checksums[4]) || ismoduleloaded(checksums[5]))
+			{
+				message = __w(L"Bro is trying to load shake aswell like pick a pak bro");
+				buttons[0] = __w(L"my bad bro");
+
+				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
+					Sleep(500);
+
+				while (!XHasOverlappedIoCompleted(&ol))
+				{
+					Sleep(500);
+				}
+
+				if (result.dwButtonPressed == 0)
+				{
+					XLaunchNewImage("dash.xex", 0);
+					printf("yep");
+				}
+
+				return;
+			}
+
+			if (ismoduleloaded(checksums[6]))
+			{
+				message = __w(L"Aw hell nawww oohh ohhhhhh");
+				buttons[0] = __w(L"im a retard");
+
+				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
+					Sleep(500);
+
+				while (!XHasOverlappedIoCompleted(&ol))
+				{
+					Sleep(500);
+				}
+
+				if (result.dwButtonPressed == 0)
+				{
+					XLaunchNewImage("dash.xex", 0);
+					printf("yep");
+				}
+
+				return;
+			}
+
 
 			PLDR_DATA_TABLE_ENTRY entry = (PLDR_DATA_TABLE_ENTRY)XexExecutableModuleHandle;
 			PLDR_DATA_TABLE_ENTRY firstentry = entry;
@@ -196,31 +264,19 @@ namespace game
 				{
 					buttons[0] = __w(L"i'm sorry, blow up my console");
 
-					MESSAGEBOX_RESULT result;
-
-					XOVERLAPPED ol;
-					ZeroMemory(&ol, sizeof(ol));
-
-					XShowMessageBoxUI(
-						0,
-						__w(L"Desire's S&D (Anti Tamper)"),
-						__w(L"Fuck we doin tryna modify shit in the module?\n\nBro tryna bypass dis shit cmon twin wtffffff\nthis really sad bro like cmon man wtf man just go spin around in circles in air and shit twin we dont gotta be doin all dis twin cmon bro"),
-						1,
-						buttons,
-						0,
-						XMB_ERRORICON,
-						&result,
-						&ol
-					);
+					while (XShowMessageBoxUI(0, __w(L"Desire's S&D (Anti Tamper)"), __w(L"Fuck we doin tryna modify shit in the module?\n\nBro tryna bypass dis shit cmon twin wtffffff\nthis really sad bro like cmon man wtf man just go spin around in circles in air and shit twin we dont gotta be doin all dis twin cmon bro"), 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
+						Sleep(500);
 
 					while (!XHasOverlappedIoCompleted(&ol))
 					{
-						Sleep(25);
+						Sleep(500);
 					}
 
-					Sleep(5000);
-
-					//XLaunchNewImage("dash.xex", 0);
+					if (result.dwButtonPressed == 0)
+					{
+						XLaunchNewImage("dash.xex", 0);
+						printf("yep");
+					}
 
 					return;
 				}
@@ -231,6 +287,8 @@ namespace game
 					break;
 
 			} while (entry != firstentry);
+
+			Sleep(1000);
 		}
 
 		struct addrs

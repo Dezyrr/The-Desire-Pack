@@ -623,7 +623,15 @@ namespace game
 
 							case 1:
 							{
-								features::ingame::preventforfeit::tpbottoself();
+								if (helpers::isingame())
+								{
+									features::ingame::preventforfeit::tpbottoself();
+								}
+								else
+								{
+									game::notify::add("bro tryna tp a bot in the pre-game lobby");
+								}
+
 								break;
 							}
 
@@ -767,22 +775,16 @@ namespace game
 										if (!helpers::isingame())
 										{
 											features::customisation::vars.wasingame = true;
+
 											if (features::customisation::vars.wasingame)
 											{
-												// thread this so that we can keep a constant check wether we are in game or not
 												ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcardsthread, 0, 0);
 												features::customisation::vars.custom_callingcards_enabled = true;
 											}
 										}
 										else
 										{
-											features::customisation::vars.wasingame = false;
-											if (!features::customisation::vars.wasingame)
-											{
-												// thread this so that we can keep a constant check wether we are in game or not
-												ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcardsthread, 0, 0);
-												features::customisation::vars.custom_callingcards_enabled = true;
-											}
+											game::notify::add("you can only enable this in the pre-game lobby!");
 										}
 									}
 
