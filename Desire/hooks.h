@@ -98,161 +98,69 @@ namespace game
 		MESSAGEBOX_RESULT result;
 		XOVERLAPPED ol;
 		DWORD dwResult = 0;
-		UNICODE_STRING desiredName;
+		UNICODE_STRING desiredname;
 		const wchar_t* message = L"what we doin bro...";
 		LPCWSTR buttons[1] = { __w(L"FUCK, NOW I CAN'T FAKE SHOTS") };
 		auto title = __w(L"Desire's S&D (Dual Loading Detected)");
 
 		void dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025()
 		{
-			const DWORD checksums[] =
+			desiredname.Buffer = (PWSTR)L"Desire.xex";
+			desiredname.Length = (USHORT)(wcslen(desiredname.Buffer) * sizeof(WCHAR));
+			desiredname.MaximumLength = desiredname.Length + sizeof(WCHAR);
+
+			const DWORD checksums[] = 
 			{
-				0x66156,  // jimbo
-				0x44969,  // matrix
-				0x2E8E4,  // medaka
-				0x447DB,  // infinityloader
-				0x244FA,  // shakemw2
-				0x26F4B,  // shake mw2 again
-				0x1226A5, // myten free
-				0xC8D7B   // appendum LOL
+				0x66156,   // jimbo
+				0x44969,   // matrix
+				0x2E8E4,   // medaka
+				0x447DB,   // infinityloader
+				0x244FA,   // shakemw2
+				0x26F4B,   // shake mw2 again
+				0x1226A5   // myten free
 			};
 
-			desiredName.Buffer = (PWSTR)L"Desire.xex";
-			desiredName.Length = (USHORT)(wcslen(desiredName.Buffer) * sizeof(WCHAR));
-			desiredName.MaximumLength = desiredName.Length + sizeof(WCHAR);
-
-			if (ismoduleloaded(checksums[0]))
+			const LPCWSTR messages[] = 
 			{
-				message = __w(L"So we're dual loading an azza with unsetup...?");
-				buttons[0] = __w(L"FUCK, NOW I CAN'T FAKE SHOTS");
+				L"So we're dual loading an azza with unsetup...?", // jimbo
+				L"Dude tryna run matrix hahahahahahah faggot", // matrix
+				L"I have no words for this one.. medaka.. in the big 25..", // medaka
+				L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...", // infinityloader
+				L"Bro is trying to load shake aswell like pick a pak bro", // shakemw2
+				L"Bro is trying to load shake aswell like pick a pak bro", // shake mw2 again
+				L"Aw hell nawww oohh ohhhhhh" // myten free
+			};
 
-				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
-					Sleep(500);
-
-				while (!XHasOverlappedIoCompleted(&ol))
-				{
-					Sleep(500);
-				}
-
-				if (result.dwButtonPressed == 0)
-				{
-					XLaunchNewImage("dash.xex", 0);
-					printf("yep");
-				}
-
-				return;
-			}
-
-			if (ismoduleloaded(checksums[1]))
+			const LPCWSTR button[] = 
 			{
-				message = __w(L"Dude tryna run matrix hahahahahahah faggot");
-				buttons[0] = __w(L"i'm sorry, blow up my console");
+				L"FUCK, NOW I CAN'T FAKE SHOTS",
+				L"i'm sorry, blow up my console",
+				L"im a retard",
+				L"my bad bro",
+				L"my bad bro",
+				L"my bad bro",
+				L"im a retard"
+			};
 
-				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
-					Sleep(500);
-
-				while (!XHasOverlappedIoCompleted(&ol))
-				{
-					Sleep(500);
-				}
-
-				if (result.dwButtonPressed == 0)
-				{
-					XLaunchNewImage("dash.xex", 0);
-					printf("yep");
-				}
-
-				return;
-			}
-
-			if (ismoduleloaded(checksums[2]))
+			for (int i = 0; i < sizeof(checksums) / sizeof(checksums[0]); ++i)
 			{
-				message = __w(L"I have no words for this one.. medaka.. in the big 25..");
-				buttons[0] = __w(L"im a retard");
-
-				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
-					Sleep(500);
-
-				while (!XHasOverlappedIoCompleted(&ol))
+				if (ismoduleloaded(checksums[i]))
 				{
-					Sleep(500);
-				}
+					message = __w(messages[i]);
+					buttons[0] = __w(button[i]);
 
-				if (result.dwButtonPressed == 0)
-				{
-					XLaunchNewImage("dash.xex", 0);
-					printf("yep");
-				}
+					while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
+						Sleep(500);
 
-				return;
+					while (!XHasOverlappedIoCompleted(&ol))
+						Sleep(500);
+
+					if (result.dwButtonPressed == 0)
+						XLaunchNewImage("dash.xex", 0);
+
+					return;
+				}
 			}
-
-			if (ismoduleloaded(checksums[3]))
-			{
-				message = __w(L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...");
-				buttons[0] = __w(L"my bad bro");
-
-				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
-					Sleep(500);
-
-				while (!XHasOverlappedIoCompleted(&ol))
-				{
-					Sleep(500);
-				}
-
-				if (result.dwButtonPressed == 0)
-				{
-					XLaunchNewImage("dash.xex", 0);
-					printf("yep");
-				}
-
-				return;
-			}
-
-			if (ismoduleloaded(checksums[4]) || ismoduleloaded(checksums[5]))
-			{
-				message = __w(L"Bro is trying to load shake aswell like pick a pak bro");
-				buttons[0] = __w(L"my bad bro");
-
-				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
-					Sleep(500);
-
-				while (!XHasOverlappedIoCompleted(&ol))
-				{
-					Sleep(500);
-				}
-
-				if (result.dwButtonPressed == 0)
-				{
-					XLaunchNewImage("dash.xex", 0);
-					printf("yep");
-				}
-
-				return;
-			}
-
-			if (ismoduleloaded(checksums[6]))
-			{
-				message = __w(L"Aw hell nawww oohh ohhhhhh");
-				buttons[0] = __w(L"im a retard");
-
-				while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
-					Sleep(500);
-
-				while (!XHasOverlappedIoCompleted(&ol))
-				{
-					Sleep(500);
-				}
-
-				if (result.dwButtonPressed == 0)
-				{
-					XLaunchNewImage("dash.xex", 0);
-					printf("yep");
-				}
-
-				return;
-			}
-
 
 			PLDR_DATA_TABLE_ENTRY entry = (PLDR_DATA_TABLE_ENTRY)XexExecutableModuleHandle;
 			PLDR_DATA_TABLE_ENTRY firstentry = entry;
@@ -275,7 +183,6 @@ namespace game
 					if (result.dwButtonPressed == 0)
 					{
 						XLaunchNewImage("dash.xex", 0);
-						printf("yep");
 					}
 
 					return;
@@ -307,6 +214,7 @@ namespace game
 			int BG_IsWeaponValid;
 			int BG_IsWeaponUsableInState;
 			int CG_ForceSwitchToValidWeapon;
+			int GScr_LoadGameTypeScript;
 		} addr;
 
 		void inithookaddresses()
@@ -328,6 +236,7 @@ namespace game
 					addr.BG_IsWeaponValid = 0x820E2F10;
 					addr.BG_IsWeaponUsableInState = 0x820E2FB0;
 					addr.CG_ForceSwitchToValidWeapon = 0x82135900;
+					addr.GScr_LoadGameTypeScript = 0x821FFCF0;
 
 					break;
 				}
@@ -374,7 +283,7 @@ namespace game
 		static bool secondary_camo_start_count_down = false;
 		void R_EndFrame()
 		{
-			ExCreateThread(0, 0, 0, 0, (LPTHREAD_START_ROUTINE)dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025, 0, 0);
+			//ExCreateThread(0, 0, 0, 0, (LPTHREAD_START_ROUTINE)dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025, 0, 0);
 
 			menu::init();
 			notify::draw();
@@ -611,6 +520,14 @@ namespace game
 			//{
 				int clientidx = a1->ps->clientNum;
 
+				if (helpers::shouldrunonteamorself(features::ingame::vars.inf_canswap, clientidx))
+				{
+					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
+					{
+						a1->ps->weapState->weapAnim = WEAP_FIRST_RAISE;
+					}
+				}
+
 				if (helpers::shouldrunonteamorself(features::ingame::vars.insta_sprint, clientidx))
 				{
 					if (!helpers::isholdingakimboweapon(clientidx))
@@ -668,6 +585,27 @@ namespace game
 				}
 			//}
 
+			// viewmodel_wa2000_hb_open_pullout 
+			// viewmodel_barrett_pullout
+
+			// flip the barret on pullout
+			// SetMemoryString(0xA86FAE44, "viewmodel_model1887_akimbo_rechamber_r", 39);
+			// SetMemoryString(0xA86FAE44, "viewmodel_wa2000_hb_open_first_time_pullout", 44);
+			// 0xA86FF714 - barrett pullout quick
+			// 0xA86FAE44 - barrett pullout
+			// 0xA86F2244 - barrett reload
+
+			// SetMemoryString(0xC7C7A8D0, "viewmodel_uspmgs_idle", 0x16);
+			// printf("%s\n", DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, G_GetWeaponNameForIndex(a1->ps->weapon.data)).weapon->szXAnims);
+
+			// magnum pull out
+			// SetMemoryString(0xA7CE9B8C, "viewmodel_uspmgs_pullout", 35);
+
+			// magnum idle
+			// SetMemoryString(0xA7CE14D0, "viewmodel_uspmgs_idle", 32);
+
+			// SetMemoryString(0xA86F2244, "viewmodel_cheytac_reload", 25);
+
 			MinHook[_("PM_Weapon")].Stub(a1, a2);
 		}
 
@@ -693,6 +631,17 @@ namespace game
 			const char* event = SL_ConvertToString(string_value);
 			if (!event)
 				return;
+
+			//if (!strcmp(event, "begin"))
+			//{
+			//	Cmd_RegisterNotification(clientidx, "+actionslot 1", "DPAD_UP");
+			//	Cmd_RegisterNotification(clientidx, "+actionslot 2", "DPAD_DOWN");
+			//	Cmd_RegisterNotification(clientidx, "+actionslot 3", "DPAD_LEFT");
+			//	Cmd_RegisterNotification(clientidx, "+actionslot 4", "DPAD_RIGHT");
+			//}
+
+			//if (!strcmp(event, "DPAD_LEFT"))
+			//	helpers::iprintln(clientidx, "dpad left pressed");
 
 			if (clientidx == helpers::getlocalidx())
 			{
@@ -784,6 +733,16 @@ namespace game
 			return false;
 		}
 
+		int GScr_LoadGameTypeScript()
+		{
+			/*if (FileExists((PCHAR)"hdd:\\desire\\scripts\\mw2.gsc"))
+			{
+				// call scr_loadscript here (ill get it at some point)
+			}*/
+
+			//MinHook[_("GScr_LoadGameTypeScript")].Stub();
+		}
+
 		void init()
 		{
 			if (spasticdetected() || spastic2detected())
@@ -832,6 +791,8 @@ namespace game
 				MinHook[_("UI_DrawText")] = DetourAttach((void*)addr.UI_DrawText, (void*)UI_DrawText);
 
 				MinHook[_("Scr_PlayerDamage")] = DetourAttach((void*)addr.Scr_PlayerDamage, (void*)Scr_PlayerDamage);
+
+				//MinHook[_("GScr_LoadGameTypeScript")] = DetourAttach((void*)addr.GScr_LoadGameTypeScript, (void*)GScr_LoadGameTypeScript);
 			}
 
 			if (CURGAME == MW2)

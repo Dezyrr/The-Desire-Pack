@@ -42,6 +42,7 @@ namespace game
 				int always_zoomload;
 				int always_lunge;
 				int insta_spas_pump;
+				int inf_canswap;
 			};
 			varrs vars;
 

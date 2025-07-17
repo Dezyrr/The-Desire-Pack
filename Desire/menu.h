@@ -213,9 +213,21 @@ namespace game
 								break;
 							}
 
-							case 6:
+							case 5:
 							{
-
+								if (left)
+								{
+									features::ingame::vars.inf_canswap--;
+									if (features::ingame::vars.inf_canswap < 0)
+										features::ingame::vars.inf_canswap = 2;
+								}
+								else
+								{
+									features::ingame::vars.inf_canswap++;
+									if (features::ingame::vars.inf_canswap > 2)
+										features::ingame::vars.inf_canswap = 0;
+								}
+								break;
 								break;
 							}
 
@@ -268,7 +280,7 @@ namespace game
 								break;
 							}
 
-							case 4:
+							case 5:
 							{
 								if (left)
 								{
@@ -285,7 +297,7 @@ namespace game
 								break;
 							}
 
-							case 6:
+							case 7:
 							{								
 								if (left)
 								{
@@ -302,7 +314,7 @@ namespace game
 								break;
 							}
 
-							case 7:
+							case 8:
 							{								
 								if (left)
 								{
@@ -319,7 +331,7 @@ namespace game
 								break;
 							}
 
-							case 8:
+							case 9:
 							{
 								if (left)
 								{
@@ -471,7 +483,7 @@ namespace game
 							{
 								if (CURGAME == MW2)
 								{
-									//auto weap = g_entities[helpers::getlocalidx()].client->ps.weapon.data;
+									auto weap = g_entities[helpers::getlocalidx()].client->ps.weapon.data;
 
 									//auto text = fmt("info: [num: %d, weapid: %d, weapname: %s]\n", 
 									//	helpers::getlocalidx(),
@@ -493,10 +505,12 @@ namespace game
 
 								//	helpers::printmodelinfomw2(G_GetWeaponNameForIndex(weap));
 
-									helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\camo_mw2.bin");
+									//helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\camo_mw2.bin");
 
-									auto nigger = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, "cardtitle_camo_arctic");
-									helpers::printimageinfomw2(nigger);
+									//auto nigger = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, "cardtitle_camo_arctic");
+									//helpers::printimageinfomw2(nigger);
+
+									const auto offHandClass = BG_GetWeaponDef(weap)->offhandClass;
 
 									game::notify::add("ran test function");
 								}
@@ -749,13 +763,6 @@ namespace game
 					{						
 						switch (controls.currentoption)
 						{
-							case 5:
-							{
-								//helpers::giveweapon(helpers::getlocalidx(), "usp_mp", 0);
-								//helpers::dropweapon(helpers::getlocalidx(), "usp_mp");
-								//helpers::refillammo(helpers::getlocalidx());
-								break;
-							}
 
 							default: break;
 						}
@@ -784,7 +791,7 @@ namespace game
 										}
 										else
 										{
-											game::notify::add("you can only enable this in the pre-game lobby!");
+											game::notify::add("you can only toggle this in the pre-game lobby!");
 										}
 									}
 
@@ -808,14 +815,14 @@ namespace game
 								break;
 							}
 
-							case 1:
-							{			
+							case 3:
+							{
 								features::customisation::vars.has_camo_selected = true;
 								features::customisation::customcamos();
 								break;
 							}
 
-							case 3:
+							case 4:
 							{
 								features::customisation::vars.give_secondary_camo = !features::customisation::vars.give_secondary_camo;
 
@@ -843,11 +850,60 @@ namespace game
 						{
 							case 0:
 							{
-								features::weapon_editing::replaceakwithcod4ak();
+								if (!helpers::isingame())
+								{
+									features::weapon_editing::vars.deagle_flips = !features::weapon_editing::vars.deagle_flips;
+
+									if (features::weapon_editing::vars.deagle_flips)
+									{
+										SetMemoryString(0xC7C778AC, "viewmodel_uspmgs_pullout", 35);
+										SetMemoryString(0xC7C6D0D7, "viewmodel_uspmgs_idle", 32);
+									}
+									else
+									{
+										SetMemoryString(0xC7C778AC, "viewmodel_desert_eagle_tac_pullout", 35);
+										SetMemoryString(0xC7C6D0D7, "viewmodel_desert_eagle_tac_idle", 32);
+									}
+								}
+								else
+								{
+									game::notify::add("you can only toggle this in the pre-game lobby!");
+								}
+
 								break;
 							}
 
 							case 1:
+							{
+								if (!helpers::isingame())
+								{
+									features::weapon_editing::vars.barrett_canswap_anim = !features::weapon_editing::vars.barrett_canswap_anim;
+
+									if (features::weapon_editing::vars.barrett_canswap_anim)
+									{
+										SetMemoryString(0xA86FAE44, "viewmodel_wa2000_hb_open_first_time_pullout", 44);
+									}
+									else
+									{
+										SetMemoryString(0xA86FAE44, "viewmodel_barrett_pullout", 44);
+										SetMemoryString(0xA86FAE44, "viewmodel_barrett_pullout", 26);
+									}
+								}
+								else
+								{
+									game::notify::add("you can only toggle this in the pre-game lobby!");
+								}
+
+								break;
+							}
+
+							case 2:
+							{
+								features::weapon_editing::replaceakwithcod4ak();
+								break;
+							}
+
+							case 3:
 							{
 								features::weapon_editing::replacedeaglewithcod4goldone();
 								break;
@@ -963,7 +1019,7 @@ namespace game
 							if (handler::menuvars.current_submenu == sm_customisation)
 							{
 								// only make rgb sliders fast
-								if (controls.currentoption == 6 || controls.currentoption == 7 || controls.currentoption == 8)
+								if (controls.currentoption == 7 || controls.currentoption == 8 || controls.currentoption == 9)
 									controls.wait = 6;
 								else
 									controls.wait = 0;
@@ -979,7 +1035,7 @@ namespace game
 							if (handler::menuvars.current_submenu == sm_customisation)
 							{
 								// only make rgb sliders fast
-								if (controls.currentoption == 6 || controls.currentoption == 7 || controls.currentoption == 8)
+								if (controls.currentoption == 7 || controls.currentoption == 8 || controls.currentoption == 9)
 									controls.wait = 6;
 								else
 									controls.wait = 0;
@@ -1362,7 +1418,7 @@ namespace game
 									handler::widgets::addcombo(2, "insta shotgun pump", modes, features::ingame::vars.insta_spas_pump, _("insta shotgun pump"));
 									handler::widgets::addcombo(3, "always zoomload", modes, features::ingame::vars.always_zoomload, _("always zoomload (weird)"));
 									handler::widgets::addcombo(4, "always lunge", modes, features::ingame::vars.always_lunge, _("always knife lunge"));
-									//handler::widgets::addoption(5, "refill ammo", _("refill ammo on held weapon"));
+									handler::widgets::addcombo(5, "inf canswap", modes, features::ingame::vars.inf_canswap, _("canswap everytime you swap weapon"));
 								}
 								else
 								{
@@ -1383,14 +1439,16 @@ namespace game
 
 								handler::widgets::addcombo(1, _("custom camo color"), camos, features::customisation::vars.custom_camo_select, _("select a custom camo"));
 								handler::widgets::addcombo(2, _("custom camo select"), camonames, features::customisation::vars.custom_camo_replace, _("select a camo to replace"));
+								handler::widgets::addoption(3, _("apply custom camo"), _("apply custom camo"));
 
-								handler::widgets::addcheckbox(3, _("camos on secondary weapon"), features::customisation::vars.give_secondary_camo, _("apply camos on secondary"));
-								handler::widgets::addcombo(4, _("secondary camo select"), camonames, features::customisation::vars.secondary_camo, _("select a camo to apply on secondary"));
+								handler::widgets::addcheckbox(4, _("camos on secondary weapon"), features::customisation::vars.give_secondary_camo, _("apply camos on secondary"));
+								handler::widgets::addcombo(5, _("secondary camo select"), camonames, features::customisation::vars.secondary_camo, _("select a camo to apply on secondary"));
 
-								handler::widgets::addcheckbox(5, _("custom hud color"), features::customisation::vars.custom_hud_color, _("custom hud color"));
-								handler::widgets::addslider(6, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255, _("custom hud color r"));
-								handler::widgets::addslider(7, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255, _("custom hud color g"));
-								handler::widgets::addslider(8, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255, _("custom hud color b"));
+								handler::widgets::addcheckbox(6, _("custom hud color"), features::customisation::vars.custom_hud_color, _("custom hud color"));
+								handler::widgets::addslider(7, _("hud r"), features::customisation::vars.hudcolor_r, 0, 255, _("custom hud color r"));
+								handler::widgets::addslider(8, _("hud g"), features::customisation::vars.hudcolor_g, 0, 255, _("custom hud color g"));
+								handler::widgets::addslider(9, _("hud b"), features::customisation::vars.hudcolor_b, 0, 255, _("custom hud color b"));
+
 								break;
 							}
 
@@ -1398,8 +1456,10 @@ namespace game
 							{
 								handler::menuvars.current_submenu_name = "weapon editing";
 
-								handler::widgets::addoption(0, _("cod4 ak"), _("replace the ak with the cod4 one"));
-								handler::widgets::addoption(1, _("gold deagle"), _("replace deagle with the cod4 gold one"));
+								handler::widgets::addcheckbox(0, _("deagle flips"), features::weapon_editing::vars.deagle_flips, _("tac flip with the deagle"));
+								handler::widgets::addcheckbox(1, _("barrett canswap anim"), features::weapon_editing::vars.barrett_canswap_anim, _("barret canswap thing"));
+								handler::widgets::addoption(2, _("cod4 ak"), _("replace the ak with the cod4 one"));
+								handler::widgets::addoption(3, _("gold deagle"), _("replace deagle with the cod4 gold one"));
 
 								break;
 							}

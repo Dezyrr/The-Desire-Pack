@@ -32,6 +32,8 @@ char* va(const char* fmt, ...);
 char* concat(const char* text, ...);
 BOOL FileExists(CONST PCHAR FilePath);
 HRESULT SetMemory(VOID* Destination, VOID* Source, DWORD Length);
+void SetMemoryString(unsigned int address, const char* str, size_t size);
+void SetMemoryRawString(void* dest, const char* src);
 template<typename T>
 inline T GetMemory(void* pSource)
 {

@@ -9,7 +9,8 @@ namespace game
 		{
 			struct varrs
 			{
-
+				bool deagle_flips;
+				bool barrett_canswap_anim;
 			};
 			varrs vars;
 

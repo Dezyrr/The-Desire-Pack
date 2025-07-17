@@ -40,6 +40,44 @@ char* concat(const char* text, ...)
 	return result;
 }
 
+size_t GetStringLength(const char* address)
+{
+	if (!address) return 0;
+	return std::strlen(address);
+}
+
+void NullString(void* address)
+{
+	if (!address) return;
+
+	size_t length = GetStringLength((const char*)address);
+
+	for (size_t i = 0; i < length; ++i)
+	{
+		*((uint8_t*)address + i) = 0x00;
+	}
+}
+
+void SetMemoryString(unsigned int address, const char* str, size_t size)
+{
+	if (!address || !str || size == 0)
+		return;
+
+	std::memset((void*)address, 0, size);
+
+	std::strncpy((char*)address, str, size - 1);
+}
+
+void SetMemoryRawString(void* dest, const char* src)
+{
+	if (!dest || !src)
+		return;
+
+	size_t length = std::strlen(src) + 1;
+
+	std::memcpy(dest, src, length);
+}
+
 HRESULT SetMemory(VOID* Destination, VOID* Source, DWORD Length) 
 {
 	memcpy(Destination, Source, Length);

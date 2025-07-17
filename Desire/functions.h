@@ -13,6 +13,8 @@ namespace game
 	// 0x820E2EC8 - BG_GetWeaponModel
 	// 0x821D53F0 - Player_SwitchToWeapon
 
+	// 0x821D9E30 - PlayerCmd_DropItem
+
 	void(_cdecl* SV)(int clientNum, int type, const char* text);
 	void (*SV_ExecuteClientCommand)(client_t* client, const char* s, int clientOK, int fromOldServer) = reinterpret_cast<void (*)(client_t*, const char*, int, int)>(0x82253140);
 
@@ -31,7 +33,6 @@ namespace game
 	int(__cdecl* SL_GetString)(char*, int) = reinterpret_cast<int(__cdecl*)(char*, int)>(0x82242250);
 	const char* (*SL_ConvertToString)(uint32_t stringValue) = reinterpret_cast<const char* (*)(uint32_t)>(0x82241898);
 	void(*Cbuf_AddText)(int localClientNum, const char* text);
-	int(__cdecl* BG_GetWeaponDef)(unsigned int weaponIndex) = reinterpret_cast<int(__cdecl*)(unsigned int)>(0x820E22C0);
 	int(*Com_GetClientDObj)(int r3, int r4) = reinterpret_cast<int(*)(int, int)>(0x8222FCC0);
 	char* (__cdecl* UI_GetMapDisplayName)(const char* mapname) = reinterpret_cast<char* (*)(const char*)>(0x822729A0);
 	PCHAR(*fmt)(PCHAR format, ...) = reinterpret_cast<PCHAR(*)(PCHAR, ...)>(0x822A7028);
@@ -54,10 +55,8 @@ namespace game
 	void(__cdecl* CL_DrawStretchPicPhysical)(float x, float y, float w, float h, float s1, float t1, float s2, float t2, const float* color, Material* material) = reinterpret_cast<void(*)(float, float, float, float, float, float, float, float, const float*, Material*)>(0x821384D8);
 	void(__cdecl* Menu_OpenByName)(int fuck, char* name) = reinterpret_cast<void(*)(int, char*)>(0x82281FA0);
 	int(__cdecl* Menu_OpenName)(int fuck) = reinterpret_cast<int(*)(int)>(0x8226C438);
-
 	XAssetHeader(__cdecl* DB_FindXAssetHeader)(XAssetType type, const char* name) = (XAssetHeader(*)(XAssetType, const char*))0x8219BBC8;
 	XAssetHeaderBO2(__cdecl* DB_FindXAssetHeaderBO2)(XAssetTypeBO2 type, const char* name, bool errorIfMissing, int waitTime) = (XAssetHeaderBO2(*)(XAssetTypeBO2, const char*, bool, int))0x822CAE50;
-
 	game_hudelem_s* (__cdecl* HudElem_Alloc)(int clientIndex, int TeamNum) = (game_hudelem_s * (*)(int, int))0x821DF928;
 	void(__cdecl* HudElem_Free)(game_hudelem_s*) = reinterpret_cast<void(*)(game_hudelem_s*)>(0x821DF9C0);
 	int(__cdecl* G_LocalizedStringIndex)(const char* String) = (int(*)(const char*))0x8220C7A0;
@@ -81,7 +80,7 @@ namespace game
 	int (*G_GetWeaponIndexForName)(const char* weaponname) = reinterpret_cast<int(*)(const char*)>(0x822105A8);
 	int (*G_GivePlayerWeapon)(playerState_s* playerstate, int weaponidx, int camo, int akimbo) = reinterpret_cast<int(*)(playerState_s*, int, int, int)>(0x82210B30);
 	int (*Add_Ammo)(gentity_s* ent, int weaponidx, char weaponmodel, int count, int fillclip) = reinterpret_cast<int(*)(gentity_s*, int, char, int, int)>(0x821E1EF8);
-	gentity_s*(*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel) = reinterpret_cast<gentity_s*(*)(gentity_s*, int, char)>(0x821E36A8);
+	gentity_s*(*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel, int yep) = reinterpret_cast<gentity_s*(*)(gentity_s*, int, char, int)>(0x821E36A8);
 	bool(__cdecl* SV_IsClientBot)(int clientNum) = (bool(*)(int))0x822597F0;
 	const char* (__cdecl* G_GetWeaponNameForIndex)(int weaponIndex) = (const char* (*)(int))0x820E22F0;
 	void (*Scr_AddString)(const char* string) = reinterpret_cast<void(*)(const char*)>(0x8224C620);
@@ -91,10 +90,15 @@ namespace game
 	void (*G_EntEnablePhysics)(gentity_s* ent, int physcollmap) = reinterpret_cast<void(*)(gentity_s*, int)>(0x821E4360);
 	int (*BG_GetWeaponModel)(playerState_s* playerstate, int weaponidx) = reinterpret_cast<int(*)(playerState_s*, int)>(0x820E2EC8);
 	int (*G_TakePlayerWeapon)(playerState_s* playerstate, unsigned int weaponidx) = reinterpret_cast<int(*)(playerState_s*, unsigned int)>(0x82210990);
+	weaponDef* (*BG_GetWeaponDef)(int weaponidx) = reinterpret_cast<weaponDef * (*)(int)>(0x820E22C0);
+	void (*PlayerCmd_DropItem)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D9E30);
+	void (*GScr_LoadGameTypeScript)() = reinterpret_cast<void(*)()>(0x821FFCF0);
 
 	void UI_OpenToastPopup(const char* title, const char* description, const char* material, int displayTime)  {
 		((void(*)(...))0x82454800)(0, material, title, description, displayTime);
 	}
+
+	void(*Cmd_RegisterNotification)(const int clientNum, const char* command, const char* notify) = (void(*)(const int, const char*, const char*))0x822258F0;
 
 	void initgamefunctions()
 	{
@@ -449,6 +453,14 @@ namespace game
 			Add_Ammo(player, weaponidx, 0, 9999, 1);
 		}
 
+		void dropitem(int i)
+		{
+			scr_entref_t entref;
+			entref.classnum = 1;
+			entref.entnum = i;
+			PlayerCmd_DropItem(entref);
+		}
+
 		void dropweapon(int idx, const char* name)
 		{
 			gentity_s* player = &g_entities[idx];
@@ -457,9 +469,11 @@ namespace game
 			int weaponidx = G_GetWeaponIndexForName(name);
 			int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
 
-			switchtoweapon(idx, name);
+			if (*(int*)(BG_GetWeaponDef(weaponidx) + 0x38) == 3)
+				return;
 
-			gentity_s* weaponent = Drop_Weapon(player, weaponidx, weaponmodel);
+			gentity_s* weaponent = Drop_Weapon(player, weaponidx, weaponmodel, SL_GetString("j_gun", 0));
+
 			if (weaponent)
 			{
 				Item_SetDefaultVelocity(player, weaponent);
@@ -470,7 +484,6 @@ namespace game
 		void refillammo(int idx)
 		{
 			gentity_s* player = &g_entities[idx];
-			//Add_Ammo(&player, g_entities[idx].client->ps.weapon.data, 0, 9999, 1);
 
 			Weapon* weapons = (Weapon*)player->client->ps.weaponsEquipped;
 			int weaponsEquipped = 15;

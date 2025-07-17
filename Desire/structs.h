@@ -615,7 +615,6 @@ struct LerpEntityState
 	char pad_0050[32];
 };
 
-
 struct rectDef_s
 {
 	float x;
@@ -679,13 +678,11 @@ struct entityState_s
 	unsigned int pad[1];
 };
 
-
 struct Bounds
 {
 	float midPoint[3];
 	float halfSize[3];
 };
-
 
 struct viewClamp {
 	vec2_t start; // 0x0
@@ -715,6 +712,7 @@ struct usercmd_s {
 	char selectedLocAngle; // 0x3
 	int unknown; // 0x24
 };
+
 struct playerTeamState_t {
 	int location; // 0x0
 };
@@ -740,6 +738,7 @@ struct clientState_s
 	unsigned int playerCardTitle;
 	unsigned int playerCardNameplate;
 };
+
 struct SprintState
 {
 	int sprintButtonUpRequired; //0x0000

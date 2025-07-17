@@ -67,14 +67,11 @@ namespace game
                 {
                     delete notify;
                     notifications.erase(notifications.begin() + i);
-                    // Don't increment i; next notification is now at same index
                     continue;
                 }
 
                 float targetposx = posx;
-                float targetposy = (notify->timer <= 1.f)
-                    ? uiContext->screenHeight + 50.f
-                    : posy - (visual_idx * 22);  // Use visual index
+                float targetposy = (notify->timer <= 1.f) ? uiContext->screenHeight + 50.f : posy - (visual_idx * 22);
 
                 float speed = (notify->timer <= 1.f) ? 4.f : 10.f;
 
