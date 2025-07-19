@@ -28,6 +28,16 @@ T clamp(T value, T min, T max)
 	return value;
 }
 
+struct scheduledfunc
+{
+	DWORD exec;
+	void (*func)(int);
+	int arg;
+};
+
+extern std::vector<scheduledfunc> scheduledfunctions;
+void delaycall(void (*func)(int), int arg, int delay);
+
 char* va(const char* fmt, ...);
 char* concat(const char* text, ...);
 BOOL FileExists(CONST PCHAR FilePath);

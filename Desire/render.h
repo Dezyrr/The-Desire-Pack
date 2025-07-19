@@ -58,6 +58,7 @@ namespace game
 			float accent[4] = { 255 / 255.f, 169 / 255.f, 215 / 255.f, 1 };
 			float accentnoalpha[4] = { 255 / 255.f, 169 / 255.f, 215 / 255.f, 0 };
 			float accenthalfalpha[4] = { 255 / 255.f, 169 / 255.f, 215 / 255.f, 0.5 };
+			float accentyepalpha[4] = { 255 / 255.f, 169 / 255.f, 215 / 255.f, 0.2 };
 
 			float darkblue[4] = { 47 / 255.f, 99 / 255.f, 219 / 255.f, 1 };
 			float darkbluenoalpha[4] = { 255 / 255.f, 169 / 255.f, 215 / 255.f, 0 };

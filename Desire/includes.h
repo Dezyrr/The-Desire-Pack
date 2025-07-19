@@ -4,7 +4,7 @@
 
 enum TitleIDs
 {
-	BOOT_UP = 0x00000000,
+	BOOTUP = 0x00000000,
 	DASHBOARD = 0xFFFE07D1,
 	MW2 = 0x41560817,
 	COD4 = 0x415607E6,
@@ -55,10 +55,12 @@ namespace game
 	bool moduleunloading();
 	extern int current_title;
 	
-	extern volatile bool shouldstop_callingcard_thread;
-	extern PHANDLE callingcard_thread;
+	extern PHANDLE camo_thread;
+	extern DWORD camo_threadid;
 
 	extern bool begin_set;
+
+	extern int cached_host_idx;
 }
 #endif
 #define CURGAME game::current_title

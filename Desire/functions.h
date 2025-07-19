@@ -85,7 +85,7 @@ namespace game
 	const char* (__cdecl* G_GetWeaponNameForIndex)(int weaponIndex) = (const char* (*)(int))0x820E22F0;
 	void (*Scr_AddString)(const char* string) = reinterpret_cast<void(*)(const char*)>(0x8224C620);
 	void (*Scr_Notify)(int* ent, short stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int*, short, unsigned int)>(0x82209710);
-	void (*Scr_NotifyNum)(int entnum, unsigned int classnum, unsigned int stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int, unsigned int, unsigned int, unsigned int)>(0x82209710);
+	void (*Scr_NotifyNum)(int entnum, unsigned int classnum, unsigned int stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int, unsigned int, unsigned int, unsigned int)>(0x8224AF10);
 	void (*Item_SetDefaultVelocity)(gentity_s* ent, gentity_s* weaponidx) = reinterpret_cast<void(*)(gentity_s*, gentity_s*)>(0x821E2E18);
 	void (*G_EntEnablePhysics)(gentity_s* ent, int physcollmap) = reinterpret_cast<void(*)(gentity_s*, int)>(0x821E4360);
 	int (*BG_GetWeaponModel)(playerState_s* playerstate, int weaponidx) = reinterpret_cast<int(*)(playerState_s*, int)>(0x820E2EC8);
@@ -241,6 +241,55 @@ namespace game
 			}
 		}
 
+		static unsigned short rgbTo565(unsigned char r, unsigned char g, unsigned char b) {
+			return ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
+		}
+
+
+		void RecolorDXT1_128x128_7Levels(void* pixels, unsigned char r, unsigned char g, unsigned char b) {
+			if (!pixels) return;
+
+			unsigned char* data = static_cast<unsigned char*>(pixels);
+			unsigned short color565 = rgbTo565(r, g, b);
+
+			int baseWidth = 210;
+			int baseHeight = 210;
+			int mipLevels = 7;
+
+			size_t offset = 0;
+
+			for (int level = 0; level < mipLevels; ++level) {
+				int mipWidth = baseWidth >> level;
+				int mipHeight = baseHeight >> level;
+
+				if (mipWidth < 1) mipWidth = 1;
+				if (mipHeight < 1) mipHeight = 1;
+
+				int blocksWide = (mipWidth + 3) / 4;
+				int blocksHigh = (mipHeight + 3) / 4;
+				size_t numBlocks = blocksWide * blocksHigh;
+
+				// Each DXT1 block = 8 bytes
+				for (size_t i = 0; i < numBlocks; ++i) {
+					size_t blockOffset = offset + i * 8;
+
+					// Set both base colors to the same color (solid color block)
+					data[blockOffset + 0] = color565 & 0xFF;
+					data[blockOffset + 1] = (color565 >> 8) & 0xFF;
+					data[blockOffset + 2] = color565 & 0xFF;
+					data[blockOffset + 3] = (color565 >> 8) & 0xFF;
+
+					// Clear pixel indices so the block uses the first color everywhere
+					data[blockOffset + 4] = 0x00;
+					data[blockOffset + 5] = 0x00;
+					data[blockOffset + 6] = 0x00;
+					data[blockOffset + 7] = 0x00;
+				}
+
+				offset += numBlocks * 8;
+			}
+		}
+
 		const char* getweaponname(char weapon)
 		{
 			return G_GetWeaponNameForIndex(weapon);
@@ -367,6 +416,17 @@ namespace game
 			return svs->clients[clientNum].testClient == TC_TEST_CLIENT;
 		}
 
+		int getbotidx() 
+		{
+			for (int i = 0; i < 18; i++) 
+			{
+				if (SV_IsTestClient(i))
+					return i;
+			}
+
+			return -1;
+		}
+
 		bool ishost(int idx)
 		{
 			if (idx < 0 || idx > 17)
@@ -388,10 +448,17 @@ namespace game
 
 		int getlocalidx()
 		{
-			if (cgs)
-				return cgs->clientNumber;
+			static int clientnum = 0;
 
-			return -1;
+			if (cgs)
+			{
+				if (cgs->clientNumber != clientnum)
+				{
+					clientnum = cgs->clientNumber;
+				}
+			}
+
+			return clientnum;
 		}
 
 		bool islocalplayerhost()
@@ -401,7 +468,7 @@ namespace game
 
 		void kickclient(int idx)
 		{
-			if (!ishost(cgs->clientNumber))
+			if (!ishost(getlocalidx()))
 				return;
 
 			if (!isingame())

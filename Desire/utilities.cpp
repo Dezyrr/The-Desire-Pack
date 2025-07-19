@@ -58,6 +58,17 @@ void NullString(void* address)
 	}
 }
 
+std::vector<scheduledfunc> scheduledfunctions;
+
+void delaycall(void (*func)(int), int arg, int delay)
+{
+	scheduledfunc entry;
+	entry.func = func;
+	entry.arg = arg;
+	entry.exec = GetTickCount() + delay;
+	scheduledfunctions.push_back(entry);
+}
+
 void SetMemoryString(unsigned int address, const char* str, size_t size)
 {
 	if (!address || !str || size == 0)

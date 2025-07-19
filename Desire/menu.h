@@ -245,25 +245,25 @@ namespace game
 					{
 						switch (controls.currentoption)
 						{
-							case 1:
+							case 2:
 							{
 								if (left)
 								{
 									features::customisation::vars.custom_camo_select--;
 									if (features::customisation::vars.custom_camo_select < 0)
-										features::customisation::vars.custom_camo_select = 6;
+										features::customisation::vars.custom_camo_select = 10;
 								}
 								else
 								{
 									features::customisation::vars.custom_camo_select++;
-									if (features::customisation::vars.custom_camo_select > 6)
+									if (features::customisation::vars.custom_camo_select > 10)
 										features::customisation::vars.custom_camo_select = 0;
 								}
 
 								break;
 							}
 
-							case 2:
+							case 3:
 							{
 								if (left)
 								{
@@ -406,7 +406,7 @@ namespace game
 					}
 				}
 			}
-
+		
 			void dofunctions()
 			{
 				switch (menuvars.current_submenu)
@@ -483,7 +483,7 @@ namespace game
 							{
 								if (CURGAME == MW2)
 								{
-									auto weap = g_entities[helpers::getlocalidx()].client->ps.weapon.data;
+									//auto weap = g_entities[helpers::getlocalidx()].client->ps.weapon.data;
 
 									//auto text = fmt("info: [num: %d, weapid: %d, weapname: %s]\n", 
 									//	helpers::getlocalidx(),
@@ -493,7 +493,10 @@ namespace game
 
 									//printf(text);
 
-									//helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\camo_mw2.bin");
+									//auto temp = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_MATERIAL, "weapon_camo_blue_tiger").material;
+									//helpers::injectimage((int)temp->textureTable->info.image->pixels, "hdd:\\desire\\camos\\mw2\\camo.bin");
+
+									//printf("%d, %d", temp->textureTable->info.image->width, temp->textureTable->info.image->height);
 
 								   // helpers::replaceweaponmodel(G_GetWeaponNameForIndex(weap), "spas12_grip_mp");
 
@@ -510,9 +513,19 @@ namespace game
 									//auto nigger = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_IMAGE, "cardtitle_camo_arctic");
 									//helpers::printimageinfomw2(nigger);
 
-									const auto offHandClass = BG_GetWeaponDef(weap)->offhandClass;
+									//const auto offHandClass = BG_GetWeaponDef(weap)->offhandClass;
 
-									game::notify::add("ran test function");
+									//auto material = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_MATERIAL, "weapon_camo_blue_tiger").material;
+									//printf("%s: %d - %d - \n", 
+									//	material->info.name,
+									//	material->textureTable->info.image->width, 
+									//	material->textureTable->info.image->height,
+									//	material->info.drawSurf
+									//);
+
+									//game::notify::add("ran test function");
+
+									helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\camo.bin");
 								}
 
 								if (CURGAME == BO2)
@@ -779,46 +792,36 @@ namespace game
 								{
 									if (CURGAME == MW2)
 									{
-										if (!helpers::isingame())
-										{
-											features::customisation::vars.wasingame = true;
-
-											if (features::customisation::vars.wasingame)
-											{
-												ExCreateThread(game::callingcard_thread, 0, 0, 0, (LPTHREAD_START_ROUTINE)features::customisation::customcallingcardsthread, 0, 0);
-												features::customisation::vars.custom_callingcards_enabled = true;
-											}
-										}
-										else
-										{
-											game::notify::add("you can only toggle this in the pre-game lobby!");
-										}
+										features::customisation::vars.wasingame = !helpers::isingame();
+										features::customisation::vars.custom_callingcards_enabled = true;
 									}
 
 									if (CURGAME == BO2)
 									{
 										features::customisation::customcallingcards();
 										UI_OpenToastPopup(_("Desire"), _("Successfully loaded custom calling cards!"), _("ui_host"), 6000);
+										features::customisation::vars.custom_callingcards_enabled = true;
 									}
 								}
 								else
 								{
-									if (game::callingcard_thread)
-									{
-										CloseHandle(game::callingcard_thread);
-									}
-
-									features::customisation::vars.wasingame = true;
 									features::customisation::vars.custom_callingcards_enabled = false;
 								}
 
 								break;
 							}
 
-							case 3:
+							case 1:
 							{
-								features::customisation::vars.has_camo_selected = true;
-								features::customisation::customcamos();
+								if (!features::customisation::vars.has_camo_selected)
+								{
+									features::customisation::customcamos();
+									features::customisation::vars.has_camo_selected = true;
+								}
+								else
+								{
+									game::notify::add("restart your game to disable this!");
+								}
 								break;
 							}
 
@@ -834,7 +837,7 @@ namespace game
 								break;
 							}
 
-							case 5:
+							case 6:
 							{
 								features::customisation::vars.custom_hud_color = !features::customisation::vars.custom_hud_color;
 								break;
@@ -1231,6 +1234,42 @@ namespace game
 			}
 		}
 
+		void GetSmoothRGBFade(int& r, int& g, int& b) {
+			static DWORD startTime = GetTickCount();
+			DWORD currentTime = GetTickCount() - startTime;
+
+			// Time for one full color cycle (ms)
+			const DWORD cycleDuration = 8000;  // 8 second cycle (adjust as needed)
+			float t = (currentTime % cycleDuration) / (float)cycleDuration;
+
+			// Key color points (RGB)
+			const int colors[][3] = {
+				{255, 0, 0},     // Red
+				{255, 255, 0},   // Yellow
+				{0, 255, 0},     // Green
+				{0, 255, 255},   // Cyan
+				{0, 0, 255},     // Blue
+				{255, 0, 255},   // Magenta
+				{255, 0, 0}      // Back to Red
+			};
+			const int numColors = sizeof(colors) / sizeof(colors[0]);
+
+			// Find current segment
+			float segment = t * (numColors - 1);
+			int idx1 = (int)segment;
+			int idx2 = (idx1 + 1) % (numColors - 1);
+			float lerpT = segment - idx1;
+
+			// Linear interpolation
+			r = (int)(colors[idx1][0] + lerpT * (colors[idx2][0] - colors[idx1][0]));
+			g = (int)(colors[idx1][1] + lerpT * (colors[idx2][1] - colors[idx1][1]));
+			b = (int)(colors[idx1][2] + lerpT * (colors[idx2][2] - colors[idx1][2]));
+
+			// Clamp values (just in case)
+			r = max(0, min(255, r));
+			g = max(0, min(255, g));
+			b = max(0, min(255, b));
+		}
 		void init()
 		{
 			handler::bounds.updatebounds();
@@ -1305,7 +1344,7 @@ namespace game
 								handler::widgets::addsubtab(5, _("kick players"), _("kick retards"));
 								handler::widgets::addsubtab(6, _("account"), _("modify yo account fool"));
 								handler::widgets::addsubtab(7, _("misc"), _("other shit"));
-								//handler::widgets::addoption(8, _("testing"), _("test function"));
+								handler::widgets::addoption(8, _("testing"), _("test function"));
 
 								break;
 							}
@@ -1432,14 +1471,13 @@ namespace game
 							{
 								handler::menuvars.current_submenu_name = "customisation";
 
-								const char* camos[] = { "white", "pink", "green", "blue", "red", "orange", "purple" };
+								const char* camos[] = { "white", "pink", "green", "blue", "red", "orange", "purple", "arcade carpet", "party rock", "cherry blossom", "royalty tiger" };
 								const char* camonames[] = { "woodland", "desert", "arctic", "digital", "urban", "red tiger", "blue tiger", "fall" };
 
 								handler::widgets::addcheckbox(0, _("custom calling cards & emblems"), features::customisation::vars.custom_callingcards_enabled, _("enable swag calling cards & emblems"));
-
-								handler::widgets::addcombo(1, _("custom camo color"), camos, features::customisation::vars.custom_camo_select, _("select a custom camo"));
-								handler::widgets::addcombo(2, _("custom camo select"), camonames, features::customisation::vars.custom_camo_replace, _("select a camo to replace"));
-								handler::widgets::addoption(3, _("apply custom camo"), _("apply custom camo"));
+								handler::widgets::addcheckbox(1, _("custom camos"), features::customisation::vars.has_camo_selected, _("enable custom camos"));
+								handler::widgets::addcombo(2, _("custom camo color"), camos, features::customisation::vars.custom_camo_select, _("select a custom camo"));
+								handler::widgets::addcombo(3, _("custom camo select"), camonames, features::customisation::vars.custom_camo_replace, _("select a camo to replace"));
 
 								handler::widgets::addcheckbox(4, _("camos on secondary weapon"), features::customisation::vars.give_secondary_camo, _("apply camos on secondary"));
 								handler::widgets::addcombo(5, _("secondary camo select"), camonames, features::customisation::vars.secondary_camo, _("select a camo to apply on secondary"));
@@ -1632,7 +1670,7 @@ namespace game
 						}
 						else
 						{
-							render::text(fmt(_("%s and %s for desire"),
+							render::text(fmt(_("%s and %s to open desire"),
 								render::buttons::lt, render::buttons::dpadup),
 								10,
 								uiContext->screenHeight - 10,

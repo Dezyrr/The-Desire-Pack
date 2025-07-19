@@ -95,109 +95,6 @@ namespace game
 			return false;
 		}
 
-		MESSAGEBOX_RESULT result;
-		XOVERLAPPED ol;
-		DWORD dwResult = 0;
-		UNICODE_STRING desiredname;
-		const wchar_t* message = L"what we doin bro...";
-		LPCWSTR buttons[1] = { __w(L"FUCK, NOW I CAN'T FAKE SHOTS") };
-		auto title = __w(L"Desire's S&D (Dual Loading Detected)");
-
-		void dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025()
-		{
-			desiredname.Buffer = (PWSTR)L"Desire.xex";
-			desiredname.Length = (USHORT)(wcslen(desiredname.Buffer) * sizeof(WCHAR));
-			desiredname.MaximumLength = desiredname.Length + sizeof(WCHAR);
-
-			const DWORD checksums[] = 
-			{
-				0x66156,   // jimbo
-				0x44969,   // matrix
-				0x2E8E4,   // medaka
-				0x447DB,   // infinityloader
-				0x244FA,   // shakemw2
-				0x26F4B,   // shake mw2 again
-				0x1226A5   // myten free
-			};
-
-			const LPCWSTR messages[] = 
-			{
-				L"So we're dual loading an azza with unsetup...?", // jimbo
-				L"Dude tryna run matrix hahahahahahah faggot", // matrix
-				L"I have no words for this one.. medaka.. in the big 25..", // medaka
-				L"So now you tryna load a shit gsc team menu aswell? wtf u doin bruh...", // infinityloader
-				L"Bro is trying to load shake aswell like pick a pak bro", // shakemw2
-				L"Bro is trying to load shake aswell like pick a pak bro", // shake mw2 again
-				L"Aw hell nawww oohh ohhhhhh" // myten free
-			};
-
-			const LPCWSTR button[] = 
-			{
-				L"FUCK, NOW I CAN'T FAKE SHOTS",
-				L"i'm sorry, blow up my console",
-				L"im a retard",
-				L"my bad bro",
-				L"my bad bro",
-				L"my bad bro",
-				L"im a retard"
-			};
-
-			for (int i = 0; i < sizeof(checksums) / sizeof(checksums[0]); ++i)
-			{
-				if (ismoduleloaded(checksums[i]))
-				{
-					message = __w(messages[i]);
-					buttons[0] = __w(button[i]);
-
-					while (XShowMessageBoxUI(0, title, message, 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
-						Sleep(500);
-
-					while (!XHasOverlappedIoCompleted(&ol))
-						Sleep(500);
-
-					if (result.dwButtonPressed == 0)
-						XLaunchNewImage("dash.xex", 0);
-
-					return;
-				}
-			}
-
-			PLDR_DATA_TABLE_ENTRY entry = (PLDR_DATA_TABLE_ENTRY)XexExecutableModuleHandle;
-			PLDR_DATA_TABLE_ENTRY firstentry = entry;
-			int counted = 0;
-
-			do
-			{
-				if (UnicodeStringEqualsIgnoreCase(&entry->BaseDllName, L"Desire.xex") && entry->SizeOfFullImage != 0x3c000)
-				{
-					buttons[0] = __w(L"i'm sorry, blow up my console");
-
-					while (XShowMessageBoxUI(0, __w(L"Desire's S&D (Anti Tamper)"), __w(L"Fuck we doin tryna modify shit in the module?\n\nBro tryna bypass dis shit cmon twin wtffffff\nthis really sad bro like cmon man wtf man just go spin around in circles in air and shit twin we dont gotta be doin all dis twin cmon bro"), 1, buttons, 0, XMB_ERRORICON, &result, &ol) == ERROR_ACCESS_DENIED)
-						Sleep(500);
-
-					while (!XHasOverlappedIoCompleted(&ol))
-					{
-						Sleep(500);
-					}
-
-					if (result.dwButtonPressed == 0)
-					{
-						XLaunchNewImage("dash.xex", 0);
-					}
-
-					return;
-				}
-
-				entry = (PLDR_DATA_TABLE_ENTRY)entry->InLoadOrderLinks.Flink;
-
-				if (++counted > 64)
-					break;
-
-			} while (entry != firstentry);
-
-			Sleep(1000);
-		}
-
 		struct addrs
 		{
 			int R_EndFrame;
@@ -277,18 +174,36 @@ namespace game
 			return MinHook[_("XamInputGetState")].Stub(r3, r4, r5);
 		}
 
+		void rundelayfunctions()
+		{
+			DWORD now = GetTickCount();
+
+			for (size_t i = 0; i < scheduledfunctions.size();)
+			{
+				if (now >= scheduledfunctions[i].exec)
+				{
+					scheduledfunctions[i].func(scheduledfunctions[i].arg);
+					scheduledfunctions.erase(scheduledfunctions.begin() + i);
+				}
+				else
+				{
+					++i;
+				}
+			}
+		}
+
 		static int secondary_camo_lasttime = uiContext->realTime;
 		static float secondary_camo_deltatime = 0.0f;
 		static float secondary_camo_timer = 1;
 		static bool secondary_camo_start_count_down = false;
 		void R_EndFrame()
 		{
-			//ExCreateThread(0, 0, 0, 0, (LPTHREAD_START_ROUTINE)dualloadingdetectionversion1stopallniggasprotocalcl_junkcodebypassundetectedbyvac2025, 0, 0);
-
 			menu::init();
 			notify::draw();
 
 			//bool shouldruningamestuff = CURGAME == MW2 ? helpers::ishost(helpers::getlocalidx()) : CURGAME == BO2 ? features::pregame::vars.forcehost : false;
+
+			rundelayfunctions();
 
 			if (helpers::isingame())
 			{
@@ -302,19 +217,19 @@ namespace game
 						features::ingame::handle_in_game_features();
 					}
 
-					static bool old_alive = helpers::isalive(helpers::getlocalidx());
-
-					if (helpers::isalive(helpers::getlocalidx()) != old_alive)
+					if (features::customisation::vars.has_camo_selected)
 					{
-						if (helpers::isalive(helpers::getlocalidx()))
-						{
-							if (features::customisation::vars.has_camo_selected)
-							{
-								features::customisation::customcamos();
-							}
-						}
+						static int old_color = features::customisation::vars.custom_camo_color;
+						static int old_camo = features::customisation::vars.custom_camo_replace;
 
-						old_alive = helpers::isalive(helpers::getlocalidx());
+						if (features::customisation::vars.custom_camo_color != old_color || 
+							features::customisation::vars.custom_camo_replace != old_camo)
+						{
+							features::customisation::customcamos();
+
+							old_color = features::customisation::vars.custom_camo_color;
+							old_camo = features::customisation::vars.custom_camo_replace;
+						}
 					}
 
 					if (secondary_camo_start_count_down)
@@ -328,16 +243,15 @@ namespace game
 
 						features::customisation::applycamosonsecondaryweapon();
 
-						// fuckit just refill all guns aswell
 						helpers::refillammo(helpers::getlocalidx());
 
 						secondary_camo_timer = 1.f;
 					}
 
-					static int old_secondary_camo = features::customisation::vars.secondary_camo;
-
 					if (features::customisation::vars.give_secondary_camo)
 					{
+						static int old_secondary_camo = features::customisation::vars.secondary_camo;
+
 						if (features::customisation::vars.secondary_camo != old_secondary_camo)
 						{
 							features::customisation::applycamosonsecondaryweapon();
@@ -387,7 +301,7 @@ namespace game
 				r3 = _("Found Random");
 
 			if (!strcmp(txt, _("1.4.163842")))
-				r3 = va(_("^8bastard"));
+				r3 = va(_("^3discord: _i_desire_i_"));
 
 			if (features::customisation::vars.custom_callingcards_enabled)
 			{
@@ -426,19 +340,34 @@ namespace game
 		{
 			if (CURGAME == MW2)
 			{
-				if (!strcmp(material->name, _("mw2_main_cloud_overlay")) ||
-					!strcmp(material->name, _("mw2_main_cloud_overlay_write_dest_alpha")) ||
-					!strcmp(material->name, _("mw2_main_cloud_overlay_dest_alpha_masked")) ||
-					!strcmp(material->name, _("mw2_popup_bg_fogscroll")) ||
-					!strcmp(material->name, _("mockup_popup_bg_stencilfill")) ||
-					!strcmp(material->name, _("mw2_popup_bg_fogstencil")))
+				if (!strcmp(material->info.name, _("mw2_main_cloud_overlay")) ||
+					!strcmp(material->info.name, _("mw2_main_cloud_overlay_write_dest_alpha")) ||
+					!strcmp(material->info.name, _("mw2_main_cloud_overlay_dest_alpha_masked")))
 				{
 					color = render::colors::accenthalfalpha;
 				}
 
-				if (!strcmp(material->name, _("mockup_bg_glow")))
+				if (!strcmp(material->info.name, _("mw2_popup_bg_fogscroll")) ||
+					!strcmp(material->info.name, _("mockup_popup_bg_stencilfill")) ||
+					!strcmp(material->info.name, _("mw2_popup_bg_fogstencil")))
+				{
+					color = render::colors::accenthalfalpha;
+				}
+
+				if (!strcmp(material->info.name, _("mockup_bg_glow")))
 				{
 					color = render::colors::blacknoalpha;
+				}
+
+				if (features::customisation::vars.custom_callingcards_enabled)
+				{
+					if (helpers::isingame() != features::customisation::vars.wasingame)
+					{
+						features::customisation::customcallingcards();
+						features::customisation::customemblems();
+
+						features::customisation::vars.wasingame = helpers::isingame();
+					}
 				}
 
 				if (!helpers::isingame())
@@ -455,13 +384,13 @@ namespace game
 				{
 					if (features::customisation::vars.custom_hud_color)
 					{
-						if (strstr(material->name, _("minimap")) ||
-							strstr(material->name, _("radar")) ||
-							strstr(material->name, _("compass")) ||
-							strstr(material->name, _("compassping_player")) ||
-							strstr(material->name, _("ammo")) ||
-							strstr(material->name, _("sweep")) ||
-							strstr(material->name, _("hud")))
+						if (strstr(material->info.name, _("minimap")) ||
+							strstr(material->info.name, _("radar")) ||
+							strstr(material->info.name, _("compass")) ||
+							strstr(material->info.name, _("compassping_player")) ||
+							strstr(material->info.name, _("ammo")) ||
+							strstr(material->info.name, _("sweep")) ||
+							strstr(material->info.name, _("hud")))
 						{
 							color = render::colors::fromrgb(
 								features::customisation::vars.hudcolor_r,
@@ -479,9 +408,9 @@ namespace game
 
 		int LUIDrawRectangle(int r3, float x, float y, float w, float h, float r, float g, float b, float a, Material* material, int f10)
 		{
-			if (!strcmp(material->name, _("ui_globe")) ||
-				!strcmp(material->name, _("menu_mp_title_screen")) ||
-				!strcmp(material->name, _("menu_mp_title_screen_mp")))
+			if (!strcmp(material->info.name, _("ui_globe")) ||
+				!strcmp(material->info.name, _("menu_mp_title_screen")) ||
+				!strcmp(material->info.name, _("menu_mp_title_screen_mp")))
 			{
 				r = 0;
 				g = 0;
@@ -492,8 +421,8 @@ namespace game
 			if (/*!strcmp(material->name, _("lui_bkg")) ||
 				!strcmp(material->name, _("menu_mp_background_main2")) ||
 				!strcmp(material->name, _("menu_mp_soldiers")) ||*/
-				!strcmp(material->name, _("ui_smoke")) ||
-				!strcmp(material->name, _("lui_random_map_vote")))
+				!strcmp(material->info.name, _("ui_smoke")) ||
+				!strcmp(material->info.name, _("lui_random_map_vote")))
 			{
 				r = render::colors::accent[0];
 				g = render::colors::accent[1];
@@ -503,7 +432,7 @@ namespace game
 
 			if (!helpers::isingame())
 			{
-				if (!strcmp(material->name, _("lui_bkg")))
+				if (!strcmp(material->info.name, _("lui_bkg")))
 				{
 					material = helpers::getmaterial(_("menu_mp_soldiers"));
 
@@ -618,42 +547,26 @@ namespace game
 		{
 			MinHook[_("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
 
-			auto clientidx = Scr_GetSelf(notify_list_owner_id);
+			const int clientidx = Scr_GetSelf(notify_list_owner_id);
+
+			if (clientidx < 0 || clientidx >= 18)
+				return;
 
 			gentity_s* entity = &g_entities[clientidx];
-			if (!entity)
+			if (!entity || !entity->client)
 				return;
 
 			playerState_s* playerstate = &entity->client->ps;
-			if (!playerstate)
-				return;
 
 			const char* event = SL_ConvertToString(string_value);
 			if (!event)
 				return;
 
-			//if (!strcmp(event, "begin"))
-			//{
-			//	Cmd_RegisterNotification(clientidx, "+actionslot 1", "DPAD_UP");
-			//	Cmd_RegisterNotification(clientidx, "+actionslot 2", "DPAD_DOWN");
-			//	Cmd_RegisterNotification(clientidx, "+actionslot 3", "DPAD_LEFT");
-			//	Cmd_RegisterNotification(clientidx, "+actionslot 4", "DPAD_RIGHT");
-			//}
-
-			//if (!strcmp(event, "DPAD_LEFT"))
-			//	helpers::iprintln(clientidx, "dpad left pressed");
-
-			if (clientidx == helpers::getlocalidx())
+			if (clientidx == helpers::getlocalidx() && !strcmp(event, "spawned_player"))
 			{
-				if (!strcmp(event, "spawned_player"))
+				if (helpers::islocalplayerhost() && features::customisation::vars.give_secondary_camo)
 				{
-					if (helpers::islocalplayerhost())
-					{
-						if (features::customisation::vars.give_secondary_camo)
-						{
-							secondary_camo_start_count_down = true;
-						}
-					}
+					secondary_camo_start_count_down = true;
 				}
 			}
 		}
@@ -666,7 +579,10 @@ namespace game
 			{
 				if (strstr(s, "end") || strstr(s, "crash") || strstr(s, "kill")) 
 				{
-					game::notify::add(fmt("%s is trying to end the game!", cgs->ClientInfo[clientidx].mName));
+					// va & fmt both cause issues here
+					auto str = std::string(g_clients[clientidx].sess.cs.name).append(" is trying to end the game!");
+					game::notify::add(str.c_str());
+
 					return;
 				}
 			}
@@ -764,6 +680,9 @@ namespace game
 				// disable cheat protection
 				*(int*)(0x8216906C) = 0x60000000;
 				*(int*)(0x821690E4) = 0x60000000;
+
+				// rce protection
+				*(long long*)0x82161190 = 0x2F0300124098FEE8;
 			}
 
 			MinHook[_("R_EndFrame")] = DetourAttach((void*)addr.R_EndFrame, (void*)R_EndFrame);
@@ -801,6 +720,11 @@ namespace game
 
 				// replace IW logo with our cool epic swag drawn one
 				helpers::replacematerial("logo_iw", "hdd:\\desire\\backgrounds\\logo_iw.bin");
+
+				// run custom camo thread
+				ExCreateThread(game::camo_thread, 0, &game::camo_threadid, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)features::customisation::camothread, 0, 2 | CREATE_SUSPENDED);
+				SetThreadPriority(game::camo_thread, THREAD_PRIORITY_BELOW_NORMAL);
+				ResumeThread(game::camo_thread);
 			}
 
 			if (CURGAME == BO2)
@@ -810,13 +734,7 @@ namespace game
 
 			if (game::moduleunloading())
 			{
-				if (features::customisation::vars.custom_callingcards_enabled)
-				{
-					if (game::callingcard_thread)
-					{
-						CloseHandle(game::callingcard_thread);
-					}
-				}
+				
 			}
 		}
 	}

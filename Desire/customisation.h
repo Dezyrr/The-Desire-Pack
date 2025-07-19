@@ -1,5 +1,6 @@
 #pragma once
 #include "functions.h"
+#include "notifications.h"
 
 namespace game
 {
@@ -86,6 +87,10 @@ namespace game
 							case 4: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\red.bin"); break;
 							case 5: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\orange.bin"); break;
 							case 6: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\purple.bin"); break;
+							case 7: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\arcade_carpet.bin"); break;
+							case 8: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\party_rock.bin"); break;
+							case 9: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\cherry_blossom.bin"); break;
+							case 10: helpers::replacematerial(camo_to_replace, "hdd:\\desire\\camos\\mw2\\royalty_tiger.bin"); break;
 						}
 					}
 				}
@@ -97,6 +102,17 @@ namespace game
 					//auto t6_camo_mango_pattern = DB_FindXAssetHeaderBO2(XAssetTypeBO2::_ASSET_TYPE_IMAGE, "t6_camo_mango_pattern", false, 0);
 
 					//helpers::printimageinfobo2(t6_camo_mango_pattern);
+				}
+			}
+
+			void camothread()
+			{
+				while (!game::moduleunloading())
+				{
+					if (features::customisation::vars.has_camo_selected)
+						customcamos();
+
+					Sleep(1000);
 				}
 			}
 
@@ -922,22 +938,6 @@ namespace game
 					helpers::replacematerial(_("em_bg_wpn_attach_fhj"), _("hdd:\\desire\\cardtitles\\bo2\\em_bg_wpn_attach_fhj.bin"));
 					helpers::replacematerial(_("em_bg_wpn_attach_rpg"), _("hdd:\\desire\\cardtitles\\bo2\\em_bg_wpn_attach_rpg.bin"));
 					helpers::replacematerial(_("em_bg_wpn_attach_shield"), _("hdd:\\desire\\cardtitles\\bo2\\em_bg_wpn_attach_shield.bin"));
-				}
-			}
-
-			void customcallingcardsthread()
-			{
-				while (true)
-				{
-					if (vars.wasingame != helpers::isingame())
-					{
-						customcallingcards();
-						customemblems();
-
-						vars.wasingame = helpers::isingame();
-					}
-
-					Sleep(1000);
 				}
 			}
 

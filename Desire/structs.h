@@ -303,9 +303,9 @@ enum XAssetType
 	ASSET_TYPE_PHYSPRESET = 0x1,
 	ASSET_TYPE_PHYSCONSTRAINTS = 0x2,
 	ASSET_TYPE_DESTRUCTIBLEDEF = 0x3,
-	ASSET_TYPE_XANIMPARTS = 0x5,
+	ASSET_TYPE_XANIMPARTS = 0x6,
 	ASSET_TYPE_XMODEL = 0x4,
-	ASSET_TYPE_MATERIAL = 0x6,
+	ASSET_TYPE_MATERIAL = 0x5,
 	ASSET_TYPE_TECHNIQUE_SET = 0x7,
 	ASSET_TYPE_IMAGE = 0x8,
 	ASSET_TYPE_SOUND = 0x9,
@@ -496,6 +496,7 @@ enum statIndex_t : __int32
 	STAT_SPAWN_COUNT = 0x4,
 	MAX_STATS = 0x5,
 };
+
 struct ScreenPlacement
 {
 	vec2_t scaleVirtualToReal;
@@ -516,9 +517,232 @@ struct ScreenPlacement
 	float hudSplitscreenScale;
 };
 
-struct Material
+struct CardMemory
+{
+	int platform;
+};
+struct GfxImageStreamData
+{
+	short Width;
+	short Height;
+	int pixelSize;
+};
+struct GfxImage
+{
+	char pad_0000[52]; //0x00
+	_D3DFORMAT Format; //0x34
+	char mapType; //0x38
+	char semantic; //0x39
+	char category; //0x3A
+	char _padding_003B; //0x3B
+	CardMemory cardMemory; //0x3C
+	short width; //0x40
+	short height; //0x42
+	short depth; //0x44
+	char levelCount; //0x46
+	bool cached; //0x47
+	void* pixels; //0x48
+	GfxImageStreamData streams[4]; //0x4C
+	char* name; //0x6C
+};//Size: 0x70
+
+struct WaterWritable
+{
+	float floatTime;
+};
+
+struct water_t
+{
+	WaterWritable writable;
+	float* H0X;					//Total size = (M * N) << 2
+	float* H0Y;				//Total size = (M * N) << 2
+	float* wTerm;			//Total size = (M * N) << 2
+	int M;
+	int N;
+	float Lx;
+	float Lz;
+	float gravity;
+	float windvel;
+	float winddir[2];
+	float amplitude;
+	float codeConstant[4];
+	GfxImage* image;
+};
+
+union MaterialTextureDefInfo
+{
+	GfxImage* image;
+	water_t* water;
+};
+
+struct MaterialTextureDef
+{
+	unsigned int nameHash;
+	char nameStart;
+	char nameEnd;
+	char samplerState;
+	char semantic;
+	MaterialTextureDefInfo info;
+	//if semantic != 0xB, then use MaterialTextureDefInfo::image
+	//else use MaterialTextureDefInfo::water
+};
+
+struct GfxDrawSurfFields
+{
+	__int64 _bf0;
+};
+
+union GfxDrawSurf
+{
+	GfxDrawSurfFields fields;
+	unsigned __int64 packed;
+};
+
+struct __declspec(align(8)) MaterialInfo
 {
 	const char* name;
+	char gameFlags;
+	char sortKey;
+	char textureAtlasRowCount;
+	char textureAtlasColumnCount;
+	GfxDrawSurf drawSurf;
+	unsigned int surfaceTypeBits;
+};
+
+struct MaterialConstantDef
+{
+	unsigned int nameHash;
+	char name[12];
+	float literal[4];
+};
+
+struct GfxStateBits
+{
+	unsigned int loadBits[2];
+};
+struct MaterialStreamRouting
+{
+	char source;
+	char dest;
+};
+
+union MaterialVertexStreamRouting
+{
+	MaterialStreamRouting data[16];
+	D3DVertexDeclaration* decl[15];
+};
+
+struct MaterialVertexDeclaration
+{
+	char streamCount;
+	bool hasOptionalSource;
+	char _padding[2];
+	MaterialVertexStreamRouting routing;
+};
+
+struct GfxVertexShaderLoadDef
+{
+	char* cachedPart;
+	char* physicalPart;
+	unsigned __int16 cachedPartSize;
+	unsigned __int16 physicalPartSize;
+};
+
+union MaterialVertexShaderProgram
+{
+	D3DVertexShader* vs;
+	GfxVertexShaderLoadDef loadDef;
+};
+
+struct MaterialVertexShader
+{
+	const char* name;
+	MaterialVertexShaderProgram prog;
+};
+
+struct MaterialArgumentCodeConst
+{
+	unsigned __int16 index;
+	char firstRow;
+	char rowCount;
+};
+
+union MaterialArgumentDef
+{
+	const float* literalConst;
+	MaterialArgumentCodeConst codeConst;
+	unsigned int codeSampler;
+	unsigned int nameHash;
+};
+
+struct MaterialShaderArgument
+{
+	unsigned __int16 type;
+	unsigned __int16 dest;
+	MaterialArgumentDef u;
+};
+
+struct GfxPixelShaderLoadDef
+{
+	char* cachedPart;						//Loaded second
+	char* physicalPart;					//Loaded first
+	unsigned __int16 cachedPartSize;
+	unsigned __int16 physicalPartSize;
+};
+
+typedef struct MaterialPixelShader
+{
+	char* name;
+	GfxPixelShaderLoadDef prog;
+} MaterialPixelShader;
+
+struct MaterialPass
+{
+	MaterialVertexDeclaration* vertexDecl;
+	MaterialVertexShader* vertexShaderArray[15];
+	MaterialVertexShader* vertexShader;
+	MaterialPixelShader* pixelShader;
+	char perPrimArgCount;
+	char perObjArgCount;
+	char stableArgCount;
+	char customSamplerFlags;
+	char precompiledIndex;
+	MaterialShaderArgument* args;
+};
+
+typedef struct MaterialTechnique
+{
+	const char* name; //Loaded after the passArray
+	unsigned __int16 flags;
+	unsigned __int16 passCount;
+	MaterialPass passArray[1];
+} MaterialTechnique;
+
+typedef struct MaterialTechniqueSet
+{
+	const char* name;
+	byte worldVertFormat;
+	byte unused[3];
+	MaterialTechniqueSet* remappedTechniqueSet;		//only used in mem
+	MaterialTechnique* techniques[0x21];
+} MaterialTechniqueSet;
+
+struct Material
+{
+	MaterialInfo info;
+	char stateBitsEntry[0x21];
+	char textureCount;
+	char constantCount;
+	char stateBitsCount;
+	char stateFlags;
+	char cameraRegion;
+	short undefined;
+	MaterialTechniqueSet* techniqueSet;
+	MaterialTextureDef* textureTable;
+	MaterialConstantDef* constantTable;
+	GfxStateBits* stateBitsTable;
+	char** unknownXStringTable1;
+	long unknown;
 };
 
 struct KerningPairs
@@ -1347,35 +1571,6 @@ enum svscmd_type : __int32
 	SV_CMD_CAN_IGNORE = 0x0,
 	SV_CMD_RELIABLE = 0x1,
 };
-
-struct CardMemory
-{
-	int platform;
-};
-struct GfxImageStreamData
-{
-	short Width;
-	short Height;
-	int pixelSize;
-};
-struct GfxImage
-{
-	char pad_0000[52]; //0x00
-	_D3DFORMAT Format; //0x34
-	char mapType; //0x38
-	char semantic; //0x39
-	char category; //0x3A
-	char _padding_003B; //0x3B
-	CardMemory cardMemory; //0x3C
-	short width; //0x40
-	short height; //0x42
-	short depth; //0x44
-	char levelCount; //0x46
-	bool cached; //0x47
-	void* pixels; //0x48
-	GfxImageStreamData streams[4]; //0x4C
-	char* name; //0x6C
-};//Size: 0x70
 
 struct scr_entref_t
 {

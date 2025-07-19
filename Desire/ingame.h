@@ -46,7 +46,6 @@ namespace game
 			};
 			varrs vars;
 
-			// bot spawning taken from hayzen
 			namespace preventforfeit
 			{
 				void* botent = nullptr;
@@ -65,37 +64,13 @@ namespace game
 					Scr_NotifyNum(idx, 0, SL_GetString("menuresponse", 0), 2);
 				}
 
-				uint32_t spawnbotthread()
+				void spawnbot()
 				{
-					if (!botent)
-						return 0;
-
-					int serverid = GetMemory<int>(0x8360922C);
-
-					int botclientnum = static_cast<gentity_s*>(botent)->client->ps.clientNum;
-
-					client_t* botclient = &GetMemory<client_t*>(0x83620380 + 0x3818)[botclientnum];
-
-					SV_ExecuteClientCommand(botclient, va("mr %d 3 autoassign", serverid), 1, 0);
-
-					Sleep(150);
-
-					SV_ExecuteClientCommand(botclient, va("mr %d 10 class1", serverid), 1, 0);
-
-					Sleep(150);
-
 					SetDvar("testClients_watchKillcam", "0");
 					SetDvar("testclients_doReload", "0");
 					SetDvar("testclients_doMove", "0");
 					SetDvar("testclients_doAttack", "0");
 					SetDvar("testclients_doCrouch", "0");
-
-					return 0;
-				}
-
-				void spawnbot()
-				{
-					gentity_s* bot = static_cast<gentity_s*>(botent);
 
 					if (botent != nullptr)
 					{
@@ -104,7 +79,10 @@ namespace game
 
 					botent = SV_AddTestClient();
 
-					CreateThread(nullptr, 0, LPTHREAD_START_ROUTINE(spawnbotthread), 0, 0, nullptr);
+					int botclientnum = static_cast<gentity_s*>(botent)->client->ps.clientNum;
+
+					delaycall(teamselect, botclientnum, 200);
+					delaycall(classselect, botclientnum, 400);
 				}
 
 				int enemyteamcount()
