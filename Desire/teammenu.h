@@ -260,17 +260,11 @@ namespace game
 			{
 				int idx = entity->client->ps.clientNum;
 
-				if (helpers::islocalplayerhost() && features::customisation::vars.give_secondary_camo)
-				{
-					local_ent::secondary_camo_start_count_down = true;
-				}
-
 				if (!helpers::isonhostteam(idx))
 					return;
 				
 				if (!game::ent_handlr.spawned_once[idx])
 				{
-					helpers::setclientdvar(idx, _("loc_warnings"), _("0"));
 					helpers::setclientdvar(idx, _("loc_warnings"), _("0"));
 					ent_handlr.spawned_once[idx] = true;
 				}

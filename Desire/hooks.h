@@ -546,62 +546,61 @@ namespace game
 			MinHook[_("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
 
 			const int idx = Scr_GetSelf(notify_list_owner_id);
-
 			gentity_s* entity = &g_entities[idx];
-			if (!entity)
-				return;
 
-			// only continue if the entity is a player
-			if (!entity->client)
+			if (!entity || !entity->client)
 				return;
 
 			const char* event = SL_ConvertToString(string_value);
 			if (!event)
 				return;
-		
+
+			const bool is_host = helpers::islocalplayerhost();
+
 			if (!strcmp(event, "begin"))
 			{
-				game::menu::ingame::onplayerbegin(entity);
+				if (is_host)
+					game::menu::ingame::onplayerbegin(entity);
 			}
 
 			if (!strcmp(event, "spawned_player"))
 			{
-				game::menu::ingame::onplayerspawned(entity);
+				if (is_host)
+				{
+					if (features::customisation::vars.give_secondary_camo)
+					{
+						local_ent::secondary_camo_start_count_down = true;
+					}
+
+					game::menu::ingame::onplayerspawned(entity);
+				}
 			}
 
 			if (!strcmp(event, "game_over"))
 			{
-				game::menu::ingame::ongameended(entity);
+				if (is_host)
+					game::menu::ingame::ongameended(entity);
 			}
 
-			if (!strcmp(event, "DPAD_UP"))
+			if (is_host)
 			{
-				game::menu::ingame::ondpadup(entity);
-			}
+				if (!strcmp(event, "DPAD_UP"))
+					game::menu::ingame::ondpadup(entity);
 
-			if (!strcmp(event, "DPAD_DOWN"))
-			{
-				game::menu::ingame::ondpaddown(entity);
-			}
+				if (!strcmp(event, "DPAD_DOWN"))
+					game::menu::ingame::ondpaddown(entity);
 
-			if (!strcmp(event, "DPAD_LEFT"))
-			{
-				game::menu::ingame::ondpadleft(entity);
-			}
+				if (!strcmp(event, "DPAD_LEFT"))
+					game::menu::ingame::ondpadleft(entity);
 
-			if (!strcmp(event, "DPAD_RIGHT"))
-			{
-				game::menu::ingame::ondpadright(entity);
-			}
+				if (!strcmp(event, "DPAD_RIGHT"))
+					game::menu::ingame::ondpadright(entity);
 
-			if (!strcmp(event, "MENU_SELECT"))
-			{
-				game::menu::ingame::onx(entity);
-			}
+				if (!strcmp(event, "MENU_SELECT"))
+					game::menu::ingame::onx(entity);
 
-			if (!strcmp(event, "MENU_CLOSE"))
-			{
-				game::menu::ingame::onrs(entity);
+				if (!strcmp(event, "MENU_CLOSE"))
+					game::menu::ingame::onrs(entity);
 			}
 		}
 
