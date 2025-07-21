@@ -5,13 +5,19 @@ namespace game
 {
 	struct entity_handler
 	{
-		bool is_uav_enabled[18];
-		bool insta_sprint_enabled[18];
-		bool insta_shoots_enabled[18];
-		bool always_zoomload_enabled[18];
+		bool spawned_once[18];
+
+		bool is_uav[18];
+		bool insta_sprint[18];
+		bool insta_shoots[18];
 		bool insta_spas_pump[18];
-		bool unstuck[18];
-		bool gflip[18];
+		bool always_lunge[18];
+		bool always_zoomload[18];
+		bool inf_canswap[18];
+		bool smooth_actions[18];
+		bool altswap[18];
+
+		bool pressed_smooth_actions_bind[18];
 	};
 	entity_handler ent_handlr;
 
@@ -24,7 +30,7 @@ namespace game
 				// game settings
 				bool prevent_enemy_forfeit;
 				bool depatch_bounces;
-				bool easy_eles;
+				int depatch_eles;
 				bool prone_anywhere;
 				bool sweeping_uav;
 				bool wallbang_everything;
@@ -35,14 +41,6 @@ namespace game
 				bool prone_spins;
 				bool ladder_spins;
 				bool knife_lunges;
-
-				// team menu
-				int insta_sprint;
-				int insta_shoots;
-				int always_zoomload;
-				int always_lunge;
-				int insta_spas_pump;
-				int inf_canswap;
 			};
 			varrs vars;
 
@@ -78,6 +76,9 @@ namespace game
 					}
 
 					botent = SV_AddTestClient();
+
+					if (!botent)
+						return;
 
 					int botclientnum = static_cast<gentity_s*>(botent)->client->ps.clientNum;
 
@@ -220,22 +221,41 @@ namespace game
 						*(int*)(0x820DABE4) = 0x409AFFB0;
 					}
 
-					// easy eles
-					if (features::ingame::vars.easy_eles)
+					// depatch eles
+					switch (features::ingame::vars.depatch_eles)
 					{
-						*(short*)(0x820D8360) = 0x4800;
-						*(int*)(0x820D8310) = 0x60000000;
-						*(int*)(0x820D4E74) = 0x60000000;
-						*(int*)(0x820D4F34) = 0x60000000;
-						*(int*)(0x820D5020) = 0x60000000;
-					}
-					else
-					{
-						*(short*)(0x820D8360) = 0x419A;
-						*(int*)(0x820D8310) = 0x409A0054;
-						*(int*)(0x820D4E74) = 0x409A002C;
-						*(int*)(0x820D4F34) = 0x409A002C;
-						*(int*)(0x820D5020) = 0x409A002C;
+						case 0: // off
+						{						
+							*(short*)(0x820D8360) = 0x419A;
+							*(int*)(0x820D8310) = 0x409A0054;
+							*(int*)(0x820D4E74) = 0x409A002C;
+							*(int*)(0x820D4F34) = 0x409A002C;
+							*(int*)(0x820D5020) = 0x409A002C;
+
+							break;
+						}
+
+						case 1: // classic depatch
+						{
+							*(short*)(0x820D8360) = 0x4800;
+							*(int*)(0x820D8310) =  0x409A0054;
+							*(int*)(0x820D4E74) = 0x409A002C;
+							*(int*)(0x820D4F34) = 0x409A002C;
+							*(int*)(0x820D5020) = 0x409A002C;
+
+							break;
+						}
+
+						case 2: // easy
+						{
+							*(short*)(0x820D8360) = 0x4800;
+							*(int*)(0x820D8310) = 0x60000000;
+							*(int*)(0x820D4E74) = 0x60000000;
+							*(int*)(0x820D4F34) = 0x60000000;
+							*(int*)(0x820D5020) = 0x60000000;
+
+							break;
+						}
 					}
 
 					// prone anywhere
@@ -317,21 +337,21 @@ namespace game
 						*(int*)(0x8269F688) = 0x419AFFC4;
 					}
 
-					// depatch eles
-					if (features::ingame::vars.easy_eles)
-					{
-						*(int*)(0x8255D220) = 0x60000000;
-						*(short*)(0x82231964) = 0x4800;
-						*(int*)(0x82237038) = 0x60000000;
-						*(int*)(0x82239B90) = 0x60000000;
-					}
-					else
-					{
-						*(int*)(0x8255D220) = 0x409A0054;
-						*(short*)(0x82231964) = 0x419A;
-						*(int*)(0x82237038) = 0x409A0014;
-						*(int*)(0x82239B90) = 0x409A0014;
-					}
+					//// depatch eles
+					//if (features::ingame::vars.easy_eles)
+					//{
+					//	*(int*)(0x8255D220) = 0x60000000;
+					//	*(short*)(0x82231964) = 0x4800;
+					//	*(int*)(0x82237038) = 0x60000000;
+					//	*(int*)(0x82239B90) = 0x60000000;
+					//}
+					//else
+					//{
+					//	*(int*)(0x8255D220) = 0x409A0054;
+					//	*(short*)(0x82231964) = 0x419A;
+					//	*(int*)(0x82237038) = 0x409A0014;
+					//	*(int*)(0x82239B90) = 0x409A0014;
+					//}
 
 					if (features::ingame::vars.miniscule_health)
 					{

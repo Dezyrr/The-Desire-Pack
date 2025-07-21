@@ -52,15 +52,24 @@ enum TitleIDs
 #define GAME_H
 namespace game
 {
+	// module
 	bool moduleunloading();
 	extern int current_title;
 	
+	// threads
 	extern PHANDLE camo_thread;
 	extern DWORD camo_threadid;
-
-	extern bool begin_set;
-
-	extern int cached_host_idx;
 }
+
+namespace local_ent
+{
+	extern int cached_idx;
+
+	extern int secondary_camo_lasttime;
+	extern float secondary_camo_deltatime;
+	extern float secondary_camo_timer;
+	extern bool secondary_camo_start_count_down;
+}
+
 #endif
 #define CURGAME game::current_title

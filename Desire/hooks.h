@@ -192,10 +192,6 @@ namespace game
 			}
 		}
 
-		static int secondary_camo_lasttime = uiContext->realTime;
-		static float secondary_camo_deltatime = 0.0f;
-		static float secondary_camo_timer = 1;
-		static bool secondary_camo_start_count_down = false;
 		void R_EndFrame()
 		{
 			menu::init();
@@ -209,8 +205,8 @@ namespace game
 			{
 				if (CURGAME == MW2)
 				{
-					secondary_camo_deltatime = (uiContext->realTime - secondary_camo_lasttime) / 1000.0f;
-					secondary_camo_lasttime = uiContext->realTime;
+					local_ent::secondary_camo_deltatime = (uiContext->realTime - local_ent::secondary_camo_lasttime) / 1000.0f;
+					local_ent::secondary_camo_lasttime = uiContext->realTime;
 
 					if (helpers::ishost(helpers::getlocalidx()))
 					{
@@ -232,20 +228,20 @@ namespace game
 						}
 					}
 
-					if (secondary_camo_start_count_down)
+					if (local_ent::secondary_camo_start_count_down)
 					{
-						secondary_camo_timer -= secondary_camo_deltatime;
+						local_ent::secondary_camo_timer -= local_ent::secondary_camo_deltatime;
 					}
 
-					if (secondary_camo_timer <= 0.f)
+					if (local_ent::secondary_camo_timer <= 0.f)
 					{
-						secondary_camo_start_count_down = false;
+						local_ent::secondary_camo_start_count_down = false;
 
 						features::customisation::applycamosonsecondaryweapon();
 
 						helpers::refillammo(helpers::getlocalidx());
 
-						secondary_camo_timer = 1.f;
+						local_ent::secondary_camo_timer = 1.f;
 					}
 
 					if (features::customisation::vars.give_secondary_camo)
@@ -273,9 +269,12 @@ namespace game
 			{
 				features::pregame::handle_pre_game_features();
 
-				// reset this shit
-				if (game::begin_set)
-					game::begin_set = false;
+				// reset dis shit
+				for (int i = 0; i < 18; i++)
+				{
+					if (game::ent_handlr.spawned_once[i])
+						game::ent_handlr.spawned_once[i] = false;
+				}
 			}
 
 			MinHook[_("R_EndFrame")].Stub();
@@ -445,21 +444,14 @@ namespace game
 
 		void PM_Weapon(pmove_t* a1, pml_t* a2)
 		{
-			//if (helpers::ishost(helpers::getlocalidx()))
-			//{
-				int clientidx = a1->ps->clientNum;
+			int idx = a1->ps->clientNum;
 
-				if (helpers::shouldrunonteamorself(features::ingame::vars.inf_canswap, clientidx))
-				{
-					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
-					{
-						a1->ps->weapState->weapAnim = WEAP_FIRST_RAISE;
-					}
-				}
+			if (helpers::isonhostteam(idx))
+			{
 
-				if (helpers::shouldrunonteamorself(features::ingame::vars.insta_sprint, clientidx))
+				if (ent_handlr.insta_sprint[idx])
 				{
-					if (!helpers::isholdingakimboweapon(clientidx))
+					if (!helpers::isholdingakimboweapon(idx))
 					{
 						if (a1->ps->weapState->weaponState == WEAPON_SPRINT_RAISE)
 						{
@@ -469,7 +461,7 @@ namespace game
 					}
 				}
 
-				if (helpers::shouldrunonteamorself(features::ingame::vars.always_zoomload, clientidx))
+				if (ent_handlr.always_zoomload[idx])
 				{
 					if (a1->ps->weapState->weaponState == WEAPON_RELOADING &&
 						a1->ps->weapState->weapAnim != WEAP_RELOAD_EMPTY)
@@ -478,7 +470,7 @@ namespace game
 					}
 				}
 
-				if (helpers::shouldrunonteamorself(features::ingame::vars.insta_shoots, clientidx))
+				if (ent_handlr.insta_shoots[idx])
 				{
 					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
 					{
@@ -488,7 +480,7 @@ namespace game
 					}
 				}
 
-				if (helpers::shouldrunonteamorself(features::ingame::vars.always_lunge, clientidx))
+				if (ent_handlr.always_lunge[idx])
 				{
 					if (a1->ps->weapState->weaponState == WEAPON_MELEE_INIT)
 					{
@@ -496,9 +488,9 @@ namespace game
 					}
 				}
 
-				if (helpers::shouldrunonteamorself(features::ingame::vars.insta_spas_pump, clientidx))
+				if (ent_handlr.insta_spas_pump[idx])
 				{
-					if (helpers::isholdingpumpshotgun(clientidx))
+					if (helpers::isholdingpumpshotgun(idx))
 					{
 						if (a1->ps->weapState->weaponState == WEAPON_FIRING)
 						{
@@ -512,28 +504,34 @@ namespace game
 						}
 					}
 				}
-			//}
 
-			// viewmodel_wa2000_hb_open_pullout 
-			// viewmodel_barrett_pullout
+				if (ent_handlr.inf_canswap[idx])
+				{
+					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
+					{
+						a1->ps->weapState->weapAnim = WEAP_FIRST_RAISE;
+					}
+				}
 
-			// flip the barret on pullout
-			// SetMemoryString(0xA86FAE44, "viewmodel_model1887_akimbo_rechamber_r", 39);
-			// SetMemoryString(0xA86FAE44, "viewmodel_wa2000_hb_open_first_time_pullout", 44);
-			// 0xA86FF714 - barrett pullout quick
-			// 0xA86FAE44 - barrett pullout
-			// 0xA86F2244 - barrett reload
+				if (ent_handlr.pressed_smooth_actions_bind[idx])
+				{
+					a1->ps->weapState->weapAnim = WEAP_IDLE;
+					helpers::gsc::wait(0.05);
+					a1->ps->weapState->weapAnim = WEAP_FORCE_IDLE;
 
-			// SetMemoryString(0xC7C7A8D0, "viewmodel_uspmgs_idle", 0x16);
-			// printf("%s\n", DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, G_GetWeaponNameForIndex(a1->ps->weapon.data)).weapon->szXAnims);
+					if (a1->ps->weapState->weaponState == WEAPON_RELOAD_START ||
+						a1->ps->weapState->weaponState == WEAPON_RELOADING ||
+						a1->ps->weapState->weaponState == WEAPON_RELOAD_END)
+					{
+						a1->ps->weapState->weaponState = WEAPON_READY;
+						a1->ps->weapState->weaponTime = 0;
+						a1->ps->weapState->weaponDelay = 0;
+						a1->ps->weapState->weaponRestrictKickTime = 1;
+					}
 
-			// magnum pull out
-			// SetMemoryString(0xA7CE9B8C, "viewmodel_uspmgs_pullout", 35);
-
-			// magnum idle
-			// SetMemoryString(0xA7CE14D0, "viewmodel_uspmgs_idle", 32);
-
-			// SetMemoryString(0xA86F2244, "viewmodel_cheytac_reload", 25);
+					ent_handlr.pressed_smooth_actions_bind[idx] = false;
+				}
+			}
 
 			MinHook[_("PM_Weapon")].Stub(a1, a2);
 		}
@@ -547,27 +545,63 @@ namespace game
 		{
 			MinHook[_("VM_Notify")].Stub(notify_list_owner_id, string_value, count);
 
-			const int clientidx = Scr_GetSelf(notify_list_owner_id);
+			const int idx = Scr_GetSelf(notify_list_owner_id);
 
-			if (clientidx < 0 || clientidx >= 18)
+			gentity_s* entity = &g_entities[idx];
+			if (!entity)
 				return;
 
-			gentity_s* entity = &g_entities[clientidx];
-			if (!entity || !entity->client)
+			// only continue if the entity is a player
+			if (!entity->client)
 				return;
-
-			playerState_s* playerstate = &entity->client->ps;
 
 			const char* event = SL_ConvertToString(string_value);
 			if (!event)
 				return;
-
-			if (clientidx == helpers::getlocalidx() && !strcmp(event, "spawned_player"))
+		
+			if (!strcmp(event, "begin"))
 			{
-				if (helpers::islocalplayerhost() && features::customisation::vars.give_secondary_camo)
-				{
-					secondary_camo_start_count_down = true;
-				}
+				game::menu::ingame::onplayerbegin(entity);
+			}
+
+			if (!strcmp(event, "spawned_player"))
+			{
+				game::menu::ingame::onplayerspawned(entity);
+			}
+
+			if (!strcmp(event, "game_over"))
+			{
+				game::menu::ingame::ongameended(entity);
+			}
+
+			if (!strcmp(event, "DPAD_UP"))
+			{
+				game::menu::ingame::ondpadup(entity);
+			}
+
+			if (!strcmp(event, "DPAD_DOWN"))
+			{
+				game::menu::ingame::ondpaddown(entity);
+			}
+
+			if (!strcmp(event, "DPAD_LEFT"))
+			{
+				game::menu::ingame::ondpadleft(entity);
+			}
+
+			if (!strcmp(event, "DPAD_RIGHT"))
+			{
+				game::menu::ingame::ondpadright(entity);
+			}
+
+			if (!strcmp(event, "MENU_SELECT"))
+			{
+				game::menu::ingame::onx(entity);
+			}
+
+			if (!strcmp(event, "MENU_CLOSE"))
+			{
+				game::menu::ingame::onrs(entity);
 			}
 		}
 
@@ -704,6 +738,7 @@ namespace game
 				//MinHook[_("PM_Weapon_Process_Hand")] = DetourAttach((void*)addr.PM_Weapon_Process_Hand, (void*)PM_Weapon_Process_Hand);
 
 				MinHook[_("VM_Notify")] = DetourAttach((void*)addr.VM_Notify, (void*)VM_Notify);
+
 				MinHook[_("SV_ExecuteClientCommand")] = DetourAttach((void*)addr.SV_ExecuteClientCommand, (void*)SV_ExecuteClientCommand);
 
 				MinHook[_("AddCmdDrawStretchPic")] = DetourAttach((void*)addr.AddCmdDrawStretchPic, (void*)AddCmdDrawStretchPic);
@@ -725,6 +760,7 @@ namespace game
 				ExCreateThread(game::camo_thread, 0, &game::camo_threadid, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)features::customisation::camothread, 0, 2 | CREATE_SUSPENDED);
 				SetThreadPriority(game::camo_thread, THREAD_PRIORITY_BELOW_NORMAL);
 				ResumeThread(game::camo_thread);
+				CloseHandle(game::camo_thread);
 			}
 
 			if (CURGAME == BO2)

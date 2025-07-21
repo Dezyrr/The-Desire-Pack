@@ -13,15 +13,20 @@ namespace game
 	{
 		return UnloadPlugin;
 	}	
-
 	int current_title = 0;
 
 	PHANDLE camo_thread = nullptr;
 	DWORD camo_threadid = 0;
+}
 
-	bool begin_set = false;
+namespace local_ent
+{
+	int cached_idx = -1;
 
-	int cached_host_idx = -1;
+	int secondary_camo_lasttime = uiContext->realTime;
+	float secondary_camo_deltatime = 0.0f;
+	float secondary_camo_timer = 1;
+	bool secondary_camo_start_count_down = false;
 }
 
 void titlecheck(DWORD TitleID)
@@ -245,7 +250,7 @@ void antitamper()
 				continue;
 			}
 
-			if (_wcsicmp(entry->BaseDllName.Buffer, L"Desire.xex") == 0 && entry->SizeOfFullImage != 0x3D000)
+			if (_wcsicmp(entry->BaseDllName.Buffer, L"Desire.xex") == 0 && entry->SizeOfFullImage != 0x3E000)
 			{
 				buttons[0] = L"i'm sorry, blow up my console";
 
@@ -408,13 +413,13 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD dwReason, LPVOID lpReserved)
 		SetThreadPriority(hThread, THREAD_PRIORITY_NORMAL);
 		ResumeThread(hThread);
 
-		//ExCreateThread(&tamperThread, 0, &tamperThreadId, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)antitamper, 0, 2 | CREATE_SUSPENDED);
-		//SetThreadPriority(tamperThread, THREAD_PRIORITY_BELOW_NORMAL);
-		//ResumeThread(tamperThread);
+		ExCreateThread(&tamperThread, 0, &tamperThreadId, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)antitamper, 0, 2 | CREATE_SUSPENDED);
+		SetThreadPriority(tamperThread, THREAD_PRIORITY_BELOW_NORMAL);
+		ResumeThread(tamperThread);
 
-		//ExCreateThread(&moduleThread, 0, &moduleThreadId, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)dualloadprotection, 0, 2 | CREATE_SUSPENDED);
-		//SetThreadPriority(moduleThread, THREAD_PRIORITY_BELOW_NORMAL);
-		//ResumeThread(moduleThread);
+		ExCreateThread(&moduleThread, 0, &moduleThreadId, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)dualloadprotection, 0, 2 | CREATE_SUSPENDED);
+		SetThreadPriority(moduleThread, THREAD_PRIORITY_BELOW_NORMAL);
+		ResumeThread(moduleThread);
 
 		titlecheck(XamGetCurrentTitleID());
 	}

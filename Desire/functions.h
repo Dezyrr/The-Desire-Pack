@@ -4,16 +4,22 @@
 namespace game
 {
 	// shit ive found in ida
-	// 0x820E2EC8 - GetWeaponModel
-	// 0x820E22C0 - BG_GetWeaponDef
-	// 0x820E22D8 - BG_GetWeaponCompleteDef
-	// 0x821E2E18 - Item_SetDefaultVelocity
-	// 0x821E2188 - CurrentPrimaryWeapon
-	// 0x821E4360 - G_EntEnablePhysics
-	// 0x820E2EC8 - BG_GetWeaponModel
-	// 0x821D53F0 - Player_SwitchToWeapon
-
-	// 0x821D9E30 - PlayerCmd_DropItem
+	// 0x820E2EC8 GetWeaponModel
+	// 0x820E22C0 BG_GetWeaponDef
+	// 0x820E22D8 BG_GetWeaponCompleteDef
+	// 0x821E2E18 Item_SetDefaultVelocity
+	// 0x821E2188 CurrentPrimaryWeapon
+	// 0x821E4360 G_EntEnablePhysics
+	// 0x820E2EC8 BG_GetWeaponModel
+	// 0x821D53F0 Player_SwitchToWeapon
+	// 0x821D9E30 PlayerCmd_DropItem
+	// 0x821D9288 GScr_notifyOnPlayerCommand
+	// 0x82249DF0 Scr_ClearOutParams
+	// 0x821D4AD0 PlayerCmd_giveWeapon
+	// 0x821D4C80 PlayerCmd_takeWeapon
+	// 0x8224C2C8 Scr_AddBool
+	// 0x8224C348 Scr_AddInt
+	// 0x8224C3C8 Scr_AddFloat
 
 	void(_cdecl* SV)(int clientNum, int type, const char* text);
 	void (*SV_ExecuteClientCommand)(client_t* client, const char* s, int clientOK, int fromOldServer) = reinterpret_cast<void (*)(client_t*, const char*, int, int)>(0x82253140);
@@ -74,7 +80,7 @@ namespace game
 	void (*G_SetModel)(gentity_s* ent, const char* modelName) = reinterpret_cast<void (*)(gentity_s*, const char*)>(0x8220D278);
 	void (*SV_LinkEntity)(gentity_s* gEnt) = reinterpret_cast<void (*)(gentity_s*)>(0x8225F518);
 	void (*SV_UnlinkEntity)(gentity_s* gEnt) = reinterpret_cast<void (*)(gentity_s*)>(0x8225F430);
-	int(_cdecl* NotifyOnButton)(int idx, const char* button, const char* button_name) = reinterpret_cast<int(*)(int, const char*, const char*)>(0x82225858);
+	int(_cdecl* Cmd_RegisterNotification)(int idx, const char* button, const char* button_name) = reinterpret_cast<int(*)(int, const char*, const char*)>(0x82225858);
 	int (*Scr_GetSelf)(int var) = reinterpret_cast<int(*)(int)>(0x82243758);
 	int (*CG_GetClientNum)(int var) = reinterpret_cast<int(*)(int)>(0x82253948);
 	int (*G_GetWeaponIndexForName)(const char* weaponname) = reinterpret_cast<int(*)(const char*)>(0x822105A8);
@@ -83,7 +89,12 @@ namespace game
 	gentity_s*(*Drop_Weapon)(gentity_s* ent, int weaponidx, char weaponmodel, int yep) = reinterpret_cast<gentity_s*(*)(gentity_s*, int, char, int)>(0x821E36A8);
 	bool(__cdecl* SV_IsClientBot)(int clientNum) = (bool(*)(int))0x822597F0;
 	const char* (__cdecl* G_GetWeaponNameForIndex)(int weaponIndex) = (const char* (*)(int))0x820E22F0;
-	void (*Scr_AddString)(const char* string) = reinterpret_cast<void(*)(const char*)>(0x8224C620);
+
+	void (*Scr_AddString)(const char* s) = reinterpret_cast<void(*)(const char*)>(0x8224C620);
+	void (*Scr_AddBool)(bool b) = reinterpret_cast<void(*)(bool)>(0x8224C2C8);
+	void (*Scr_AddInt)(int i) = reinterpret_cast<void(*)(int)>(0x8224C348);
+	void (*Scr_AddFloat)(float f) = reinterpret_cast<void(*)(float)>(0x8224C3C8);
+
 	void (*Scr_Notify)(int* ent, short stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int*, short, unsigned int)>(0x82209710);
 	void (*Scr_NotifyNum)(int entnum, unsigned int classnum, unsigned int stringValue, unsigned int paramcount) = reinterpret_cast<void(*)(int, unsigned int, unsigned int, unsigned int)>(0x8224AF10);
 	void (*Item_SetDefaultVelocity)(gentity_s* ent, gentity_s* weaponidx) = reinterpret_cast<void(*)(gentity_s*, gentity_s*)>(0x821E2E18);
@@ -91,14 +102,18 @@ namespace game
 	int (*BG_GetWeaponModel)(playerState_s* playerstate, int weaponidx) = reinterpret_cast<int(*)(playerState_s*, int)>(0x820E2EC8);
 	int (*G_TakePlayerWeapon)(playerState_s* playerstate, unsigned int weaponidx) = reinterpret_cast<int(*)(playerState_s*, unsigned int)>(0x82210990);
 	weaponDef* (*BG_GetWeaponDef)(int weaponidx) = reinterpret_cast<weaponDef * (*)(int)>(0x820E22C0);
-	void (*PlayerCmd_DropItem)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D9E30);
 	void (*GScr_LoadGameTypeScript)() = reinterpret_cast<void(*)()>(0x821FFCF0);
 
 	void UI_OpenToastPopup(const char* title, const char* description, const char* material, int displayTime)  {
 		((void(*)(...))0x82454800)(0, material, title, description, displayTime);
 	}
 
-	void(*Cmd_RegisterNotification)(const int clientNum, const char* command, const char* notify) = (void(*)(const int, const char*, const char*))0x822258F0;
+	void (*PlayerCmd_DropItem)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D9E30);
+	void (*PlayerCmd_giveWeapon)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D4AD0);
+	void (*PlayerCmd_takeWeapon)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D4C80);
+
+	void(*GScr_notifyOnPlayerCommand)(scr_entref_t entref) = (void(*)(scr_entref_t))0x821D9288;
+	void(*Scr_ClearOutParams)() = reinterpret_cast<void(*)()>(0x82249DF0);
 
 	void initgamefunctions()
 	{
@@ -448,17 +463,12 @@ namespace game
 
 		int getlocalidx()
 		{
-			static int clientnum = 0;
-
 			if (cgs)
 			{
-				if (cgs->clientNumber != clientnum)
-				{
-					clientnum = cgs->clientNumber;
-				}
+				return cgs->clientNumber;
 			}
 
-			return clientnum;
+			return -1;
 		}
 
 		bool islocalplayerhost()
@@ -508,44 +518,15 @@ namespace game
 			SV(idx, 1, buffer);
 		}
 
-		void giveweapon(int idx, const char* name, int camo)
+		void giveweapon(int idx, const char* name, int camo, int akimbo)
 		{
 			gentity_s* player = &g_entities[idx];
 			playerState_s* playerstate = &player->client->ps;
 
 			int weaponidx = G_GetWeaponIndexForName(name);
-			int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
 
-			G_GivePlayerWeapon(playerstate, weaponidx, camo, 0);
+			G_GivePlayerWeapon(playerstate, weaponidx, camo, akimbo);
 			Add_Ammo(player, weaponidx, 0, 9999, 1);
-		}
-
-		void dropitem(int i)
-		{
-			scr_entref_t entref;
-			entref.classnum = 1;
-			entref.entnum = i;
-			PlayerCmd_DropItem(entref);
-		}
-
-		void dropweapon(int idx, const char* name)
-		{
-			gentity_s* player = &g_entities[idx];
-			playerState_s* playerstate = &player->client->ps;
-
-			int weaponidx = G_GetWeaponIndexForName(name);
-			int weaponmodel = BG_GetWeaponModel(playerstate, weaponidx);
-
-			if (*(int*)(BG_GetWeaponDef(weaponidx) + 0x38) == 3)
-				return;
-
-			gentity_s* weaponent = Drop_Weapon(player, weaponidx, weaponmodel, SL_GetString("j_gun", 0));
-
-			if (weaponent)
-			{
-				Item_SetDefaultVelocity(player, weaponent);
-				G_EntEnablePhysics(player, *(int*)(BG_GetWeaponDef(weaponidx) + 0x3C8));
-			}
 		}
 
 		void refillammo(int idx)
@@ -627,6 +608,78 @@ namespace game
 		bool shouldrunonteamorself(int feature_value, int clientidx)
 		{
 			return (feature_value == 1 && clientidx == helpers::getlocalidx()) || (feature_value == 2 && helpers::isonhostteam(clientidx));
+		}
+
+		namespace gsc
+		{
+			void wait(int seconds)
+			{
+				time_t curtime = time(NULL);
+
+				time_t endtime = curtime + seconds;
+
+				while (endtime > curtime)
+				{
+					time(&curtime);
+				}
+			}
+
+			void notifyonplayercommand(int idx, const char* command, const char* string)
+			{
+				scr_entref_t ent;
+				ent.classnum = CLASS_NUM_ENTITY;
+				ent.entnum = idx;
+
+				Scr_AddString(command);
+				Scr_AddString(string);
+				scrVmPub->outparamcount = 2;
+				GScr_notifyOnPlayerCommand(ent);
+				scrVmPub->outparamcount = 0;
+
+				Scr_ClearOutParams();
+			}
+
+			void takeweapon(int idx, const char* name)
+			{
+				scr_entref_t entref;
+				entref.classnum = CLASS_NUM_ENTITY;
+				entref.entnum = idx;
+
+				Scr_AddString(name);
+				scrVmPub->outparamcount = 1;
+				PlayerCmd_takeWeapon(entref);
+				scrVmPub->outparamcount = 0;
+
+				Scr_ClearOutParams();
+			}
+
+			void giveweapon(int idx, const char* name)
+			{
+				scr_entref_t entref;
+				entref.classnum = CLASS_NUM_ENTITY;
+				entref.entnum = idx;
+
+				Scr_AddString(name);
+				scrVmPub->outparamcount = 1;
+				PlayerCmd_giveWeapon(entref);
+				scrVmPub->outparamcount = 0;
+
+				Scr_ClearOutParams();
+			}
+
+			void dropitem(int idx, const char* name)
+			{
+				scr_entref_t entref;
+				entref.classnum = CLASS_NUM_ENTITY;
+				entref.entnum = idx;
+
+				Scr_AddString(name);
+				scrVmPub->outparamcount = 2;
+				PlayerCmd_DropItem(entref);
+				scrVmPub->outparamcount = 0;
+
+				Scr_ClearOutParams();
+			}
 		}
 	}
 

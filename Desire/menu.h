@@ -23,7 +23,6 @@ namespace game
 				sm_main,
 				sm_matchmaking,
 				sm_gamesettings,
-				sm_trickshotting,
 				sm_customisation,
 				sm_weapon_editing,
 				sm_players,
@@ -124,120 +123,27 @@ namespace game
 						break;
 					}
 
-					case sm_trickshotting:
+					case sm_gamesettings:
 					{
 						switch (controls.currentoption)
 						{
-							case 0:
-							{
-								if (left)
-								{
-									features::ingame::vars.insta_shoots--;
-									if (features::ingame::vars.insta_shoots < 0)
-										features::ingame::vars.insta_shoots = 2;
-								}
-								else
-								{
-									features::ingame::vars.insta_shoots++;
-									if (features::ingame::vars.insta_shoots > 2)
-										features::ingame::vars.insta_shoots = 0;
-								}
-								break;
-							}
-
-							case 1:
-							{
-								if (left)
-								{
-									features::ingame::vars.insta_sprint--;
-									if (features::ingame::vars.insta_sprint < 0)
-										features::ingame::vars.insta_sprint = 2;
-								}
-								else
-								{
-									features::ingame::vars.insta_sprint++;
-									if (features::ingame::vars.insta_sprint > 2)
-										features::ingame::vars.insta_sprint = 0;
-								}
-								break;
-							}
-
-							case 2:
-							{
-								if (left)
-								{
-									features::ingame::vars.insta_spas_pump--;
-									if (features::ingame::vars.insta_spas_pump < 0)
-										features::ingame::vars.insta_spas_pump = 2;
-								}
-								else
-								{
-									features::ingame::vars.insta_spas_pump++;
-									if (features::ingame::vars.insta_spas_pump > 2)
-										features::ingame::vars.insta_spas_pump = 0;
-								}
-								break;
-							}
-
 							case 3:
 							{
 								if (left)
 								{
-									features::ingame::vars.always_zoomload--;
-									if (features::ingame::vars.always_zoomload < 0)
-										features::ingame::vars.always_zoomload = 2;
+									features::ingame::vars.depatch_eles--;
+									if (features::ingame::vars.depatch_eles < 0)
+										features::ingame::vars.depatch_eles = 2;
 								}
 								else
 								{
-									features::ingame::vars.always_zoomload++;
-									if (features::ingame::vars.always_zoomload > 2)
-										features::ingame::vars.always_zoomload = 0;
+									features::ingame::vars.depatch_eles++;
+									if (features::ingame::vars.depatch_eles > 2)
+										features::ingame::vars.depatch_eles = 0;
 								}
-								break;
-							}
-
-							case 4:
-							{
-								if (left)
-								{
-									features::ingame::vars.always_lunge--;
-									if (features::ingame::vars.always_lunge < 0)
-										features::ingame::vars.always_lunge = 2;
-								}
-								else
-								{
-									features::ingame::vars.always_lunge++;
-									if (features::ingame::vars.always_lunge > 2)
-										features::ingame::vars.always_lunge = 0;
-								}
-								break;
-							}
-
-							case 5:
-							{
-								if (left)
-								{
-									features::ingame::vars.inf_canswap--;
-									if (features::ingame::vars.inf_canswap < 0)
-										features::ingame::vars.inf_canswap = 2;
-								}
-								else
-								{
-									features::ingame::vars.inf_canswap++;
-									if (features::ingame::vars.inf_canswap > 2)
-										features::ingame::vars.inf_canswap = 0;
-								}
-								break;
-								break;
-							}
-
-							case 7:
-							{
-
 								break;
 							}
 						}
-
 						break;
 					}
 
@@ -433,7 +339,7 @@ namespace game
 
 							case 2:
 							{
-								menuvars.current_submenu = sm_trickshotting;
+								menuvars.current_submenu = sm_customisation;
 								controls.currentoption = 0;
 
 								break;
@@ -441,7 +347,7 @@ namespace game
 
 							case 3:
 							{
-								menuvars.current_submenu = sm_customisation;
+								menuvars.current_submenu = sm_weapon_editing;
 								controls.currentoption = 0;
 
 								break;
@@ -449,7 +355,7 @@ namespace game
 
 							case 4:
 							{
-								menuvars.current_submenu = sm_weapon_editing;
+								menuvars.current_submenu = sm_players;
 								controls.currentoption = 0;
 
 								break;
@@ -457,7 +363,7 @@ namespace game
 
 							case 5:
 							{
-								menuvars.current_submenu = sm_players;
+								menuvars.current_submenu = sm_account;
 								controls.currentoption = 0;
 
 								break;
@@ -465,21 +371,13 @@ namespace game
 
 							case 6:
 							{
-								menuvars.current_submenu = sm_account;
-								controls.currentoption = 0;
-
-								break;
-							}
-
-							case 7:
-							{
 								menuvars.current_submenu = sm_misc;
 								controls.currentoption = 0;
 
 								break;
 							}
 
-							case 8:
+							case 7:
 							{
 								if (CURGAME == MW2)
 								{
@@ -524,8 +422,29 @@ namespace game
 									//);
 
 									//game::notify::add("ran test function");
+									// 
+									// viewmodel_wa2000_hb_open_pullout 
+									// viewmodel_barrett_pullout
 
-									helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\camo.bin");
+									// flip the barret on pullout
+									// SetMemoryString(0xA86FAE44, "viewmodel_model1887_akimbo_rechamber_r", 39);
+									// SetMemoryString(0xA86FAE44, "viewmodel_wa2000_hb_open_first_time_pullout", 44);
+									// 0xA86FF714 - barrett pullout quick
+									// 0xA86FAE44 - barrett pullout
+									// 0xA86F2244 - barrett reload
+
+									// SetMemoryString(0xC7C7A8D0, "viewmodel_uspmgs_idle", 0x16);
+									// printf("%s\n", DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, G_GetWeaponNameForIndex(a1->ps->weapon.data)).weapon->szXAnims);
+
+									// magnum pull out
+									// SetMemoryString(0xA7CE9B8C, "viewmodel_uspmgs_pullout", 35);
+
+									// magnum idle
+									// SetMemoryString(0xA7CE14D0, "viewmodel_uspmgs_idle", 32);
+
+									// SetMemoryString(0xA86F2244, "viewmodel_cheytac_reload", 25);
+
+									//helpers::replacematerial("weapon_camo_blue_tiger", "hdd:\\desire\\camos\\mw2\\camo.bin");
 								}
 
 								if (CURGAME == BO2)
@@ -668,12 +587,6 @@ namespace game
 								break;
 							}
 
-							case 3:
-							{
-								features::ingame::vars.easy_eles = !features::ingame::vars.easy_eles;
-								break;
-							}
-
 							case 4:
 							{
 								if (CURGAME == MW2)
@@ -769,16 +682,6 @@ namespace game
 							default: break;
 						}
 
-						break;
-					}
-
-					case sm_trickshotting:
-					{						
-						switch (controls.currentoption)
-						{
-
-							default: break;
-						}
 						break;
 					}
 
@@ -965,7 +868,7 @@ namespace game
 				{
 					if (!controls.isopen)
 					{
-						if (input.Gamepad.bLeftTrigger && input.Gamepad.wButtons & (XINPUT_GAMEPAD_DPAD_UP))
+						if (input.Gamepad.bLeftTrigger && input.Gamepad.wButtons & (XINPUT_GAMEPAD_RIGHT_THUMB))
 						{
 							controls.isopen = true;
 							controls.currentoption = 0;
@@ -1338,13 +1241,12 @@ namespace game
 
 								handler::widgets::addsubtab(0, _("matchmaking"), _("shit to help with matchmaking"));
 								handler::widgets::addsubtab(1, _("game settings"), _("modify game settings"));
-								handler::widgets::addsubtab(2, _("trickshotting"), _("shit to assist with trickshotting"));
-								handler::widgets::addsubtab(3, _("customisation"), _("custom shit that usually isn't possible"));
-								handler::widgets::addsubtab(4, _("weapon editing"), _("fuck up the weapons or something"));
-								handler::widgets::addsubtab(5, _("kick players"), _("kick retards"));
-								handler::widgets::addsubtab(6, _("account"), _("modify yo account fool"));
-								handler::widgets::addsubtab(7, _("misc"), _("other shit"));
-								handler::widgets::addoption(8, _("testing"), _("test function"));
+								handler::widgets::addsubtab(2, _("customisation"), _("custom shit that usually isn't possible"));
+								handler::widgets::addsubtab(3, _("weapon editing"), _("fuck up the weapons or something"));
+								handler::widgets::addsubtab(4, _("kick players"), _("kick retards"));
+								handler::widgets::addsubtab(5, _("account"), _("modify yo account fool"));
+								handler::widgets::addsubtab(6, _("misc"), _("other shit"));
+								//handler::widgets::addoption(8, _("testing"), _("test function"));
 
 								break;
 							}
@@ -1366,103 +1268,21 @@ namespace game
 							case handler::sm_gamesettings:
 							{
 								handler::menuvars.current_submenu_name = "game settings";
+								const char* eles[] = { "off", "classic", "easy" };
 
-								if (helpers::isingame() && !helpers::ishost(helpers::getlocalidx()))
-								{
-									if (features::ingame::vars.prevent_enemy_forfeit != false)
-										features::ingame::vars.prevent_enemy_forfeit = false;
-
-									if (features::ingame::vars.depatch_bounces != false)
-										features::ingame::vars.depatch_bounces = false;
-
-									if (features::ingame::vars.easy_eles != false)
-										features::ingame::vars.easy_eles = false;
-
-									if (features::ingame::vars.prone_anywhere != false)
-										features::ingame::vars.prone_anywhere = false;
-
-									if (features::ingame::vars.sweeping_uav != false)
-										features::ingame::vars.sweeping_uav = false;
-
-									if (features::ingame::vars.wallbang_everything != false)
-										features::ingame::vars.wallbang_everything = false;
-
-									if (features::ingame::vars.infinite_bullet_dist != false)
-										features::ingame::vars.infinite_bullet_dist = false;
-
-									if (features::ingame::vars.miniscule_health != false)
-										features::ingame::vars.miniscule_health = false;
-
-									if (features::ingame::vars.no_fall_damage != false)
-										features::ingame::vars.no_fall_damage = false;
-
-									if (features::ingame::vars.prone_spins != false)
-										features::ingame::vars.prone_spins = false;
-
-									if (features::ingame::vars.ladder_spins != false)
-										features::ingame::vars.ladder_spins = false;
-								}
-
-								if ((helpers::isingame() && helpers::ishost(helpers::getlocalidx())) || !helpers::isingame())
-								{
-									handler::widgets::addcheckbox(0, _("prevent enemy forfeit"), features::ingame::vars.prevent_enemy_forfeit, _("prevent enemy forfeit"));
-									handler::widgets::addoption(1, _("tp bot to you"), _("teleport the bot to you"));
-									handler::widgets::addcheckbox(2, _("depatch bounces"), features::ingame::vars.depatch_bounces, _("allows you to bounce"));
-									handler::widgets::addcheckbox(3, _("easy eles"), features::ingame::vars.easy_eles, _("allows you to ele easy af"));
-									handler::widgets::addcheckbox(4, _("prone anywhere"), features::ingame::vars.prone_anywhere, _("allows you to prone anywhere"));
-									handler::widgets::addcheckbox(5, _("sweeping uav"), features::ingame::vars.sweeping_uav, _("sweeping uav for your team"));
-									handler::widgets::addcheckbox(6, _("wallbang everything"), features::ingame::vars.wallbang_everything, _("bullets go through all surfaces"));
-									handler::widgets::addcheckbox(7, _("infinite bullet dist"), features::ingame::vars.infinite_bullet_dist, _("bullets do not have a distance limit"));
-									handler::widgets::addcheckbox(8, _("miniscule health"), features::ingame::vars.miniscule_health, _("enemies have miniscule health"));
-									handler::widgets::addcheckbox(9, _("no fall damage"), features::ingame::vars.no_fall_damage, _("no fall damage for your team"));
-									//handler::widgets::addcheckbox(9, _("soft lands"), features::ingame::vars.soft_lands);
-									handler::widgets::addcheckbox(10, _("prone spins"), features::ingame::vars.prone_spins, _("spin while prone"));
-									handler::widgets::addcheckbox(11, _("ladder spins"), features::ingame::vars.ladder_spins, _("spin on ladders"));
-								}
-								else
-								{
-									handler::widgets::addoption(0, _("you must be host to use these features!"), _("gotta be host dawg"));
-								}
-
-								break;
-							}
-
-							case handler::sm_trickshotting:
-							{
-								handler::menuvars.current_submenu_name = "trickshotting";
-
-								if (helpers::isingame() && !helpers::ishost(helpers::getlocalidx()))
-								{
-									if (features::ingame::vars.insta_shoots != 0)
-										features::ingame::vars.insta_shoots = 0;
-
-									if (features::ingame::vars.insta_sprint != 0)
-										features::ingame::vars.insta_sprint = 0;
-
-									if (features::ingame::vars.insta_spas_pump != 0)
-										features::ingame::vars.insta_spas_pump = 0;
-
-									if (features::ingame::vars.always_zoomload != 0)
-										features::ingame::vars.always_zoomload = 0;
-
-									if (features::ingame::vars.always_lunge != 0)
-										features::ingame::vars.always_lunge = 0;
-								}
-
-								if ((helpers::isingame() && helpers::ishost(helpers::getlocalidx())) || !helpers::isingame())
-								{
-									const char* modes[] = { "off", "self", "team" };
-									handler::widgets::addcombo(0, "insta shoots", modes, features::ingame::vars.insta_shoots, _("insta shoots"));
-									handler::widgets::addcombo(1, "insta sprint", modes, features::ingame::vars.insta_sprint, _("insta sprint"));
-									handler::widgets::addcombo(2, "insta shotgun pump", modes, features::ingame::vars.insta_spas_pump, _("insta shotgun pump"));
-									handler::widgets::addcombo(3, "always zoomload", modes, features::ingame::vars.always_zoomload, _("always zoomload (weird)"));
-									handler::widgets::addcombo(4, "always lunge", modes, features::ingame::vars.always_lunge, _("always knife lunge"));
-									handler::widgets::addcombo(5, "inf canswap", modes, features::ingame::vars.inf_canswap, _("canswap everytime you swap weapon"));
-								}
-								else
-								{
-									handler::widgets::addoption(0, _("you must be host to use these features!"), _("gotta be host dawg"));
-								}
+								handler::widgets::addcheckbox(0, _("prevent enemy forfeit"), features::ingame::vars.prevent_enemy_forfeit, _("prevent enemy forfeit"));
+								handler::widgets::addoption(1, _("tp bot to you"), _("teleport the bot to you"));
+								handler::widgets::addcheckbox(2, _("depatch bounces"), features::ingame::vars.depatch_bounces, _("allows you to bounce"));
+								handler::widgets::addcombo(3, "depatch elevators", eles, features::ingame::vars.depatch_eles, _("allows you to elevate through solid shit"));
+								handler::widgets::addcheckbox(4, _("prone anywhere"), features::ingame::vars.prone_anywhere, _("allows you to prone anywhere"));
+								handler::widgets::addcheckbox(5, _("sweeping uav"), features::ingame::vars.sweeping_uav, _("sweeping uav for your team"));
+								handler::widgets::addcheckbox(6, _("wallbang everything"), features::ingame::vars.wallbang_everything, _("bullets go through all surfaces"));
+								handler::widgets::addcheckbox(7, _("infinite bullet dist"), features::ingame::vars.infinite_bullet_dist, _("bullets do not have a distance limit"));
+								handler::widgets::addcheckbox(8, _("miniscule health"), features::ingame::vars.miniscule_health, _("enemies have miniscule health"));
+								handler::widgets::addcheckbox(9, _("no fall damage"), features::ingame::vars.no_fall_damage, _("no fall damage for your team"));
+								//handler::widgets::addcheckbox(9, _("soft lands"), features::ingame::vars.soft_lands);
+								handler::widgets::addcheckbox(10, _("prone spins"), features::ingame::vars.prone_spins, _("spin while prone"));
+								handler::widgets::addcheckbox(11, _("ladder spins"), features::ingame::vars.ladder_spins, _("spin on ladders"));
 
 								break;
 							}
@@ -1508,19 +1328,12 @@ namespace game
 
 								if (helpers::isingame())
 								{
-									if (helpers::ishost(helpers::getlocalidx()))
+									for (int i = 0; i < 18; i++)
 									{
-										for (int i = 0; i < 18; i++)
-										{
-											if (!g_entities[i].client)
-												continue;
+										if (!g_entities[i].client)
+											continue;
 
-											handler::widgets::addoption(i, g_entities[i].client->sess.cs.name, _("kick this guy"));
-										}
-									}
-									else
-									{
-										handler::widgets::addoption(0, _("you must be host to use these features!"), _("gotta be host dawg"));
+										handler::widgets::addoption(i, g_entities[i].client->sess.cs.name, _("kick this guy"));
 									}
 								}
 								else
@@ -1590,15 +1403,10 @@ namespace game
 								break;
 							}
 
-							case handler::sm_trickshotting:
-							{
-								break;
-							}
-
 							case handler::sm_gamesettings:
 							{
 								handler::widgets::addcheckbox(0, _("depatch bounces"), features::ingame::vars.depatch_bounces);
-								handler::widgets::addcheckbox(1, _("depatch eles"), features::ingame::vars.easy_eles);
+								//handler::widgets::addcheckbox(1, _("depatch eles"), features::ingame::vars.easy_eles);
 								handler::widgets::addcheckbox(2, _("depatch knife lunges"), features::ingame::vars.knife_lunges);
 								handler::widgets::addcheckbox(3, _("one shot snipers"), features::ingame::vars.miniscule_health);
 								handler::widgets::addcheckbox(4, _("prone spins"), features::ingame::vars.prone_spins);
@@ -1671,7 +1479,7 @@ namespace game
 						else
 						{
 							render::text(fmt(_("%s and %s to open desire"),
-								render::buttons::lt, render::buttons::dpadup),
+								render::buttons::lt, render::buttons::rs),
 								10,
 								uiContext->screenHeight - 10,
 								normalfont, 0.5,

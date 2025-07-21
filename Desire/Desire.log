@@ -2,68 +2,6 @@
   module name: Desire
   Path: HDD:\Desire.xex
   Module Unloading
-  main.cpp
-c:\github\the-desire-pack\desire\functions.h(232): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(238): warning C4482: nonstandard extension used: enum 'XAssetTypeBO2' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(300): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(301): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(302): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(303): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(304): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(305): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(306): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(324): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(324): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(325): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(325): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(330): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(330): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(331): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\functions.h(331): warning C4482: nonstandard extension used: enum 'XAssetType' used in qualified name
-c:\github\the-desire-pack\desire\render.h(90): warning C4172: returning address of local variable or temporary
-c:\github\the-desire-pack\desire\render.h(125): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\render.h(130): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\render.h(144): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\render.h(163): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\render.h(168): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\render.h(182): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\pregame.h(107): warning C4309: '=' : truncation of constant value
-c:\github\the-desire-pack\desire\notifications.h(54): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\notifications.h(55): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\notifications.h(108): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(781): warning C4065: switch statement contains 'default' but no 'case' labels
-c:\github\the-desire-pack\desire\menu.h(1098): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1166): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1168): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1168): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1196): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1196): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1211): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1211): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1228): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1321): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1325): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1327): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1669): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1669): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1680): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1680): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1695): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1695): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\menu.h(1705): warning C4482: nonstandard extension used: enum 'render_alignment' used in qualified name
-c:\github\the-desire-pack\desire\menu.h(1705): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\teammenu.h(93): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\teammenu.h(93): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\teammenu.h(94): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\teammenu.h(135): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-c:\github\the-desire-pack\desire\hooks.h(50): warning C4826: Conversion from 'PVOID' to 'INT64' is sign-extended. This may cause unexpected runtime behavior.
-c:\github\the-desire-pack\desire\hooks.h(174): warning C4244: 'return' : conversion from '__int64' to 'DWORD', possible loss of data
-c:\github\the-desire-pack\desire\hooks.h(225): warning C4805: '!=' : unsafe mix of type 'bool' and type 'int' in operation
-c:\github\the-desire-pack\desire\hooks.h(443): warning C4244: 'return' : conversion from '__int64' to 'int', possible loss of data
-c:\github\the-desire-pack\desire\hooks.h(719): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
-c:\github\the-desire-pack\desire\hooks.h(732): warning C4482: nonstandard extension used: enum 'XNOTIFYQUEUEUI_TYPE' used in qualified name
-  Generating code
-  Finished generating code
   state: load
   module name: Desire
   Path: HDD:\Desire.xex
