@@ -20,6 +20,7 @@ namespace game
 	// 0x8224C2C8 Scr_AddBool
 	// 0x8224C348 Scr_AddInt
 	// 0x8224C3C8 Scr_AddFloat
+	// 0x821D8488 PlayerCmd_SetActionSlot
 
 	void(_cdecl* SV)(int clientNum, int type, const char* text);
 	void (*SV_ExecuteClientCommand)(client_t* client, const char* s, int clientOK, int fromOldServer) = reinterpret_cast<void (*)(client_t*, const char*, int, int)>(0x82253140);
@@ -111,6 +112,7 @@ namespace game
 	void (*PlayerCmd_DropItem)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D9E30);
 	void (*PlayerCmd_giveWeapon)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D4AD0);
 	void (*PlayerCmd_takeWeapon)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D4C80);
+	void (*PlayerCmd_SetActionSlot)(scr_entref_t entref) = reinterpret_cast<void(*)(scr_entref_t)>(0x821D8488);
 
 	void(*GScr_notifyOnPlayerCommand)(scr_entref_t entref) = (void(*)(scr_entref_t))0x821D9288;
 	void(*Scr_ClearOutParams)() = reinterpret_cast<void(*)()>(0x82249DF0);
@@ -589,10 +591,7 @@ namespace game
 
 		bool isonhostteam(int idx)
 		{
-			if (!isingame())
-				return false;
-
-			return g_entities[idx].client->sess.cs.team == g_entities[getlocalidx()].client->sess.cs.team;
+			return g_entities[idx].client->sess.cs.team == g_entities[gethostidx()].client->sess.cs.team;
 		}
 
 		void iprintln(int idx, const char* text)
@@ -653,14 +652,16 @@ namespace game
 				Scr_ClearOutParams();
 			}
 
-			void giveweapon(int idx, const char* name)
+			void giveweapon(int idx, const char* name, int camo, bool akimbo)
 			{
 				scr_entref_t entref;
 				entref.classnum = CLASS_NUM_ENTITY;
 				entref.entnum = idx;
 
+				Scr_AddBool(akimbo);
+				Scr_AddInt(camo);
 				Scr_AddString(name);
-				scrVmPub->outparamcount = 1;
+				scrVmPub->outparamcount = 3;
 				PlayerCmd_giveWeapon(entref);
 				scrVmPub->outparamcount = 0;
 
@@ -674,8 +675,24 @@ namespace game
 				entref.entnum = idx;
 
 				Scr_AddString(name);
-				scrVmPub->outparamcount = 2;
+				scrVmPub->outparamcount = 1;
 				PlayerCmd_DropItem(entref);
+				scrVmPub->outparamcount = 0;
+
+				Scr_ClearOutParams();
+			}
+
+			void setactionslot(int idx, int slot, const char* weapon)
+			{
+				scr_entref_t entref;
+				entref.classnum = CLASS_NUM_ENTITY;
+				entref.entnum = idx;
+
+				Scr_AddString(weapon);
+				Scr_AddString("weapon");
+				Scr_AddInt(slot);
+				scrVmPub->outparamcount = 3;
+				PlayerCmd_SetActionSlot(entref);
 				scrVmPub->outparamcount = 0;
 
 				Scr_ClearOutParams();

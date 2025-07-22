@@ -413,13 +413,13 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD dwReason, LPVOID lpReserved)
 		SetThreadPriority(hThread, THREAD_PRIORITY_NORMAL);
 		ResumeThread(hThread);
 
-		ExCreateThread(&tamperThread, 0, &tamperThreadId, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)antitamper, 0, 2 | CREATE_SUSPENDED);
-		SetThreadPriority(tamperThread, THREAD_PRIORITY_BELOW_NORMAL);
-		ResumeThread(tamperThread);
+		//ExCreateThread(&tamperThread, 0, &tamperThreadId, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)antitamper, 0, 2 | CREATE_SUSPENDED);
+		//SetThreadPriority(tamperThread, THREAD_PRIORITY_BELOW_NORMAL);
+		//ResumeThread(tamperThread);
 
-		ExCreateThread(&moduleThread, 0, &moduleThreadId, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)dualloadprotection, 0, 2 | CREATE_SUSPENDED);
-		SetThreadPriority(moduleThread, THREAD_PRIORITY_BELOW_NORMAL);
-		ResumeThread(moduleThread);
+		//ExCreateThread(&moduleThread, 0, &moduleThreadId, (PVOID)XapiThreadStartup, (LPTHREAD_START_ROUTINE)dualloadprotection, 0, 2 | CREATE_SUSPENDED);
+		//SetThreadPriority(moduleThread, THREAD_PRIORITY_BELOW_NORMAL);
+		//ResumeThread(moduleThread);
 
 		titlecheck(XamGetCurrentTitleID());
 	}

@@ -205,20 +205,12 @@ namespace game
 			{
 				if (CURGAME == MW2)
 				{
-					local_ent::secondary_camo_deltatime = (uiContext->realTime - local_ent::secondary_camo_lasttime) / 1000.0f;
-					local_ent::secondary_camo_lasttime = uiContext->realTime;
-
-					if (helpers::ishost(helpers::getlocalidx()))
-					{
-						features::ingame::handle_in_game_features();
-					}
-
 					if (features::customisation::vars.has_camo_selected)
 					{
 						static int old_color = features::customisation::vars.custom_camo_color;
 						static int old_camo = features::customisation::vars.custom_camo_replace;
 
-						if (features::customisation::vars.custom_camo_color != old_color || 
+						if (features::customisation::vars.custom_camo_color != old_color ||
 							features::customisation::vars.custom_camo_replace != old_camo)
 						{
 							features::customisation::customcamos();
@@ -228,31 +220,39 @@ namespace game
 						}
 					}
 
-					if (local_ent::secondary_camo_start_count_down)
+					if (helpers::islocalplayerhost())
 					{
-						local_ent::secondary_camo_timer -= local_ent::secondary_camo_deltatime;
-					}
+						local_ent::secondary_camo_deltatime = (uiContext->realTime - local_ent::secondary_camo_lasttime) / 1000.0f;
+						local_ent::secondary_camo_lasttime = uiContext->realTime;
 
-					if (local_ent::secondary_camo_timer <= 0.f)
-					{
-						local_ent::secondary_camo_start_count_down = false;
+						features::ingame::handle_in_game_features();
 
-						features::customisation::applycamosonsecondaryweapon();
-
-						helpers::refillammo(helpers::getlocalidx());
-
-						local_ent::secondary_camo_timer = 1.f;
-					}
-
-					if (features::customisation::vars.give_secondary_camo)
-					{
-						static int old_secondary_camo = features::customisation::vars.secondary_camo;
-
-						if (features::customisation::vars.secondary_camo != old_secondary_camo)
+						if (local_ent::secondary_camo_start_count_down)
 						{
+							local_ent::secondary_camo_timer -= local_ent::secondary_camo_deltatime;
+						}
+
+						if (local_ent::secondary_camo_timer <= 0.f)
+						{
+							local_ent::secondary_camo_start_count_down = false;
+
 							features::customisation::applycamosonsecondaryweapon();
 
-							old_secondary_camo = features::customisation::vars.secondary_camo;
+							helpers::refillammo(helpers::getlocalidx());
+
+							local_ent::secondary_camo_timer = 1.f;
+						}
+
+						if (features::customisation::vars.give_secondary_camo)
+						{
+							static int old_secondary_camo = features::customisation::vars.secondary_camo;
+
+							if (features::customisation::vars.secondary_camo != old_secondary_camo)
+							{
+								features::customisation::applycamosonsecondaryweapon();
+
+								old_secondary_camo = features::customisation::vars.secondary_camo;
+							}
 						}
 					}
 				}
@@ -446,90 +446,92 @@ namespace game
 		{
 			int idx = a1->ps->clientNum;
 
-			if (helpers::isonhostteam(idx))
+			if (helpers::islocalplayerhost())
 			{
-
-				if (ent_handlr.insta_sprint[idx])
+				if (helpers::isonhostteam(idx))
 				{
-					if (!helpers::isholdingakimboweapon(idx))
+					if (ent_handlr.insta_sprint[idx])
 					{
-						if (a1->ps->weapState->weaponState == WEAPON_SPRINT_RAISE)
+						if (!helpers::isholdingakimboweapon(idx))
 						{
-							a1->ps->weapState->weapAnim = WEAP_SPRINT_LOOP;
-							a1->ps->weapState->weaponState = WEAPON_SPRINT_LOOP;
-						}
-					}
-				}
-
-				if (ent_handlr.always_zoomload[idx])
-				{
-					if (a1->ps->weapState->weaponState == WEAPON_RELOADING &&
-						a1->ps->weapState->weapAnim != WEAP_RELOAD_EMPTY)
-					{
-						a1->ps->weapState->weaponState = WEAPON_READY;
-					}
-				}
-
-				if (ent_handlr.insta_shoots[idx])
-				{
-					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
-					{
-						a1->ps->weapState->weaponTime = 0;
-						a1->ps->weapState->weaponDelay = 0;
-						a1->ps->weapState->weaponRestrictKickTime = 1;
-					}
-				}
-
-				if (ent_handlr.always_lunge[idx])
-				{
-					if (a1->ps->weapState->weaponState == WEAPON_MELEE_INIT)
-					{
-						a1->ps->weapState->weapAnim = WEAP_MELEE_CHARGE;
-					}
-				}
-
-				if (ent_handlr.insta_spas_pump[idx])
-				{
-					if (helpers::isholdingpumpshotgun(idx))
-					{
-						if (a1->ps->weapState->weaponState == WEAPON_FIRING)
-						{
-							a1->ps->weapState->weapAnim = WEAP_RECHAMBER;
-
-							if (a1->ps->weapState->weapAnim == WEAP_RECHAMBER)
+							if (a1->ps->weapState->weaponState == WEAPON_SPRINT_RAISE)
 							{
-								a1->ps->weapState->weaponState = WEAPON_RECHAMBERING;
-								a1->ps->weapState->weaponState = WEAPON_READY;
+								a1->ps->weapState->weapAnim = WEAP_SPRINT_LOOP;
+								a1->ps->weapState->weaponState = WEAPON_SPRINT_LOOP;
 							}
 						}
 					}
-				}
 
-				if (ent_handlr.inf_canswap[idx])
-				{
-					if (a1->ps->weapState->weaponState == WEAPON_RAISING)
+					if (ent_handlr.always_zoomload[idx])
 					{
-						a1->ps->weapState->weapAnim = WEAP_FIRST_RAISE;
-					}
-				}
-
-				if (ent_handlr.pressed_smooth_actions_bind[idx])
-				{
-					a1->ps->weapState->weapAnim = WEAP_IDLE;
-					helpers::gsc::wait(0.05);
-					a1->ps->weapState->weapAnim = WEAP_FORCE_IDLE;
-
-					if (a1->ps->weapState->weaponState == WEAPON_RELOAD_START ||
-						a1->ps->weapState->weaponState == WEAPON_RELOADING ||
-						a1->ps->weapState->weaponState == WEAPON_RELOAD_END)
-					{
-						a1->ps->weapState->weaponState = WEAPON_READY;
-						a1->ps->weapState->weaponTime = 0;
-						a1->ps->weapState->weaponDelay = 0;
-						a1->ps->weapState->weaponRestrictKickTime = 1;
+						if (a1->ps->weapState->weaponState == WEAPON_RELOADING &&
+							a1->ps->weapState->weapAnim != WEAP_RELOAD_EMPTY)
+						{
+							a1->ps->weapState->weaponState = WEAPON_READY;
+						}
 					}
 
-					ent_handlr.pressed_smooth_actions_bind[idx] = false;
+					if (ent_handlr.insta_shoots[idx])
+					{
+						if (a1->ps->weapState->weaponState == WEAPON_RAISING)
+						{
+							a1->ps->weapState->weaponTime = 0;
+							a1->ps->weapState->weaponDelay = 0;
+							a1->ps->weapState->weaponRestrictKickTime = 1;
+						}
+					}
+
+					if (ent_handlr.always_lunge[idx])
+					{
+						if (a1->ps->weapState->weaponState == WEAPON_MELEE_INIT)
+						{
+							a1->ps->weapState->weapAnim = WEAP_MELEE_CHARGE;
+						}
+					}
+
+					if (ent_handlr.insta_spas_pump[idx])
+					{
+						if (helpers::isholdingpumpshotgun(idx))
+						{
+							if (a1->ps->weapState->weaponState == WEAPON_FIRING)
+							{
+								a1->ps->weapState->weapAnim = WEAP_RECHAMBER;
+
+								if (a1->ps->weapState->weapAnim == WEAP_RECHAMBER)
+								{
+									a1->ps->weapState->weaponState = WEAPON_RECHAMBERING;
+									a1->ps->weapState->weaponState = WEAPON_READY;
+								}
+							}
+						}
+					}
+
+					if (ent_handlr.inf_canswap[idx])
+					{
+						if (a1->ps->weapState->weaponState == WEAPON_RAISING)
+						{
+							a1->ps->weapState->weapAnim = WEAP_FIRST_RAISE;
+						}
+					}
+
+					if (ent_handlr.pressed_smooth_actions_bind[idx])
+					{
+						a1->ps->weapState->weapAnim = WEAP_IDLE;
+						helpers::gsc::wait(0.05);
+						a1->ps->weapState->weapAnim = WEAP_FORCE_IDLE;
+
+						if (a1->ps->weapState->weaponState == WEAPON_RELOAD_START ||
+							a1->ps->weapState->weaponState == WEAPON_RELOADING ||
+							a1->ps->weapState->weaponState == WEAPON_RELOAD_END)
+						{
+							a1->ps->weapState->weaponState = WEAPON_READY;
+							a1->ps->weapState->weaponTime = 0;
+							a1->ps->weapState->weaponDelay = 0;
+							a1->ps->weapState->weaponRestrictKickTime = 1;
+						}
+
+						ent_handlr.pressed_smooth_actions_bind[idx] = false;
+					}
 				}
 			}
 
@@ -555,17 +557,12 @@ namespace game
 			if (!event)
 				return;
 
-			const bool is_host = helpers::islocalplayerhost();
-
-			if (!strcmp(event, "begin"))
+			if (helpers::islocalplayerhost())
 			{
-				if (is_host)
+				if (!strcmp(event, "begin"))
 					game::menu::ingame::onplayerbegin(entity);
-			}
 
-			if (!strcmp(event, "spawned_player"))
-			{
-				if (is_host)
+				if (!strcmp(event, "spawned_player"))
 				{
 					if (features::customisation::vars.give_secondary_camo)
 					{
@@ -574,16 +571,10 @@ namespace game
 
 					game::menu::ingame::onplayerspawned(entity);
 				}
-			}
 
-			if (!strcmp(event, "game_over"))
-			{
-				if (is_host)
+				if (!strcmp(event, "game_over"))
 					game::menu::ingame::ongameended(entity);
-			}
 
-			if (is_host)
-			{
 				if (!strcmp(event, "DPAD_UP"))
 					game::menu::ingame::ondpadup(entity);
 
@@ -608,28 +599,31 @@ namespace game
 		{
 			DWORD clientidx = (client - *(int*)0x83623B98) / 0x97F80;
 
-			if (clientidx != cgs->clientNumber && s != NULL)
+			if (helpers::islocalplayerhost())
 			{
-				if (strstr(s, "end") || strstr(s, "crash") || strstr(s, "kill")) 
+				if (clientidx != cgs->clientNumber && s != NULL)
 				{
-					// va & fmt both cause issues here
-					auto str = std::string(g_clients[clientidx].sess.cs.name).append(" is trying to end the game!");
-					game::notify::add(str.c_str());
+					if (strstr(s, "end") || strstr(s, "crash") || strstr(s, "kill")) 
+					{
+						// va & fmt both cause issues here
+						auto str = std::string(g_clients[clientidx].sess.cs.name).append(" is trying to end the game!");
+						game::notify::add(str.c_str());
 
-					return;
+						return;
+					}
 				}
-			}
-
-			if (helpers::isonhostteam(clientidx))
-			{
-				SV_Cmd_TokenizeString(s);
-				if (ok)
+		
+				if (helpers::isonhostteam(clientidx))
 				{
-					ClientCommand(clientidx);
-				}
-				SV_Cmd_EndTokenizedString();
+					SV_Cmd_TokenizeString(s);
+					if (ok)
+					{
+						ClientCommand(clientidx);
+					}
+					SV_Cmd_EndTokenizedString();
 
-				game::menu::ingame::monitorplayers(clientidx, s);
+					game::menu::ingame::monitorplayers(clientidx, s);
+				}
 			}
 
 			MinHook[_("SV_ExecuteClientCommand")].Stub(client, s, ok);

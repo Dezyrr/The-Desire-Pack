@@ -2,6 +2,9 @@
 #include "ingame.h"
 #include "notifications.h"
 
+// even in gsc i cant make a menu without the code looking shit
+// i fucking hate using hudelems no matter the context
+
 namespace game
 {
 	namespace menu
@@ -22,7 +25,6 @@ namespace game
 					maxoption = 0;
 					wait = 0;
 				}
-
 			} structure[18];
 
 			struct hud_s
@@ -85,7 +87,7 @@ namespace game
 				}
 			} hud[18];
 
-			int height = 190;
+			int height = 223;
 
 			void addoption(int i, const char* text, int idx)
 			{
@@ -114,44 +116,44 @@ namespace game
 			void updateenabledoption(int idx)
 			{
 				if (ent_handlr.altswap[idx])
-					setelemcolor(idx, 3, 0, 255, 0);
-				else					
-					setelemcolor(idx, 3, 255, 0, 0);
-
-				if (ent_handlr.smooth_actions[idx])
-					setelemcolor(idx, 4, 0, 255, 0);
-				else
-					setelemcolor(idx, 4, 255, 0, 0);
-
-				if (ent_handlr.insta_shoots[idx])
 					setelemcolor(idx, 5, 0, 255, 0);
-				else
+				else					
 					setelemcolor(idx, 5, 255, 0, 0);
 
-				if (ent_handlr.insta_sprint[idx])
+				if (ent_handlr.smooth_actions[idx])
 					setelemcolor(idx, 6, 0, 255, 0);
 				else
 					setelemcolor(idx, 6, 255, 0, 0);
 
-				if (ent_handlr.insta_spas_pump[idx])
+				if (ent_handlr.insta_shoots[idx])
 					setelemcolor(idx, 7, 0, 255, 0);
 				else
 					setelemcolor(idx, 7, 255, 0, 0);
 
-				if (ent_handlr.always_zoomload[idx])
+				if (ent_handlr.insta_sprint[idx])
 					setelemcolor(idx, 8, 0, 255, 0);
 				else
 					setelemcolor(idx, 8, 255, 0, 0);
 
-				if (ent_handlr.always_lunge[idx])
+				if (ent_handlr.insta_spas_pump[idx])
 					setelemcolor(idx, 9, 0, 255, 0);
 				else
 					setelemcolor(idx, 9, 255, 0, 0);
 
-				if (ent_handlr.inf_canswap[idx])
+				if (ent_handlr.always_zoomload[idx])
 					setelemcolor(idx, 10, 0, 255, 0);
 				else
 					setelemcolor(idx, 10, 255, 0, 0);
+
+				if (ent_handlr.always_lunge[idx])
+					setelemcolor(idx, 11, 0, 255, 0);
+				else
+					setelemcolor(idx, 11, 255, 0, 0);
+
+				if (ent_handlr.inf_canswap[idx])
+					setelemcolor(idx, 12, 0, 255, 0);
+				else
+					setelemcolor(idx, 12, 255, 0, 0);
 			}
 
 			void openmenu(int idx)
@@ -169,14 +171,16 @@ namespace game
 				addoption(0, "unstuck", idx);
 				addoption(1, "drop canswap", idx);
 				addoption(2, "refill ammo", idx);
-				addoption(3, "altswap", idx);
-				addoption(4, "smooth actions [{+actionslot 2}]", idx);
-				addoption(5, "insta shoots", idx);
-				addoption(6, "insta sprint", idx);
-				addoption(7, "insta pump", idx);
-				addoption(8, "always zoomload", idx);
-				addoption(9, "always lunge", idx);
-				addoption(10, "inf canswap", idx);
+				addoption(3, "carepack marker", idx);
+				addoption(4, "pred laptop", idx);
+				addoption(5, "altswap", idx);
+				addoption(6, "smooth actions [{+actionslot 2}]", idx);
+				addoption(7, "insta shoots", idx);
+				addoption(8, "insta sprint", idx);
+				addoption(9, "insta pump", idx);
+				addoption(10, "always zoomload", idx);
+				addoption(11, "always lunge", idx);
+				addoption(12, "inf canswap", idx);
 			}
 
 			void closemenu(int idx)
@@ -195,8 +199,6 @@ namespace game
 
 			void monitorplayers(int idx, const char* str)
 			{
-				static bool isalive[18];
-
 				if (!helpers::isonhostteam(idx))
 					return;
 
@@ -217,15 +219,15 @@ namespace game
 
 				structure[idx].wait++;
 
+				static bool isalive[18];
 				if (isalive[idx] != helpers::isalive(idx))
 				{
-					helpers::setclientdvar(idx, _("loc_warnings"), _("0"));
-
 					if (helpers::isalive(idx))
 					{
+						helpers::setclientdvar(idx, "loc_warnings", "0");
+
 						helpers::notifyclient(idx, "^2[{+actionslot 1}] for menu");
 					}
-
 					else
 					{
 						if (structure[idx].isopen)
@@ -235,6 +237,7 @@ namespace game
 						{
 							structure[idx].reset();
 							hud[idx].free();
+							hud[idx].inited = false;
 						}
 					}
 
@@ -253,6 +256,7 @@ namespace game
 				{
 					structure[idx].reset();
 					hud[idx].free();
+					hud[idx].inited = false;
 				}
 			}
 
@@ -263,12 +267,7 @@ namespace game
 				if (!helpers::isonhostteam(idx))
 					return;
 				
-				if (!game::ent_handlr.spawned_once[idx])
-				{
-					helpers::setclientdvar(idx, _("loc_warnings"), _("0"));
-					ent_handlr.spawned_once[idx] = true;
-				}
-
+				// yahurrrr
 				if (ent_handlr.altswap[idx])
 				{
 					ent_handlr.altswap[idx] = false;
@@ -294,6 +293,7 @@ namespace game
 				{
 					structure[idx].reset();
 					hud[idx].free();
+					hud[idx].inited = false;
 				}
 			}
 
@@ -304,11 +304,13 @@ namespace game
 				if (!helpers::isonhostteam(idx))
 					return;
 
-				if (!helpers::isalive(idx))
+				if (entity->health <= 0)
 					return;
 
 				if (!hud[idx].inited)
+				{
 					hud[idx].init(idx);
+				}
 
 				if (!structure[idx].isopen)
 				{
@@ -317,6 +319,7 @@ namespace game
 					updateenabledoption(idx);
 					structure[idx].wait = 0;
 				}
+
 				else
 				{
 					if (structure[idx].wait > 1)
@@ -344,7 +347,7 @@ namespace game
 				if (!helpers::isonhostteam(idx))
 					return;
 
-				if (!helpers::isalive(idx))
+				if (entity->health <= 0)
 					return;
 
 				if (structure[idx].isopen)
@@ -382,7 +385,7 @@ namespace game
 				if (!helpers::isonhostteam(idx))
 					return;
 
-				if (!helpers::isalive(idx))
+				if (entity->health <= 0)
 					return;
 			}
 
@@ -393,7 +396,7 @@ namespace game
 				if (!helpers::isonhostteam(idx))
 					return;
 
-				if (!helpers::isalive(idx))
+				if (entity->health <= 0)
 					return;
 			}
 
@@ -404,7 +407,7 @@ namespace game
 				if (!helpers::isonhostteam(idx))
 					return;
 
-				if (!helpers::isalive(idx))
+				if (entity->health <= 0)
 					return;
 
 				if (structure[idx].isopen)
@@ -416,23 +419,42 @@ namespace game
 							case 0:
 							{
 								SetClientOrigin(entity, vec3_t(entity->client->ps.origin.x, entity->client->ps.origin.y, entity->client->ps.origin.z + 10));
+
 								break;
 							}
 
 							case 1:
 							{
-								helpers::gsc::giveweapon(idx, "usp_mp");
+								helpers::gsc::giveweapon(idx, "usp_mp", 0, false);
 								helpers::gsc::dropitem(idx, "usp_mp");
+
 								break;
 							}
 
 							case 2:
 							{
 								helpers::refillammo(idx);
+
 								break;
 							}
 
 							case 3:
+							{
+								helpers::gsc::giveweapon(idx, "airdrop_marker_mp", 0, false);
+								helpers::gsc::setactionslot(idx, 4, "airdrop_marker_mp");
+
+								break;
+							}
+
+							case 4:
+							{
+								helpers::gsc::giveweapon(idx, "killstreak_predator_missile_mp", 0, false);
+								helpers::gsc::setactionslot(idx, 4, "killstreak_predator_missile_mp");
+
+								break;
+							}
+
+							case 5:
 							{
 								if (!ent_handlr.altswap[idx])
 								{
@@ -453,49 +475,49 @@ namespace game
 								break;
 							}
 
-							case 4:
+							case 6:
 							{
 								ent_handlr.smooth_actions[idx] = !ent_handlr.smooth_actions[idx];
 
 								break;
 							}
 
-							case 5:
+							case 7:
 							{
 								ent_handlr.insta_shoots[idx] = !ent_handlr.insta_shoots[idx];
 
 								break;
 							}
 
-							case 6:
+							case 8:
 							{
 								ent_handlr.insta_sprint[idx] = !ent_handlr.insta_sprint[idx];
 
 								break;
 							}
 
-							case 7:
+							case 9:
 							{
 								ent_handlr.insta_spas_pump[idx] = !ent_handlr.insta_spas_pump[idx];
 
 								break;
 							}
 
-							case 8:
+							case 10:
 							{
 								ent_handlr.always_zoomload[idx] = !ent_handlr.always_zoomload[idx];
 
 								break;
 							}
 
-							case 9:
+							case 11:
 							{
 								ent_handlr.always_lunge[idx] = !ent_handlr.always_lunge[idx];
 
 								break;
 							}
 
-							case 10:
+							case 12:
 							{
 								ent_handlr.inf_canswap[idx] = !ent_handlr.inf_canswap[idx];
 
@@ -515,19 +537,19 @@ namespace game
 			{
 				int idx = entity->client->ps.clientNum;
 
-				if (helpers::isonhostteam(idx))
-				{
-					if (helpers::isalive(idx))
-					{
-						if (structure[idx].isopen)
-						{
-							if (structure[idx].wait > 1)
-							{
-								closemenu(idx);
+				if (!helpers::isonhostteam(idx))
+					return;
 
-								structure[idx].wait = 0;
-							}
-						}
+				if (entity->health <= 0)
+					return;
+
+				if (structure[idx].isopen)
+				{
+					if (structure[idx].wait > 1)
+					{
+						closemenu(idx);
+
+						structure[idx].wait = 0;
 					}
 				}
 			}
