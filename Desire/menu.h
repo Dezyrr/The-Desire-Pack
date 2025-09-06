@@ -1137,42 +1137,6 @@ namespace game
 			}
 		}
 
-		void GetSmoothRGBFade(int& r, int& g, int& b) {
-			static DWORD startTime = GetTickCount();
-			DWORD currentTime = GetTickCount() - startTime;
-
-			// Time for one full color cycle (ms)
-			const DWORD cycleDuration = 8000;  // 8 second cycle (adjust as needed)
-			float t = (currentTime % cycleDuration) / (float)cycleDuration;
-
-			// Key color points (RGB)
-			const int colors[][3] = {
-				{255, 0, 0},     // Red
-				{255, 255, 0},   // Yellow
-				{0, 255, 0},     // Green
-				{0, 255, 255},   // Cyan
-				{0, 0, 255},     // Blue
-				{255, 0, 255},   // Magenta
-				{255, 0, 0}      // Back to Red
-			};
-			const int numColors = sizeof(colors) / sizeof(colors[0]);
-
-			// Find current segment
-			float segment = t * (numColors - 1);
-			int idx1 = (int)segment;
-			int idx2 = (idx1 + 1) % (numColors - 1);
-			float lerpT = segment - idx1;
-
-			// Linear interpolation
-			r = (int)(colors[idx1][0] + lerpT * (colors[idx2][0] - colors[idx1][0]));
-			g = (int)(colors[idx1][1] + lerpT * (colors[idx2][1] - colors[idx1][1]));
-			b = (int)(colors[idx1][2] + lerpT * (colors[idx2][2] - colors[idx1][2]));
-
-			// Clamp values (just in case)
-			r = max(0, min(255, r));
-			g = max(0, min(255, g));
-			b = max(0, min(255, b));
-		}
 		void init()
 		{
 			handler::bounds.updatebounds();
