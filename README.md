@@ -1,5 +1,7 @@
 # ***THE DESIRE PACK***
 
+feel free to make pull requests if you want this shit updated, idgaf
+
 Don't mind the dogshit code and bad practice, this was my first time working with the Xbox environment, might be my last. 
 The experience wasn't that bad, I lost motivation a lot during the making of this because I came out of my comfort zone, not knowing anything about the cod engine. 
 90% of the code is pasted and or taken from already existing closed-source "packs".
