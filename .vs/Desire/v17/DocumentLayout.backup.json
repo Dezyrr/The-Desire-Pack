@@ -1,24 +1,7 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\leann\\Desktop\\Desire\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{B4D0A9AF-C152-4B6D-BE7B-3A1E27570C2D}|Desire\\Desire.vcxproj|C:\\Users\\leann\\Desktop\\Desire\\Desire\\hooks.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{B4D0A9AF-C152-4B6D-BE7B-3A1E27570C2D}|Desire\\Desire.vcxproj|solutionrelative:Desire\\hooks.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4D0A9AF-C152-4B6D-BE7B-3A1E27570C2D}|Desire\\Desire.vcxproj|C:\\Users\\leann\\Desktop\\Desire\\Desire\\pregame.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{B4D0A9AF-C152-4B6D-BE7B-3A1E27570C2D}|Desire\\Desire.vcxproj|solutionrelative:Desire\\pregame.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4D0A9AF-C152-4B6D-BE7B-3A1E27570C2D}|Desire\\Desire.vcxproj|C:\\Users\\leann\\Desktop\\Desire\\Desire\\functions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{B4D0A9AF-C152-4B6D-BE7B-3A1E27570C2D}|Desire\\Desire.vcxproj|solutionrelative:Desire\\functions.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B4D0A9AF-C152-4B6D-BE7B-3A1E27570C2D}|Desire\\Desire.vcxproj|C:\\Users\\leann\\Desktop\\Desire\\Desire\\ingame.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{B4D0A9AF-C152-4B6D-BE7B-3A1E27570C2D}|Desire\\Desire.vcxproj|solutionrelative:Desire\\ingame.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    }
-  ],
+  "WorkspaceRootPath": "C:\\Github\\The-Desire-Pack\\",
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -26,59 +9,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": -1,
           "Children": [
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "pregame.h",
-              "DocumentMoniker": "C:\\Users\\leann\\Desktop\\Desire\\Desire\\pregame.h",
-              "RelativeDocumentMoniker": "Desire\\pregame.h",
-              "ToolTip": "C:\\Users\\leann\\Desktop\\Desire\\Desire\\pregame.h",
-              "RelativeToolTip": "Desire\\pregame.h",
-              "ViewState": "AgIAAA8AAAAAAAAAAAAAACcAAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-14T19:16:25.457Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "functions.h",
-              "DocumentMoniker": "C:\\Users\\leann\\Desktop\\Desire\\Desire\\functions.h",
-              "RelativeDocumentMoniker": "Desire\\functions.h",
-              "ToolTip": "C:\\Users\\leann\\Desktop\\Desire\\Desire\\functions.h",
-              "RelativeToolTip": "Desire\\functions.h",
-              "ViewState": "AgIAAB4AAAAAAAAAAAAUwC8AAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-14T19:15:52.191Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "ingame.h",
-              "DocumentMoniker": "C:\\Users\\leann\\Desktop\\Desire\\Desire\\ingame.h",
-              "RelativeDocumentMoniker": "Desire\\ingame.h",
-              "ToolTip": "C:\\Users\\leann\\Desktop\\Desire\\Desire\\ingame.h",
-              "RelativeToolTip": "Desire\\ingame.h",
-              "ViewState": "AgIAADwAAAAAAAAAAAAAAJwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-14T19:06:56.211Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "hooks.h",
-              "DocumentMoniker": "C:\\Users\\leann\\Desktop\\Desire\\Desire\\hooks.h",
-              "RelativeDocumentMoniker": "Desire\\hooks.h",
-              "ToolTip": "C:\\Users\\leann\\Desktop\\Desire\\Desire\\hooks.h",
-              "RelativeToolTip": "Desire\\hooks.h",
-              "ViewState": "AgIAAGkAAAAAAAAAAAAAAHkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-06-14T19:06:09.82Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{004be353-6879-467c-9d1e-9ac23cdf6d49}"
             }
           ]
         }

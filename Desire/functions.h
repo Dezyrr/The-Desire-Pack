@@ -258,55 +258,6 @@ namespace game
 			}
 		}
 
-		static unsigned short rgbTo565(unsigned char r, unsigned char g, unsigned char b) {
-			return ((r >> 3) << 11) | ((g >> 2) << 5) | (b >> 3);
-		}
-
-
-		void RecolorDXT1_128x128_7Levels(void* pixels, unsigned char r, unsigned char g, unsigned char b) {
-			if (!pixels) return;
-
-			unsigned char* data = static_cast<unsigned char*>(pixels);
-			unsigned short color565 = rgbTo565(r, g, b);
-
-			int baseWidth = 210;
-			int baseHeight = 210;
-			int mipLevels = 7;
-
-			size_t offset = 0;
-
-			for (int level = 0; level < mipLevels; ++level) {
-				int mipWidth = baseWidth >> level;
-				int mipHeight = baseHeight >> level;
-
-				if (mipWidth < 1) mipWidth = 1;
-				if (mipHeight < 1) mipHeight = 1;
-
-				int blocksWide = (mipWidth + 3) / 4;
-				int blocksHigh = (mipHeight + 3) / 4;
-				size_t numBlocks = blocksWide * blocksHigh;
-
-				// Each DXT1 block = 8 bytes
-				for (size_t i = 0; i < numBlocks; ++i) {
-					size_t blockOffset = offset + i * 8;
-
-					// Set both base colors to the same color (solid color block)
-					data[blockOffset + 0] = color565 & 0xFF;
-					data[blockOffset + 1] = (color565 >> 8) & 0xFF;
-					data[blockOffset + 2] = color565 & 0xFF;
-					data[blockOffset + 3] = (color565 >> 8) & 0xFF;
-
-					// Clear pixel indices so the block uses the first color everywhere
-					data[blockOffset + 4] = 0x00;
-					data[blockOffset + 5] = 0x00;
-					data[blockOffset + 6] = 0x00;
-					data[blockOffset + 7] = 0x00;
-				}
-
-				offset += numBlocks * 8;
-			}
-		}
-
 		const char* getweaponname(char weapon)
 		{
 			return G_GetWeaponNameForIndex(weapon);
@@ -346,11 +297,6 @@ namespace game
 		{
 			DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->gunXModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, model).xmodel;
 			DB_FindXAssetHeader(XAssetType::ASSET_TYPE_WEAPONDEF, weapon).weapon->weapDef->worldModel[0] = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XMODEL, model).xmodel;
-		}
-
-		void replaceweaponanimation(const char* weapon, const char* anim)
-		{
-			//DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XANIMPARTS, weapon).xanim = DB_FindXAssetHeader(XAssetType::ASSET_TYPE_XANIMPARTS, weapon).xanim;
 		}
 
 		bool isholdingsniper(int idx)

@@ -1,8 +1,14 @@
-﻿  state: unload
+﻿  [Error] Failed to connect to console!
+  state: unload
   module name: Desire
   Path: HDD:\Desire.xex
-  Module Unloading
-  state: load
-  module name: Desire
-  Path: HDD:\Desire.xex
-  Module Loading
+  
+  Unhandled Exception: Microsoft.Test.Xbox.XDRPC.XDRPCException: Unable to connect to console. Verify console is not crashed.
+     at Microsoft.Test.Xbox.XDRPC.XDRPCExecutionState.OpenXBDMConnection()
+     at Microsoft.Test.Xbox.XDRPC.XDRPCExecutionState.Invoke()
+     at Microsoft.Test.Xbox.XDRPC.XDRPCMarshaler.ExecuteRPC[T](IXboxConsole console, XDRPCExecutionOptions options, UInt64& postMethodCallReturn, XDRPCArgumentInfo[] args)
+     at Microsoft.Test.Xbox.XDRPC.XDRPCMarshaler.ExecuteRPC[T](IXboxConsole console, XDRPCMode mode, String module, Int32 ordinal, Object[] args)
+     at XML.XDRPCPlusPlus.UnloadModule(IXboxConsole xbCon, String module)
+     at XML.Program.Main(String[] args)
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(103,5): error MSB3073: The command "C:\XML\XML.exe "unload" "Desire"
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\Microsoft.CppCommon.targets(103,5): error MSB3073: :VCEnd" exited with code -532462766.
